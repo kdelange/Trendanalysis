@@ -1,0 +1,30 @@
+[
+    {
+        "table_name": "SequenceRun",
+        "chart_type": "time_series_with_absolute_threshold",
+        "chart_properties": {
+            "chart_title": "Cluster Density(K/mm2)",
+            "lower_threshold": 160,
+            "upper_threshold": 250,
+            "y_value": "ClusterDensity(K/mm2)"
+        }
+    },
+    {
+        "table_name": "SequenceRun",
+        "chart_type": "time_series_with_absolute_threshold",
+        "chart_properties": {
+            "chart_title": "Cluster Passing Filter (%)",
+            "lower_threshold": 80,
+            "y_value": "ClustersPassingFilter(%)"
+        }
+    },
+    {
+        "table_name": "SequenceRun",
+        "chart_type": "time_series_with_absolute_threshold",
+        "chart_properties": {
+            "chart_title": "Percentage>=Q30",
+            "lower_threshold": 75,
+            "y_value": "Percentage>=Q30"
+        }
+    }
+]

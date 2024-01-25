@@ -1,2 +1,3 @@
-          
-         hoi
+#!/bin/bash
+
+echo "hoi"

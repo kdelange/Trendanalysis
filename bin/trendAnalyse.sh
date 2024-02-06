@@ -530,7 +530,6 @@ LOGS_DIR="${TMP_ROOT_DIR}/logs/trendanalysis/"
 mkdir -p "${TMP_ROOT_DIR}/logs/trendanalysis/"
 CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 CHRONQC_DATABASE_NAME="${TMP_TRENDANALYSE_DIR}/database/"
-TMP_RAWDATA_DIR="${TMP_TRENDANALYSE_DIR}/rawdata/${_rawdata}/"
 LOGS_DIR="${TMP_ROOT_DIR}/logs/trendanalysis/"
 
 readarray -t rawdataArray < <(find "${TMP_TRENDANALYSE_DIR}/rawdata/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/rawdata/||")
@@ -540,6 +539,7 @@ then
 else
 	for rawdata in "${rawdataArray[@]}"
 	do
+		TMP_RAWDATA_DIR="${TMP_TRENDANALYSE_DIR}/rawdata/${rawdata}/"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
 		rm -rf "${CHRONQC_TMP:-missing}"/*
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."

@@ -238,6 +238,10 @@ function processProjectToDB() {
 			echo "${_processprojecttodb_controle_line_base}.incorrectDate" >> "${LOGS_DIR}/process.project_trendanalysis.failed"
 			return
 		fi
+	else
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} no run date info file is present, ${_project} cant be added to the database."
+	fi
+
 }
 
 function processDarwinToDB() {

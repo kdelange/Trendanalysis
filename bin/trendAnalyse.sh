@@ -783,15 +783,15 @@ else
 		RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}_processRawdatatoDB"
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${RAWDATA_JOB_CONTROLE_LINE_BASE}"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis.failed"
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis.started"
+		touch "${LOGS_DIR}/process.SequenceRun_trendanalysis.finished"
+		touch "${LOGS_DIR}/process.SequenceRun_trendanalysis.failed"
+		touch "${LOGS_DIR}/process.SequenceRun_trendanalysis.started"
 		
-		if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
+		if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.SequenceRun_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
 		else
-			echo "${RAWDATA_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.rawdata_trendanalysis.started"
+			echo "${RAWDATA_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.SequenceRun_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New batch ${rawdata} will be processed."
 			processRawdataToDB "${rawdata}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}"
 		fi

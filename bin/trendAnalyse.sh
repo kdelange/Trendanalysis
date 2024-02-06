@@ -569,7 +569,7 @@ else
 	done
 fi
 
-}
+
 #
 ## Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processProjectToDB "${project}" "${run}" to process this project.'
 #

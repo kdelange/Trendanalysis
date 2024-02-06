@@ -124,7 +124,7 @@ function updateOrCreateDatabase() {
 				echo "${_job_controle_line_base}" >> "${LOGS_DIR}/process.${_logtype}_trendanalysis.failed"
 				return
 			}
-		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_rawdata} with ${_sequencer} was stored in Chronqc database."
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_db_table} with ${_dataLable} was stored in Chronqc database."
 		sed -i "/${_job_controle_line_base}/d" "${LOGS_DIR}/process.${_logtype}_trendanalysis.failed"
 		sed -i "/${_job_controle_line_base}/d" "${LOGS_DIR}/process.${_logtype}_trendanalysis.started"
 		echo "${_job_controle_line_base}" >> "${LOGS_DIR}/process.${_logtype}_trendanalysis.finished"

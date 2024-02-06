@@ -92,7 +92,7 @@ function updateOrCreateDatabase() {
 	
 	if [[ -e "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" ]]
 		then
-		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv . Updating ChronQC database with ${_tableFile}."
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${_runDateInfo}. Updating ChronQC database with ${_tableFile}."
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Importing ${_tableFile}"
 
 		chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \

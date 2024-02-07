@@ -269,7 +269,7 @@ function processDarwinToDB() {
 		
 
 		updateOrCreateDatabase "${_filetype}All" "${_tablefile}" "${_runinfo}" all "${_darwin_job_controle_line_base}" darwin
-		updateOrCreateDatabase "${_filetype}Labpassed" "${CHRONQC_TMP}/ArrayInzettenLabpassed_${_fileDate}.csv" "${CHRONQC_TMP}/ArrayInzettenLabpassed_runinfo_${_fileDate}.csv" Labpassed "${_darwin_job_controle_line_base}" darwin
+		updateOrCreateDatabase "${_filetype}Labpassed" "${CHRONQC_TMP}/ArrayInzettenLabpassed_${_fileDate}.csv" "${CHRONQC_TMP}/ArrayInzettenLabpassed_runinfo_${_fileDate}.csv" labpassed "${_darwin_job_controle_line_base}" darwin
 
 	elif [[ "${_filetype}" == 'Concentratie' ]]
 	then

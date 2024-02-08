@@ -244,6 +244,85 @@ function processProjectToDB() {
 
 }
 
+function processRNAProjectToDB {
+	local _rnaproject="${1}"
+	local _processrnaprojecttodb_controle_line_base="${2}"
+	
+	CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
+	CHRONQC_RNAPROJECTS_DIR="${TMP_TRENDANALYSE_DIR}/RNAprojects/${_rnaproject}/"
+	CHRONQC_DATABASE_NAME="${TMP_TRENDANALYSE_DIR}/database/"
+
+	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
+	rm -rf "${CHRONQC_TMP:-missing}"/*
+
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "__________processing ${_rnaproject}.run_date_info.csv_____________"
+	if [[ -e "${CHRONQC_RNAPROJECTS_DIR}/${_rnaproject}.run_date_info.csv" ]]
+	then
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${CHRONQC_RNAPROJECTS_DIR}/${_rnaproject}.run_date_info.csv. Updating ChronQC database with ${_rnaproject}."
+		cp "${CHRONQC_RNAPROJECTS_DIR}/${_rnaproject}.run_date_info.csv" "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv"
+		for RNAmultiQC in "${MULTIQC_RNA_METRICS_TO_PLOT[@]}"
+		do
+	#'multiqc_general_stats.txt:general_stats'
+	#'multiqc_star.txt:star'
+	#'multiqc_picard_RnaSeqMetrics.txt:RnaSeqMetrics'
+
+			local _rnametrics="${RNAmultiQC%:*}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "using _rnametrics: ${_rnametrics}"
+			if [[ "${_rnametrics}" == multiqc_picard_RnaSeqMetrics.txt ]]
+			then
+				cp "${CHRONQC_RNAPROJECTS_DIR}/${_metrics}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}"
+				perl -pe 's|SAMPLE\t|SAMPLE_NAME2\t|' "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}" > "${CHRONQC_TMP}/${_rnaproject}.1.${_rnametrics}"
+			else
+				cp "${CHRONQC_RNAPROJECTS_DIR}/${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}"
+			fi
+		done
+		#
+		# Rename one of the duplicated SAMPLE column names to make it work.
+		#
+		#cp "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" "${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
+
+		#
+		# Get all the samples processed with FastQC form the MultiQC multi_source file,
+		# because samplenames differ from regular samplesheet at that stage in th epipeline.
+		# The Output is converted into standard ChronQC run_date_info.csv format.
+		#
+		#grep fastqc "${CHRONQC_TMP}/${_project}.multiqc_sources.txt" | awk -v p="${_project}" '{print $3","p","substr($3,1,6)}' >>"${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
+		#awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_project}.2.run_date_info.csv" > "${CHRONQC_TMP}/${_project}.2.run_date_info.csv.tmp"
+		#awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_project}.lane.run_date_info.csv" > "${CHRONQC_TMP}/${_project}.lane.run_date_info.csv.tmp"
+
+		#
+		# Check if the date in the run_date_info.csv file is in correct format, dd/mm/yyyy
+		#
+		_checkdate=$(awk 'BEGIN{FS=OFS=","} NR==2 {print $3}' "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv")
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "_checkdate:${_checkdate}"
+#		mv "${CHRONQC_TMP}/${_project}.2.run_date_info.csv.tmp" "${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
+
+		if [[ "${_checkdate}"  =~ [0-9] ]]
+		then
+			for i in "${MULTIQC_RNA_METRICS_TO_PLOT[@]}"
+			do
+				local _rnametrics="${i%:*}"
+				local _rnatable="${i#*:}"
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Importing ${_rnaproject}.${_rnametrics}, and using table ${_rnatable}"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "________________${_rnametrics}________${_rnatable}_____________"
+				if [[ "${_rnametrics}" == multiqc_picard_RnaSeqMetrics.txt ]]
+				then
+					updateOrCreateDatabase "${_rnatable}" "${CHRONQC_TMP}/${_rnaproject}.1.${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" RNA "${_processrnaprojecttodb_controle_line_base}" RNAproject
+				else
+					updateOrCreateDatabase "${_rnatable}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" RNA "${_processrnaprojecttodb_controle_line_base}" RNAproject
+				fi
+			done
+		else
+			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_rnaproject}: has date ${_checkdate} this is not fit for chronQC." 
+			echo "${_processrnaprojecttodb_controle_line_base}.incorrectDate" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.failed"
+			return
+		fi
+	else
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} no run date info file is present, ${_project} cant be added to the database."
+	fi
+
+}
+
 function processDarwinToDB() {
 	local _runinfo="${1}"
 	local _tablefile="${2}"
@@ -471,7 +550,7 @@ else
 			then
 				cp "${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv"
 				cp "${TMP_RAWDATA_DIR}/SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv"
-				updateOrCreateDatabase SequenceRun "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv" "${sequencer}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" rawdata
+#				updateOrCreateDatabase SequenceRun "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv" "${sequencer}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" rawdata
 			else
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} for sequence run ${_rawdata}, no sequencer statistics were stored "
 			fi
@@ -504,7 +583,37 @@ else
 		else
 			echo "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.project_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${project} will be processed."
-			processProjectToDB "${project}" "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}"
+#			processProjectToDB "${project}" "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}"
+		fi
+	done
+fi
+
+#
+## Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processRNAprojectsToDB "${project}" "${run}" to process this project.'
+#
+
+readarray -t RNAprojects < <(find "${TMP_TRENDANALYSE_DIR}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/RNAprojects/||")
+if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
+then
+	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/RNAprojects/."
+else
+	for RNAproject in "${RNAprojects[@]}"
+	do
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing RNAproject ${RNAproject} ..."
+		echo "Working on ${RNAproject}" > "${lockFile}"
+		PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE="${RNAproject}.${SCRIPT_NAME}_processRNAProjectToDB"
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${RNAproject}/ ..."
+		touch "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
+		touch "${LOGS_DIR}/process.RNAproject_trendanalysis.failed"
+		touch "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
+		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
+		else
+			echo "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${RNAproject} will be processed."
+			processRNAProjectToDB "${RNAproject}" "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
 		fi
 	done
 fi
@@ -536,7 +645,7 @@ else
 		else
 			echo "${DARWIN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.darwin_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New darwin data from ${fileDate} will be processed."
-			processDarwinToDB "${TMP_TRENDANALYSE_DIR}/darwin/${darwinfile}" "${TMP_TRENDANALYSE_DIR}/darwin/${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
+#			processDarwinToDB "${TMP_TRENDANALYSE_DIR}/darwin/${darwinfile}" "${TMP_TRENDANALYSE_DIR}/darwin/${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
 		fi
 	done
 fi
@@ -565,7 +674,7 @@ else
 		else
 			echo "${DRAGEN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.dragen_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."
-			updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+#			updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
 		fi
 	done
 fi
@@ -587,7 +696,7 @@ then
 else
 	touch "${JOB_CONTROLE_FILE_BASE}.started"
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New trendanalysis plots will be generated on ${today}."
-	generateReports "${JOB_CONTROLE_FILE_BASE}"
+#	generateReports "${JOB_CONTROLE_FILE_BASE}"
 fi
 
 trap - EXIT

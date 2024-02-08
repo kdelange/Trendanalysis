@@ -696,7 +696,7 @@ then
 else
 	touch "${JOB_CONTROLE_FILE_BASE}.started"
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New trendanalysis plots will be generated on ${today}."
-#	generateReports "${JOB_CONTROLE_FILE_BASE}"
+	generateReports "${JOB_CONTROLE_FILE_BASE}"
 fi
 
 trap - EXIT

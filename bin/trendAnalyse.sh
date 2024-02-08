@@ -270,7 +270,7 @@ function processRNAProjectToDB {
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "using _rnametrics: ${_rnametrics}"
 			if [[ "${_rnametrics}" == multiqc_picard_RnaSeqMetrics.txt ]]
 			then
-				cp "${CHRONQC_RNAPROJECTS_DIR}/${_metrics}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}"
+				cp "${CHRONQC_RNAPROJECTS_DIR}/${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}"
 				perl -pe 's|SAMPLE\t|SAMPLE_NAME2\t|' "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}" > "${CHRONQC_TMP}/${_rnaproject}.1.${_rnametrics}"
 			else
 				cp "${CHRONQC_RNAPROJECTS_DIR}/${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}"

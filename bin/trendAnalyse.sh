@@ -287,7 +287,7 @@ function processRNAProjectToDB {
 		# The Output is converted into standard ChronQC run_date_info.csv format.
 		#
 		#grep fastqc "${CHRONQC_TMP}/${_project}.multiqc_sources.txt" | awk -v p="${_project}" '{print $3","p","substr($3,1,6)}' >>"${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
-		awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_project}.run_date_info.csv" > "${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
+		awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" > "${CHRONQC_TMP}/${_rnaproject}.2.run_date_info.csv"
 
 		#
 		# Check if the date in the run_date_info.csv file is in correct format, dd/mm/yyyy

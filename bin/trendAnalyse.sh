@@ -287,8 +287,7 @@ function processRNAProjectToDB {
 		# The Output is converted into standard ChronQC run_date_info.csv format.
 		#
 		#grep fastqc "${CHRONQC_TMP}/${_project}.multiqc_sources.txt" | awk -v p="${_project}" '{print $3","p","substr($3,1,6)}' >>"${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
-		#awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_project}.2.run_date_info.csv" > "${CHRONQC_TMP}/${_project}.2.run_date_info.csv.tmp"
-		#awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_project}.lane.run_date_info.csv" > "${CHRONQC_TMP}/${_project}.lane.run_date_info.csv.tmp"
+		awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_project}.run_date_info.csv" > "${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
 
 		#
 		# Check if the date in the run_date_info.csv file is in correct format, dd/mm/yyyy
@@ -307,9 +306,9 @@ function processRNAProjectToDB {
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "________________${_rnametrics}________${_rnatable}_____________"
 				if [[ "${_rnametrics}" == multiqc_picard_RnaSeqMetrics.txt ]]
 				then
-					updateOrCreateDatabase "${_rnatable}" "${CHRONQC_TMP}/${_rnaproject}.1.${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" RNA "${_processrnaprojecttodb_controle_line_base}" RNAproject
+					updateOrCreateDatabase "${_rnatable}" "${CHRONQC_TMP}/${_rnaproject}.1.${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.2.run_date_info.csv" RNA "${_processrnaprojecttodb_controle_line_base}" RNAproject
 				else
-					updateOrCreateDatabase "${_rnatable}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" RNA "${_processrnaprojecttodb_controle_line_base}" RNAproject
+					updateOrCreateDatabase "${_rnatable}" "${CHRONQC_TMP}/${_rnaproject}.${_rnametrics}" "${CHRONQC_TMP}/${_rnaproject}.2.run_date_info.csv" RNA "${_processrnaprojecttodb_controle_line_base}" RNAproject
 				fi
 			done
 		else
@@ -318,7 +317,7 @@ function processRNAProjectToDB {
 			return
 		fi
 	else
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} no run date info file is present, ${_project} cant be added to the database."
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_rnaproject} no run date info file is present, ${_rnaproject} cant be added to the database."
 	fi
 
 }

@@ -93,9 +93,9 @@
         "table_name": "star",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
-            "chart_title": "fastqc_percentage_unique_reads",
-            "y_value": "fastqc_percentage_unique_reads",
-            "y_label": "fastqc_percentage_unique_reads"
+            "chart_title": "uniquely_mapped_percent",
+            "y_value": "uniquely_mapped_percent",
+            "y_label": "uniquely_mapped_percent"
         }
     },
     {

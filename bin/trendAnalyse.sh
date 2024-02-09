@@ -253,7 +253,7 @@ function processRNAProjectToDB {
 	CHRONQC_DATABASE_NAME="${TMP_TRENDANALYSE_DIR}/database/"
 
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
-	rm -rf "${CHRONQC_TMP:-missing}"/*
+	#rm -rf "${CHRONQC_TMP:-missing}"/*
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "__________processing ${_rnaproject}.run_date_info.csv_____________"
 	if [[ -e "${CHRONQC_RNAPROJECTS_DIR}/${_rnaproject}.run_date_info.csv" ]]
@@ -529,15 +529,13 @@ else
 	do
 		TMP_RAWDATA_DIR="${TMP_TRENDANALYSE_DIR}/rawdata/${rawdata}/"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
-		rm -rf "${CHRONQC_TMP:-missing}"/*
+#		rm -rf "${CHRONQC_TMP:-missing}"/*
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
 		echo "Working on ${rawdata}" > "${lockFile}"
 		RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}_processRawdatatoDB"
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${RAWDATA_JOB_CONTROLE_LINE_BASE}"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis.failed"
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis.started"
+		touch "${LOGS_DIR}/process.rawdata_trendanalysis."{finished,failed,started}
 		sequencer=$(echo "${rawdata}" | cut -d '_' -f2)
 		if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
 		then
@@ -573,9 +571,7 @@ else
 		PROCESSPROJECTTODB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}_processProjectToDB"
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project}/ ..."
-		touch "${LOGS_DIR}/process.project_trendanalysis.finished"
-		touch "${LOGS_DIR}/process.project_trendanalysis.failed"
-		touch "${LOGS_DIR}/process.project_trendanalysis.started"
+		touch "${LOGS_DIR}/process.project_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.project_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed project ${project}."
@@ -603,9 +599,7 @@ else
 		PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE="${RNAproject}.${SCRIPT_NAME}_processRNAProjectToDB"
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${RNAproject}/ ..."
-		touch "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
-		touch "${LOGS_DIR}/process.RNAproject_trendanalysis.failed"
-		touch "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
+		touch "${LOGS_DIR}/process.RNAproject_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
@@ -635,9 +629,7 @@ else
 		fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
 		tableFile="${fileType}_${fileDate}.csv"
 		DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}_${fileDate}.${SCRIPT_NAME}_processDarwinToDB"
-		touch "${LOGS_DIR}/process.darwin_trendanalysis.finished"
-		touch "${LOGS_DIR}/process.darwin_trendanalysis.failed"
-		touch "${LOGS_DIR}/process.darwin_trendanalysis.started"
+		touch "${LOGS_DIR}/process.darwin_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
@@ -664,9 +656,7 @@ else
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
 		tableFile="${dragenProject}".Dragen.csv
 		DRAGEN_JOB_CONTROLE_LINE_BASE="${dragenProject}.${SCRIPT_NAME}_processDragenToDB"
-		touch "${LOGS_DIR}/process.dragen_trendanalysis.finished"
-		touch "${LOGS_DIR}/process.dragen_trendanalysis.failed"
-		touch "${LOGS_DIR}/process.dragen_trendanalysis.started"
+		touch "${LOGS_DIR}/process.dragen_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${DRAGEN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.dragen_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed dragen project ${dragenProject}."
@@ -680,7 +670,7 @@ fi
 
 CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "cleanup ${CHRONQC_TMP}* ..."
-rm -rf "${CHRONQC_TMP:-missing}"/*
+#rm -rf "${CHRONQC_TMP:-missing}"/*
 
 #
 ## Function for generating a list of ChronQC plots.

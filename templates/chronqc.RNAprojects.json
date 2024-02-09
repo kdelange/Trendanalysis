@@ -37,40 +37,12 @@
     },
     {
         "table_name": "RnaSeqMetrics",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_stacked_bar_plot",
         "chart_properties": {
-            "chart_title": "PCT_CODING_BASES",
-            "y_value": "PCT_CODING_BASES",
-            "y_label": "PCT_CODING_BASES"
-        }
-    }, 
-    {
-        "table_name": "RnaSeqMetrics",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "PCT_UTR_BASES",
-            "y_value": "PCT_UTR_BASES",
-            "y_label": "PCT_UTR_BASES"
-        }
-    },    
-    {
-        "table_name": "RnaSeqMetrics",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "PCT_INTRONIC_BASES",
-            "y_value": "PCT_INTRONIC_BASES",
-            "y_label": "PCT_INTRONIC_BASES"
-        }
-    },    
-    {
-        "table_name": "RnaSeqMetrics",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "PCT_INTERGENIC_BASES",
-            "y_value": "PCT_INTERGENIC_BASES",
-            "y_label": "PCT_INTERGENIC_BASES"
-        }
-    },    
+            "chart_title": "bar plot RNA seq metrics",
+            "y_value": "RNA seq metrics in %",
+            "categories": "PCT_CODING_BASES, PCT_UTR_BASES, PCT_INTRONIC_BASES, PCT_INTERGENIC_BASES"
+    },
     {
         "table_name": "RnaSeqMetrics",
         "chart_type": "time_series_with_mean_and_stdev",
@@ -100,57 +72,11 @@
     },       
     {
         "table_name": "star",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_stacked_bar_plot",
         "chart_properties": {
-            "chart_title": "uniquely_mapped_percent",
-            "y_value": "uniquely_mapped_percent",
-            "y_label": "fastqc_percentage_unique_reads"
-        }
+            "chart_title": "bar plot alignment metrics in %",
+            "y_value": "alignment metrics %",
+            "categories": "fastqc_percentage_unique_reads, multimapped_percent, multimapped_toomany_percent, unmapped_tooshort_percent, unmapped_other_percent"
     },
-    {
-        "table_name": "star",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "multimapped_percent",
-            "y_value": "multimapped_percent",
-            "y_label": "multimapped_percent"
-        }
-    },
-    {
-        "table_name": "star",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "multimapped_toomany_percent",
-            "y_value": "multimapped_toomany_percent",
-            "y_label": "multimapped_toomany_percent"
-        }
-    },
-    {
-        "table_name": "star",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "unmapped_mismatches_percent",
-            "y_value": "unmapped_mismatches_percent",
-            "y_label": "unmapped_mismatches_percent"
-        }
-    },    
-    {
-        "table_name": "star",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "unmapped_tooshort_percent",
-            "y_value": "unmapped_tooshort_percent",
-            "y_label": "unmapped_tooshort_percent"
-        }
-    },
-    {
-        "table_name": "star",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "unmapped_other_percent",
-            "y_value": "unmapped_other_percent",
-            "y_label": "unmapped_other_percent"
-        }
-    }
 
 ]

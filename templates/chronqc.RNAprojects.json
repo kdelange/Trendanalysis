@@ -77,6 +77,6 @@
             "chart_title": "bar plot alignment metrics in %",
             "y_value": "alignment metrics %",
             "categories": "fastqc_percentage_unique_reads, multimapped_percent, multimapped_toomany_percent, unmapped_tooshort_percent, unmapped_other_percent"
-    },
+    }
 
 ]

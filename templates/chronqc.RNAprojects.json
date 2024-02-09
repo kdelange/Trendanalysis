@@ -42,6 +42,7 @@
             "chart_title": "bar plot RNA seq metrics",
             "y_value": "RNA seq metrics in %",
             "categories": "PCT_CODING_BASES, PCT_UTR_BASES, PCT_INTRONIC_BASES, PCT_INTERGENIC_BASES"
+        }
     },
     {
         "table_name": "RnaSeqMetrics",
@@ -77,6 +78,6 @@
             "chart_title": "bar plot alignment metrics in %",
             "y_value": "alignment metrics %",
             "categories": "fastqc_percentage_unique_reads, multimapped_percent, multimapped_toomany_percent, unmapped_tooshort_percent, unmapped_other_percent"
+        }
     }
-
 ]

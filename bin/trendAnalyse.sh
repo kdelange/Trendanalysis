@@ -529,7 +529,7 @@ else
 	do
 		TMP_RAWDATA_DIR="${TMP_TRENDANALYSE_DIR}/rawdata/${rawdata}/"
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
-#		rm -rf "${CHRONQC_TMP:-missing}"/*
+		rm -rf "${CHRONQC_TMP:-missing}"/*
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
 		echo "Working on ${rawdata}" > "${lockFile}"
 		RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}_processRawdatatoDB"
@@ -547,7 +547,7 @@ else
 			then
 				cp "${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv"
 				cp "${TMP_RAWDATA_DIR}/SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv"
-#				updateOrCreateDatabase SequenceRun "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv" "${sequencer}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" rawdata
+				updateOrCreateDatabase SequenceRun "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv" "${sequencer}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" rawdata
 			else
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} for sequence run ${_rawdata}, no sequencer statistics were stored "
 			fi
@@ -578,7 +578,7 @@ else
 		else
 			echo "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.project_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${project} will be processed."
-#			processProjectToDB "${project}" "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}"
+			processProjectToDB "${project}" "${PROCESSPROJECTTODB_CONTROLE_LINE_BASE}"
 		fi
 	done
 fi
@@ -663,14 +663,14 @@ else
 		else
 			echo "${DRAGEN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.dragen_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."
-#			updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+			updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
 		fi
 	done
 fi
 
 CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "cleanup ${CHRONQC_TMP}* ..."
-#rm -rf "${CHRONQC_TMP:-missing}"/*
+rm -rf "${CHRONQC_TMP:-missing}"/*
 
 #
 ## Function for generating a list of ChronQC plots.

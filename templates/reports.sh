@@ -30,9 +30,9 @@ chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p SequenceRun -f "${CHRONQC
 #
 ## Dragen data reports
 #
-chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragenExoom "${CHRONQC_TEMPLATE_DIRS}/chronqc.Dragen.json"
-
-
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragenExoom "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragenExoom.json"
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragenWGS "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragenWGS.json"
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragensWGS "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragenWGS.json"
 #
 ## RNA data reports
 #

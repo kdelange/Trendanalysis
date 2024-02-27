@@ -670,10 +670,10 @@ else
 				updateOrCreateDatabase dragenExoom "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
 			elif [[ "${dataType}" == 'WGS' ]]
 			then
-				updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+				updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" WGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
 			elif [[ "${dataType}" == 'sWGS' ]]
 			then
-				updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragensWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+				updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" sWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
 			else
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Exoom, WGS and sWGS datatypes are processed, there is room for more types."
 			fi

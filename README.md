@@ -2,6 +2,8 @@
 Generates Trendanalysis plots using ChronQC for standard diagnostic techniques. 
 See https://chronqc.readthedocs.io/en/latest/ for more information on ChronQC.
 
+## step 1: copyQCDataToTmp.sh
+
 On PRM the different kind of QC data are stored.
 - inhouse
 	- NGS projects
@@ -24,6 +26,7 @@ If the script runs on PRM06, the data will be copied to TMP06. Each data type wi
 On the PRM in the logs folder, for each project or data type a file will be touched, for instance for rawdata: `rawdata.${rawdata}.copyQCDataToTmp.`
 So the QC data will only be copied to TMP once.
 
+## step 2: trendAnalyse.sh
 
 On TMP `trendAnalyse.sh` will process each datatype to make it fit for the SQLite database.
 Basically you need a runDateInfo file and a table file.
@@ -37,6 +40,8 @@ Then, in the trendAnalyse.sh script, the file templates/reports.sh is sourced.
 In this file the commands are noted so you can generate the reports files you like, for the data types you want.
 In the command to generate the reports a json file is needed. These are also in the /templated/ folder.
 In these json files you can note which type of graphs you want to see in the report, which is in html file format.
+
+## step 3: copyTrendAnalysisDataToPrm.sh
 
 The `copyTrendAnalysisDataToPrm.sh` copies all the reports back to PRM, where the diagnostics can take a look at the QC data over time.
 

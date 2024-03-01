@@ -253,7 +253,7 @@ function processRNAProjectToDB {
 	CHRONQC_DATABASE_NAME="${TMP_TRENDANALYSE_DIR}/database/"
 
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
-	#rm -rf "${CHRONQC_TMP:-missing}"/*
+	rm -rf "${CHRONQC_TMP:-missing}"/*
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "__________processing ${_rnaproject}.run_date_info.csv_____________"
 	if [[ -e "${CHRONQC_RNAPROJECTS_DIR}/${_rnaproject}.run_date_info.csv" ]]
@@ -286,7 +286,6 @@ function processRNAProjectToDB {
 		# because samplenames differ from regular samplesheet at that stage in th epipeline.
 		# The Output is converted into standard ChronQC run_date_info.csv format.
 		#
-		#grep fastqc "${CHRONQC_TMP}/${_project}.multiqc_sources.txt" | awk -v p="${_project}" '{print $3","p","substr($3,1,6)}' >>"${CHRONQC_TMP}/${_project}.2.run_date_info.csv"
 		awk 'BEGIN{FS=OFS=","} NR>1{cmd = "date -d \"" $3 "\" \"+%d/%m/%Y\"";cmd | getline out; $3=out; close("uuidgen")} 1' "${CHRONQC_TMP}/${_rnaproject}.run_date_info.csv" > "${CHRONQC_TMP}/${_rnaproject}.2.run_date_info.csv"
 
 		#

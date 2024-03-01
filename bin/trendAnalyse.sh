@@ -114,7 +114,7 @@ function updateOrCreateDatabase() {
 			-o "${CHRONQC_DATABASE_NAME}" \
 			"${_tableFile}" \
 			--run-date-info "${_runDateInfo}" \
-			--db-table _db_table \
+			--db-table "${_db_table}" \
 			"${_dataLabel}" -f || {
 				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to create database and import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
 				sed -i "/${_job_controle_line_base}/d" "${LOGS_DIR}/process.${_logtype}_trendanalysis.started"

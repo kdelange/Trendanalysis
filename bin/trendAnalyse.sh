@@ -680,6 +680,46 @@ else
 	done
 fi
 
+#
+## Checks openarray data, and adds the new files to the database
+#
+
+readarray -t openarraydata < <(find "${TMP_TRENDANALYSE_DIR}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/||")
+if [[ "${#openarraydata[@]:-0}" -eq '0' ]]
+then
+	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/."
+else
+	for openarrayProject in "${openarraydata[@]}"
+	do
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking project ${openarrayProject}."
+		OPENARRAY_JOB_CONTROLE_LINE_BASE="${openarrayProject}.${SCRIPT_NAME}_processOpenarrayToDB"
+		touch "${LOGS_DIR}/process.openarray_trendanalysis."{finished,failed,started}
+		if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.openarray_trendanalysis.finished"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed openarray project ${openarrayProject}."
+		else
+			if [[ -f "${openarrayProject}".run.csv ]]
+			then
+				runinfoFile="${openarrayProject}".run.run_date_info.csv
+				tableFile="${openarrayProject}".run.csv
+				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
+			elif [[ -f "${openarrayProject}".samples.csv ]]
+			then
+				runinfoFile="${openarrayProject}".samples.run_date_info.csv
+				tableFile="${openarrayProject}".samples.csv
+				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" samples "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
+			elif [[ -f "${openarrayProject}".snp.csv ]]
+			then
+				runinfoFile="${openarrayProject}".snp.run_date_info.csv
+				tableFile="${openarrayProject}".snp.csv
+				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" snp "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
+			else
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "trying to process project ${openarrayProject}. No file are available is the correct format"
+			fi
+		fi
+	done
+fi
+
 CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "cleanup ${CHRONQC_TMP}* ..."
 rm -rf "${CHRONQC_TMP:-missing}"/*

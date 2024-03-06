@@ -704,19 +704,19 @@ else
 				fileType=$(echo "${csvfile}" | cut -d '.' -f2)
 				if [[ "${fileType}" == 'run' ]]
 				then
-					runinfoFile="${openarrayProject}"*".run.run_date_info.csv"
+					runinfoFile="${openarrayProject}".run.run_date_info.csv
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
-					tableFile="${openarrayProject}"*".run.csv"
+					tableFile="${openarrayProject}".run.csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 				elif [[ "${fileType}" == 'samples' ]]
 				then
-					runinfoFile="${openarrayProject}"*".samples.run_date_info.csv"
-					tableFile="${openarrayProject}"*".samples.csv"
+					runinfoFile="${openarrayProject}".samples.run_date_info.csv
+					tableFile="${openarrayProject}".samples.csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" samples "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 				elif [[ "${fileType}" == 'snps' ]]
 				then
-					runinfoFile="${openarrayProject}"*".snps.run_date_info.csv"
-					tableFile="${openarrayProject}"*".snps.csv"
+					runinfoFile="${openarrayProject}".snps.run_date_info.csv
+					tableFile="${openarrayProject}".snps.csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" snps "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 				else
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "trying to process project ${openarrayProject}. No file are available is the correct format"

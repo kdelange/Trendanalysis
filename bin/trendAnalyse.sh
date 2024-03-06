@@ -698,18 +698,18 @@ else
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed openarray project ${openarrayProject}."
 		else
-			if [[ -f "${openarrayProject}"*.run.csv ]]
+			if [[ -e "${openarrayProject}"*.run.csv ]]
 			then
 				runinfoFile="${openarrayProject}"*.run.run_date_info.csv
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
 				tableFile="${openarrayProject}"*.run.csv
 				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-			elif [[ -f "${openarrayProject}"*.samples.csv ]]
+			elif [[ -e "${openarrayProject}"*.samples.csv ]]
 			then
 				runinfoFile="${openarrayProject}"*.samples.run_date_info.csv
 				tableFile="${openarrayProject}"*.samples.csv
 				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" samples "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-			elif [[ -f "${openarrayProject}"*.snp.csv ]]
+			elif [[ -e "${openarrayProject}"*.snp.csv ]]
 			then
 				runinfoFile="${openarrayProject}"*.snp.run_date_info.csv
 				tableFile="${openarrayProject}"*.snp.csv

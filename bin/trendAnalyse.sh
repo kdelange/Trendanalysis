@@ -702,18 +702,18 @@ else
 			do
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${csvfile}."
 				fileType=$(echo "${csvfile}" | cut -d '.' -f2)
-				if [[ fileType == 'run' ]]
+				if [[ "${fileType}" == 'run' ]]
 				then
 					runinfoFile="${openarrayProject}"*.run.run_date_info.csv
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
 					tableFile="${openarrayProject}"*.run.csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-				elif [[ fileType == 'samples' ]]
+				elif [[ "${fileType}" == 'samples' ]]
 				then
 					runinfoFile="${openarrayProject}"*.samples.run_date_info.csv
 					tableFile="${openarrayProject}"*.samples.csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" samples "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-				elif [[ fileType == 'snps' ]]
+				elif [[ "${fileType}" == 'snps' ]]
 				then
 					runinfoFile="${openarrayProject}"*.snps.run_date_info.csv
 					tableFile="${openarrayProject}"*.snps.csv

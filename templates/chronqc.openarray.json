@@ -46,7 +46,7 @@
         }
     },
     {
-        "table_name": "snp",
+        "table_name": "snps",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "Assay_Call_Rate",
@@ -55,7 +55,7 @@
         }
     },
     {
-        "table_name": "snp",
+        "table_name": "snps",
         "chart_type": "time_series_with_percentage_of_samples_above_threshold",
         "chart_properties": {
             "chart_title": "Assay_Call_Rate (% snps above 80%)",
@@ -65,7 +65,7 @@
         }
     },
     {
-        "table_name": "snp",
+        "table_name": "snps",
         "chart_type": "time_series_with_stacked_bar_plot",
         "chart_properties": {
             "chart_title": "bar plot snps pass/faill",

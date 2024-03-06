@@ -1,0 +1,147 @@
+[
+    {
+        "table_name": "general_stats",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Total mapped reads",
+            "y_value": "Samtools_mqc-generalstats-samtools-flagstat_total",
+            "y_label": "Total mapped reads"
+        }
+    },
+    {
+        "table_name": "general_stats",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "TIN median",
+            "y_value": "RSeQC_mqc-generalstats-rseqc-TIN_median",
+            "y_label": "TIN median"
+        }
+    },
+    {
+        "table_name": "general_stats",
+        "chart_type": "time_series_with_percentage_of_samples_above_threshold",
+        "chart_properties": {
+            "chart_title": "TIN median (% samples above 80)",
+            "y_value": "RSeQC_mqc-generalstats-rseqc-TIN_median",
+            "y_label": "TIN median",
+            "threshold": 80
+        }
+    },
+    {
+        "table_name": "general_stats",
+        "chart_type": "time_series_with_box_whisker_plot",
+        "chart_properties": {
+            "chart_title": "TIN median",
+            "y_value": "RSeQC_mqc-generalstats-rseqc-TIN_median",
+            "y_label": "TIN median"
+        }
+    },
+    {
+        "table_name": "general_stats",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage PF aligned reads",
+            "y_value": "Picard_mqc-generalstats-picard-PCT_PF_READS_ALIGNED",
+            "y_label": "Percentage PF aligned reads"
+        }
+    },
+    {
+        "table_name": "general_stats",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Insert size",
+            "y_value": "Picard_mqc-generalstats-picard-summed_median",
+            "y_label": "Insert size"
+        }
+    },
+    {
+        "table_name": "RnaSeqMetrics",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage coding bases",
+            "y_value": "PCT_CODING_BASES",
+            "y_label": "PCT_CODING_BASES"
+        }
+    },
+    {
+        "table_name": "RnaSeqMetrics",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage UTR bases",
+            "y_value": "PCT_UTR_BASES",
+            "y_label": "PCT_UTR_BASES"
+        }
+    },
+    {
+        "table_name": "RnaSeqMetrics",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage intronic bases",
+            "y_value": "PCT_INTRONIC_BASES",
+            "y_label": "PCT_INTRONIC_BASES"
+        }
+    },
+    {
+        "table_name": "RnaSeqMetrics",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage intergenic bases",
+            "y_value": "PCT_INTERGENIC_BASES",
+            "y_label": "PCT_INTERGENIC_BASES"
+        }
+    },
+    {
+        "table_name": "RnaSeqMetrics",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage mRNA bases",
+            "y_value": "PCT_MRNA_BASES",
+            "y_label": "PCT_MRNA_BASES"
+        }
+    },
+    {
+        "table_name": "RnaSeqMetrics",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage correct strand reads",
+            "y_value": "PCT_CORRECT_STRAND_READS",
+            "y_label": "PCT_CORRECT_STRAND_READS"
+        }
+    },
+    {
+        "table_name": "star",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage uniquely mapped reads",
+            "y_value": "uniquely_mapped_percent",
+            "y_label": "uniquely_mapped_percent"
+        }
+    },
+    {
+        "table_name": "star",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage multimapped reads",
+            "y_value": "multimapped_percent",
+            "y_label": "multimapped_percent"
+        }
+    },
+    {
+        "table_name": "star",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage reads multimapped to too many loci",
+            "y_value": "multimapped_toomany_percent",
+            "y_label": "multimapped_toomany_percent"
+        }
+    },
+    {
+        "table_name": "star",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Percentage reads unmapped: too short",
+            "y_value": "unmapped_tooshort_percent",
+            "y_label": "unmapped_tooshort_percent"
+        }
+    }       
+]

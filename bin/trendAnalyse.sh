@@ -701,6 +701,7 @@ else
 			if [[ -f "${openarrayProject}"*.run.csv ]]
 			then
 				runinfoFile="${openarrayProject}"*.run.run_date_info.csv
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
 				tableFile="${openarrayProject}"*.run.csv
 				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 			elif [[ -f "${openarrayProject}"*.samples.csv ]]

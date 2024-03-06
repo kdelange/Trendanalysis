@@ -698,20 +698,20 @@ else
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed openarray project ${openarrayProject}."
 		else
-			if [[ -f "${openarrayProject}".run.csv ]]
+			if [[ -f "${openarrayProject}"*.run.csv ]]
 			then
-				runinfoFile="${openarrayProject}".run.run_date_info.csv
-				tableFile="${openarrayProject}".run.csv
+				runinfoFile="${openarrayProject}"*.run.run_date_info.csv
+				tableFile="${openarrayProject}"*.run.csv
 				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-			elif [[ -f "${openarrayProject}".samples.csv ]]
+			elif [[ -f "${openarrayProject}"*.samples.csv ]]
 			then
-				runinfoFile="${openarrayProject}".samples.run_date_info.csv
-				tableFile="${openarrayProject}".samples.csv
+				runinfoFile="${openarrayProject}"*.samples.run_date_info.csv
+				tableFile="${openarrayProject}"*.samples.csv
 				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" samples "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-			elif [[ -f "${openarrayProject}".snp.csv ]]
+			elif [[ -f "${openarrayProject}"*.snp.csv ]]
 			then
-				runinfoFile="${openarrayProject}".snp.run_date_info.csv
-				tableFile="${openarrayProject}".snp.csv
+				runinfoFile="${openarrayProject}"*.snp.run_date_info.csv
+				tableFile="${openarrayProject}"*.snp.csv
 				updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" snp "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 			else
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "trying to process project ${openarrayProject}. No file are available is the correct format"

@@ -13,8 +13,8 @@
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "Low_ROX_%",
-            "y_value": "Low_ROX_%",
-            "y_label": "Low_ROX_%"
+            "y_value": "Low_ROX",
+            "y_label": "Low_ROX"
         }
     },
     {

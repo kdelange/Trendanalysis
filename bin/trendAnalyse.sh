@@ -693,6 +693,7 @@ else
 	do
 		readarray -t csvfiles < <(find "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/" -maxdepth 1 -mindepth 1 -type f -name "*run_date_info*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/||")
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking project ${openarrayProject}/."
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking array ${csvfiles[@]}"
 		OPENARRAY_JOB_CONTROLE_LINE_BASE="${openarrayProject}.${SCRIPT_NAME}_processOpenarrayToDB"
 		touch "${LOGS_DIR}/process.openarray_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.openarray_trendanalysis.finished"
@@ -702,25 +703,25 @@ else
 			for csvfile in "${csvfiles[@]}"
 			do
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${csvfile}."
-				fileType=$(echo "${csvfile}" | cut -d '.' -f2)
+				dataType=$(echo "${csvfile}" | cut -d '.' -f2)
 				projectname=$(echo "${csvfiles}" | cut -d '.' -f1)
-				if [[ "${fileType}" == 'run' ]]
+				if [[ "${dataType}" == 'run' ]]
 				then
 					runinfoFile="${csvfile}"
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
-					tableFile="${projectname}.${fileType}".csv
+					tableFile="${projectname}.${dataType}".csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" run "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-				elif [[ "${fileType}" == 'samples' ]]
+				elif [[ "${dataType}" == 'samples' ]]
 				then
 					runinfoFile="${csvfile}"
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
-					tableFile="${projectname}.${fileType}".csv
+					tableFile="${projectname}.${dataType}".csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" samples "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-				elif [[ "${fileType}" == 'snps' ]]
+				elif [[ "${dataType}" == 'snps' ]]
 				then
 					runinfoFile="${csvfile}"
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking runinfoFile ${runinfoFile}."
-					tableFile="${projectname}.${fileType}".csv
+					tableFile="${projectname}.${dataType}".csv
 					updateOrCreateDatabase openarray "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${runinfoFile}" snps "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 				else
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "trying to process project ${openarrayProject}. No file are available is the correct format"

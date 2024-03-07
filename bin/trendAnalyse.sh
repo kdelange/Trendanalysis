@@ -697,7 +697,6 @@ else
 			log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No files found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/${openarrayProject}."
 		else
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking project ${openarrayProject}/."
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking array ${csvfiles[@]}"
 			OPENARRAY_JOB_CONTROLE_LINE_BASE="${openarrayProject}.${SCRIPT_NAME}_processOpenarrayToDB"
 			touch "${LOGS_DIR}/process.openarray_trendanalysis."{finished,failed,started}
 			if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.openarray_trendanalysis.finished"
@@ -708,7 +707,7 @@ else
 				do
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${csvfile}."
 					dataType=$(echo "${csvfile}" | cut -d '.' -f2)
-					projectname=$(echo "${csvfiles}" | cut -d '.' -f1)
+					projectname=$(echo "${csvfile}" | cut -d '.' -f1)
 					if [[ "${dataType}" == 'run' ]]
 					then
 						runinfoFile="${csvfile}"

@@ -38,4 +38,10 @@ chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p dragen -f "${CHRONQC_DATA
 #
 chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" RNA "${CHRONQC_TEMPLATE_DIRS}/chronqc.RNAprojects.json"
 
+#
+## openarray report
+#
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" openarray "${CHRONQC_TEMPLATE_DIRS}/chronqc.openarray.json"
+
+
 

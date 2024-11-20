@@ -30,7 +30,7 @@ So the QC data will only be copied to TMP once.
 
 On TMP `trendAnalyse.sh` will process each datatype to make it fit for the SQLite database.
 Basically you need a runDateInfo file and a table file.
-The runDateInfo.csv file contains a table with the sample name, project and data, and is comma seperated.
+The runDateInfo.csv file contains a table with the sample name, project and date, and is comma seperated.
 the table.csv file wil contain also the sample name, and the QC data, and it tab seperated.
 Using ChronQC in the script trendAnalyse.sh, the database will be filled with all the different datatypes, or it will add new projects to an existing database.
 When a project or other type of run is added to the database, a line is added to a log file containing the project or data type. 

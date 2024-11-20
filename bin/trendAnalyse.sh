@@ -666,7 +666,7 @@ else
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."
 			if [[ "${dataType}" == 'Exoom' ]]
 			then
-				updateOrCreateDatabase dragenExoom "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+				updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" Exoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
 			elif [[ "${dataType}" == 'WGS' ]]
 			then
 				updateOrCreateDatabase dragen "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" WGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen

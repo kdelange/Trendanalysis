@@ -3,7 +3,7 @@
         "table_name": "dragenExoom",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
-            "y_value": "average_autosomal_coverage"
+            "y_value": "total_reads"
         }
     },
     {
@@ -11,6 +11,13 @@
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "duplicate_reads"
+        }
+    },
+        {
+        "table_name": "dragenExoom",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "y_value": "unique_reads"
         }
     },
     {
@@ -31,14 +38,8 @@
         "table_name": "dragenExoom",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
-            "y_value": "total_reads"
+            "y_value": "average_autosomal_coverage"
         }
     },
-    {
-        "table_name": "dragenExoom",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "y_value": "unique_reads"
-        }
-    }
+
 ]

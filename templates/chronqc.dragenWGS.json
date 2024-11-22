@@ -6,7 +6,7 @@
             "y_value": "total_reads"
         }
     },
-        {
+    {
         "table_name": "dragenWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
@@ -48,14 +48,14 @@
             "y_value": "mean_coverage_genome"
         }
     },
-        {
+    {
         "table_name": "dragenWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "frac_min_1x_coverage"
         }
     },
-        {
+    {
         "table_name": "dragenWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
@@ -82,5 +82,5 @@
         "chart_properties": {
             "y_value": "coverage_uniformity"
         }
-    },
+    }
 ]

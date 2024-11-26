@@ -368,7 +368,7 @@ function processDarwinToDB() {
 
 function processOpenArray() {
 
-	filename=$1
+	local _filename="${1}"
 	runDateInfoFile="${filename%.*}.run_date_info.csv"
 
 	dos2unix "${filename}"
@@ -383,11 +383,11 @@ function processOpenArray() {
 	date="${day}/${month}/${year}"
 
 	#select snps, and flag snps with SD > 80% as PASS.
-	awk '/Assay Name/,/Experiment Name/ { 
-		sub("%$","",$3); { 
+	awk '/Assay Name/,/Experiment Name/ {
+		sub("%$","",$3); {
 		if ($3+0 > 80.0 ) {
-			print $1"\t"$2"\t"$3"\tPASS"} 
-		else { 
+			print $1"\t"$2"\t"$3"\tPASS"}
+		else {
 			print $1"\t"$2"\t"$3"\tFAIL" }
 			}
 		}' "${filename}" > "${filename%.*}.snps.csv"
@@ -417,20 +417,22 @@ function processOpenArray() {
 	awk '/Sample ID/,/^$/ {
 		sub("%$","",$2); {
 		if ($2+0 > 80 ) {
-				print $1"\t"$2"\tPASS"}
+			print $1"\t"$2"\tPASS"}
 		else {
-				print $1"\t"$2"\tFAIL" }
-				}
+			print $1"\t"$2"\tFAIL" }
+			}
 		}' "${filename}" > "${filename%.*}.samples.csv"
 
 	# remove last line, and replace header.
-	head -n -1 ${filename%.*}.samples.csv > temp 
+	head -n -1 "${filename%.*}.samples.csv" > temp 
 	sed '1 s/.*/Sample\tSample Call Rate\tQC_PASS/' temp > "${filename%.*}.samples.csv"
 	rm temp
 
 	#create ChronQC sample samplesheet.
 	echo -e "Sample,Run,Date" > "${filename%.*}.samples.run_date_info.csv"
-	tail -n +2 "${filename%.*}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${filename%.*}.samples.run_date_info.csv"}
+	tail -n +2 "${filename%.*}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${filename%.*}.samples.run_date_info.csv"
+	
+}
 
 
 function generateReports() {
@@ -756,9 +758,6 @@ if [[ "${#openarraydata[@]:-0}" -eq '0' ]]
 then
 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/."
 else
-	
-	 
-	
 	for openarrayProject in "${openarraydata[@]}"
 	do
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting with project ${openarrayProject} found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/."

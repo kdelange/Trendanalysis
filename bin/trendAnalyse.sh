@@ -369,16 +369,16 @@ function processDarwinToDB() {
 function processOpenArray() {
 
 	local _filename="${1}"
-	runDateInfoFile="${filename%.*}.run_date_info.csv"
+	runDateInfoFile="${_filename%.*}.run_date_info.csv"
 
-	dos2unix "${filename}"
+	dos2unix "${_filename}"
 
-	echo "filename is: ${runDateInfoFile}"
+	echo "_filename is: ${runDateInfoFile}"
 
-	project=$(grep '# Study Name : ' ${filename} | awk 'BEGIN{FS=" "}{print $5}')
-	year=$(grep  '# Export Date : ' ${filename} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')
-	month=$(grep  '# Export Date : ' ${filename} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $1}')
-	day=$(grep  '# Export Date : ' ${filename} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $2}')
+	project=$(grep '# Study Name : ' ${_filename} | awk 'BEGIN{FS=" "}{print $5}')
+	year=$(grep  '# Export Date : ' ${_filename} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')
+	month=$(grep  '# Export Date : ' ${_filename} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $1}')
+	day=$(grep  '# Export Date : ' ${_filename} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $2}')
 
 	date="${day}/${month}/${year}"
 
@@ -390,30 +390,30 @@ function processOpenArray() {
 		else {
 			print $1"\t"$2"\t"$3"\tFAIL" }
 			}
-		}' "${filename}" > "${filename%.*}.snps.csv"
+		}' "${_filename}" > "${_filename%.*}.snps.csv"
 
 	# remove last two rows, and replace header.
-	head -n -2 "${filename%.*}.snps.csv" > temp 
-	sed '1 s/.*/Sample\tAssay ID\tAssay Call Rate\tQC_PASS/' temp > "${filename%.*}.snps.csv"
+	head -n -2 "${_filename%.*}.snps.csv" > temp 
+	sed '1 s/.*/Sample\tAssay ID\tAssay Call Rate\tQC_PASS/' temp > "${_filename%.*}.snps.csv"
 
 	#create ChronQC snp samplesheet
-	echo -e "Sample,Run,Date" > "${filename%.*}.snps.run_date_info.csv"
-	tail -n +2 "${filename%.*}.snps.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${filename%.*}.snps.run_date_info.csv"
+	echo -e "Sample,Run,Date" > "${_filename%.*}.snps.run_date_info.csv"
+	tail -n +2 "${_filename%.*}.snps.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_filename%.*}.snps.run_date_info.csv"
  
 	#create project.run.csv
-	awk '/Experiment Name/,/Sample ID/' "${filename}" > temp
-	head -n -2 temp > "${filename%.*}.run.csv"
-	perl -pi -e 's|Experiment Name|Sample|' "${filename%.*}.run.csv"
-	perl -pi -e 's|\%||g' "${filename%.*}.run.csv"
-	sed "2s/\.*[^ \t]*/${project}/" "${filename%.*}.run.csv" > temp
-	mv temp "${filename%.*}.run.csv"
+	awk '/Experiment Name/,/Sample ID/' "${_filename}" > temp
+	head -n -2 temp > "${_filename%.*}.run.csv"
+	perl -pi -e 's|Experiment Name|Sample|' "${_filename%.*}.run.csv"
+	perl -pi -e 's|\%||g' "${_filename%.*}.run.csv"
+	sed "2s/\.*[^ \t]*/${project}/" "${_filename%.*}.run.csv" > temp
+	mv temp "${_filename%.*}.run.csv"
 
 	#create ChronQC runSD samplesheet
-	echo -e "Sample,Run,Date" > "${filename%.*}.run.run_date_info.csv"
-	echo -e "${project},${project},${date}" >> "${filename%.*}.run.run_date_info.csv"
+	echo -e "Sample,Run,Date" > "${_filename%.*}.run.run_date_info.csv"
+	echo -e "${project},${project},${date}" >> "${_filename%.*}.run.run_date_info.csv"
 
 	#create project.sample.csv file, and flag samples with SD > 80% as PASS.
-	#awk '/Sample ID/,/^$/; sub("%$","",$2) ' "${filename}" > ${filename%.*}.samples.csv
+	#awk '/Sample ID/,/^$/; sub("%$","",$2) ' "${_filename}" > ${_filename%.*}.samples.csv
 	awk '/Sample ID/,/^$/ {
 		sub("%$","",$2); {
 		if ($2+0 > 80 ) {
@@ -421,16 +421,16 @@ function processOpenArray() {
 		else {
 			print $1"\t"$2"\tFAIL" }
 			}
-		}' "${filename}" > "${filename%.*}.samples.csv"
+		}' "${_filename}" > "${_filename%.*}.samples.csv"
 
 	# remove last line, and replace header.
-	head -n -1 "${filename%.*}.samples.csv" > temp 
-	sed '1 s/.*/Sample\tSample Call Rate\tQC_PASS/' temp > "${filename%.*}.samples.csv"
+	head -n -1 "${_filename%.*}.samples.csv" > temp 
+	sed '1 s/.*/Sample\tSample Call Rate\tQC_PASS/' temp > "${_filename%.*}.samples.csv"
 	rm temp
 
 	#create ChronQC sample samplesheet.
-	echo -e "Sample,Run,Date" > "${filename%.*}.samples.run_date_info.csv"
-	tail -n +2 "${filename%.*}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${filename%.*}.samples.run_date_info.csv"
+	echo -e "Sample,Run,Date" > "${_filename%.*}.samples.run_date_info.csv"
+	tail -n +2 "${_filename%.*}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_filename%.*}.samples.run_date_info.csv"
 	
 }
 

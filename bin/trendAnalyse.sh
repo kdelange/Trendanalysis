@@ -368,21 +368,21 @@ function processDarwinToDB() {
 
 function processOpenArray() {
 
-	local _openArrayproject="${1}"
+	local _openarrayproject="${1}"
+	local _openarrayprojectdir="${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/"
 	CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 	CHRONQC_OPENARRAY_DIR="${TMP_TRENDANALYSE_DIR}/openarray/"
-	_openArrayProjectDir="${CHRONQC_OPENARRAY_DIR}/${_openArrayProject}/"
 	
 	rm -rf "${CHRONQC_TMP:-missing}"/*
 
-	dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openArrayproject}/${_openArrayproject}.txt"
+	dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/${_openarrayproject}.txt"
 
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openArrayProject is: ${_openArrayProject}."
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayproject}."
 
-	project=$(grep '# Study Name : ' ${_openArrayProjectDir}/${_openArrayProject} | awk 'BEGIN{FS=" "}{print $5}')
-	year=$(grep  '# Export Date : ' ${_openArrayProjectDir}/${_openArrayProject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')
-	month=$(grep  '# Export Date : ' ${_openArrayProjectDir}/${_openArrayProject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $1}')
-	day=$(grep  '# Export Date : ' ${_openArrayProjectDir}/${_openArrayProject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $2}')
+	project=$(grep '# Study Name : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}')
+	year=$(grep  '# Export Date : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')
+	month=$(grep  '# Export Date : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $1}')
+	day=$(grep  '# Export Date : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $2}')
 
 	date="${day}/${month}/${year}"
 
@@ -394,31 +394,31 @@ function processOpenArray() {
 		else {
 			print $1"\t"$2"\t"$3"\tFAIL" }
 			}
-		}' "${_openArrayprojectDir}/${_openArrayproject}.txt" > "${_openArrayProjectDir}/${_openArrayproject}.snps.csv"
+		}' "${_openarrayprojectdir}/${_openarrayproject}.txt" > "${_openarrayprojectdir}/${_openarrayproject}.snps.csv"
 
 	# remove last two rows, and replace header.
-	head -n -2 "${_openArrayProjectDir}/${_openArrayproject}.snps.csv" > "${CHRONQC_TMP}/${_openArrayproject}.snps.csv.temp" 
-	sed '1 s/.*/Sample\tAssay ID\tAssay Call Rate\tQC_PASS/' "${CHRONQC_TMP}/${_openArrayproject}.snps.csv.temp" > "${_openArrayProjectDir}/${_openArrayproject}.snps.csv"
+	head -n -2 "${_openarrayprojectdir}/${_openarrayproject}.snps.csv" > "${CHRONQC_TMP}/${_openArrayp_openarrayprojectroject}.snps.csv.temp" 
+	sed '1 s/.*/Sample\tAssay ID\tAssay Call Rate\tQC_PASS/' "${CHRONQC_TMP}/${_openarrayproject}.snps.csv.temp" > "${_openarrayprojectdir}/${_openarrayproject}.snps.csv"
 
 	#create ChronQC snp samplesheet
-	echo -e "Sample,Run,Date" > "${_openArrayProjectDir}/${_openArrayproject}.snps.run_date_info.csv"
-	tail -n +2 "${_openArrayProjectDir}/${_openArrayproject}.snps.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_openArrayProjectDir}/${_openArrayproject}.snps.run_date_info.csv"
+	echo -e "Sample,Run,Date" > "${_openarrayprojectdir}/${_openarrayproject}.snps.run_date_info.csv"
+	tail -n +2 "${_openarrayprojectdir}/${_openarrayproject}.snps.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_openarrayprojectdir}/${_openarrayproject}.snps.run_date_info.csv"
 
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openArrayProjectDir}/${_openArrayproject}.snps.run_date_info.csv"
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openarrayprojectdir}/${_openarrayproject}.snps.run_date_info.csv"
 
 	#create project.run.csv
-	awk '/Experiment Name/,/Sample ID/' "${_openArrayProjectDir}/${_openArrayproject}.txt" > "${CHRONQC_TMP}/${_openArrayproject}.run.csv.temp"
-	head -n -2 "${CHRONQC_TMP}/${_openArrayproject}.run.csv.temp" > "${_openArrayProjectDir}/${_openArrayproject}.run.csv"
-	perl -pi -e 's|Experiment Name|Sample|' "${_openArrayProjectDir}/${_openArrayproject}.run.csv"
-	perl -pi -e 's|\%||g' "${_openArrayProjectDir}/${_openArrayproject}.run.csv"
-	sed "2s/\.*[^ \t]*/${project}/" "${_openArrayProjectDir}/${_openArrayproject}.run.csv" > "${CHRONQC_TMP}/${_openArrayproject}.run.csv.temp"
-	mv "${CHRONQC_TMP}/${_openArrayproject}.run.csv.temp" "${_openArrayProjectDir}/${_openArrayproject}.run.csv"
+	awk '/Experiment Name/,/Sample ID/' "${_openarrayprojectdir}/${_openarrayproject}.txt" > "${CHRONQC_TMP}/${_openarrayproject}.run.csv.temp"
+	head -n -2 "${CHRONQC_TMP}/${_openarrayproject}.run.csv.temp" > "${_openarrayprojectdir}/${_openarrayproject}.run.csv"
+	perl -pi -e 's|Experiment Name|Sample|' "${_openarrayprojectdir}/${_openarrayproject}.run.csv"
+	perl -pi -e 's|\%||g' "${_openarrayprojectdir}/${_openarrayproject}.run.csv"
+	sed "2s/\.*[^ \t]*/${project}/" "${_openarrayprojectdir}/${_openarrayproject}.run.csv" > "${CHRONQC_TMP}/${_openarrayproject}.run.csv.temp"
+	mv "${CHRONQC_TMP}/${_openarrayproject}.run.csv.temp" "${_openarrayprojectdir}/${_openarrayproject}.run.csv"
 
 	#create ChronQC runSD samplesheet
-	echo -e "Sample,Run,Date" > "${_openArrayProjectDir}/${_openArrayproject}.run.run_date_info.csv"
-	echo -e "${project},${project},${date}" >> "${_openArrayProjectDir}/${_openArrayproject}.run.run_date_info.csv"
+	echo -e "Sample,Run,Date" > "${_openarrayprojectdir}/${_openarrayproject}.run.run_date_info.csv"
+	echo -e "${project},${project},${date}" >> "${_openarrayprojectdir}/${_openarrayproject}.run.run_date_info.csv"
 
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openArrayProjectDir}/${_openArrayproject}.run.run_date_info.csv"
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openarrayprojectdir}/${_openarrayproject}.run.run_date_info.csv"
 
 	#create project.sample.csv file, and flag samples with SD > 80% as PASS.
 	#awk '/Sample ID/,/^$/; sub("%$","",$2) ' "${_filename}" > ${_filename%.*}.samples.csv
@@ -429,17 +429,17 @@ function processOpenArray() {
 		else {
 			print $1"\t"$2"\tFAIL" }
 			}
-		}' "${_openArrayprojectDir}/${_openArrayproject}" > "${_openArrayProjectDir}/${_openArrayproject}.samples.csv"
+		}' "${_openarrayprojectdir}/${_openarrayproject}" > "${_openarrayprojectdir}/${_openarrayproject}.samples.csv"
 
 	# remove last line, and replace header.
-	head -n -1 "${_openArrayProjectDir}/${_openArrayproject}.samples.csv" > "${CHRONQC_TMP}/${_openArrayproject}.samples.csv.temp" 
-	sed '1 s/.*/Sample\tSample Call Rate\tQC_PASS/' "${CHRONQC_TMP}/${_openArrayproject}.samples.csv.temp" > "${_openArrayProjectDir}/${_openArrayproject}.samples.csv"
+	head -n -1 "${_openarrayprojectdir}/${_openarrayproject}.samples.csv" > "${CHRONQC_TMP}/${_openarrayproject}.samples.csv.temp" 
+	sed '1 s/.*/Sample\tSample Call Rate\tQC_PASS/' "${CHRONQC_TMP}/${_openarrayproject}.samples.csv.temp" > "${_openarrayprojectdir}/${_openarrayproject}.samples.csv"
 
 	#create ChronQC sample samplesheet.
-	echo -e "Sample,Run,Date" > "${_openArrayProjectDir}/${_openArrayproject}.samples.run_date_info.csv"
-	tail -n +2 "${_openArrayProjectDir}/${_openArrayproject}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_openArrayProjectDir}/${_openArrayproject}.samples.run_date_info.csv"
+	echo -e "Sample,Run,Date" > "${_openarrayprojectdir}/${_openarrayproject}.samples.run_date_info.csv"
+	tail -n +2 "${_openarrayprojectdir}/${_openarrayproject}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_openarrayprojectdir}/${_openarrayproject}.samples.run_date_info.csv"
 
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openArrayProjectDir}/${_openArrayproject}.samples.run_date_info.csv"
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openarrayprojectdir}/${_openarrayproject}.samples.run_date_info.csv"
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "__________________function processOpenArray is done___________________"
 }

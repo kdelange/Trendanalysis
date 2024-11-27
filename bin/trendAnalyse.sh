@@ -379,10 +379,10 @@ function processOpenArray() {
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayproject}."
 
-	project=$(grep '# Study Name : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}')
-	year=$(grep  '# Export Date : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')
-	month=$(grep  '# Export Date : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $1}')
-	day=$(grep  '# Export Date : ' ${_openarrayprojectdir}/${_openarrayproject} | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $2}')
+	project=$(grep '# Study Name : ' "${_openarrayprojectdir}/${_openarrayproject}.txt" | awk 'BEGIN{FS=" "}{print $5}')
+	year=$(grep  '# Export Date : ' "${_openarrayprojectdir}/${_openarrayproject}.txt" | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')
+	month=$(grep  '# Export Date : ' "${_openarrayprojectdir}/${_openarrayproject}.txt" | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $1}')
+	day=$(grep  '# Export Date : ' "${_openarrayprojectdir}/${_openarrayproject}.txt" | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $2}')
 
 	date="${day}/${month}/${year}"
 

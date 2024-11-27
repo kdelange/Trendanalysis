@@ -782,7 +782,7 @@ else
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting with project ${openarrayProject} found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/."
 		processOpenArray "${openarrayProject}"
 		
-		readarray -t csvfiles < <(find "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/" -maxdepth 1 -mindepth 1 -type f -name "*run_date_info*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/||")
+		readarray -t csvfiles < <(find "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/||")
 		if [[ "${#csvfiles[@]:-0}" -eq '0' ]]
 		then
 			log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No files found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/${openarrayProject}."

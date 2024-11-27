@@ -445,8 +445,11 @@ function processOpenArray() {
 	#create ChronQC sample samplesheet.
 	echo -e "Sample,Run,Date" > "${_openArrayProjectDir}/${_filename%.*}.samples.run_date_info.csv"
 	tail -n +2 "${_openArrayProjectDir}/${_filename%.*}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_openArrayProjectDir}/${_filename%.*}.samples.run_date_info.csv"
-	
+
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openArrayProjectDir}/${_filename%.*}.samples.run_date_info.csv"
+
+	mv "${CHRONQC_OPENARRAY_DIR}/${_filename}" "${_openArrayProjectDir}/"
+
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "__________________function processOpenArray is done___________________"
 }
 

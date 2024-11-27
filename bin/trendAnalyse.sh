@@ -783,7 +783,7 @@ else
 		else
 			updateOrCreateDatabase run "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.run.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.run.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 			updateOrCreateDatabase samples "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.samples.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.samples.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
-			updateOrCreateDatabase snps "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProjectile}.snps.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.snps.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
+			updateOrCreateDatabase snps "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.snps.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.snps.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done updating the database with ${openarrayProject}"
 		fi
 	done

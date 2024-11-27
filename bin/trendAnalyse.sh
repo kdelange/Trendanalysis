@@ -378,7 +378,9 @@ function processOpenArray() {
 
 	dos2unix "${CHRONQC_OPENARRAY_DIR}/${_filename}"
 
-	_openArrayProject=(basename "${CHRONQC_OPENARRAY_DIR}/${_filename}" .txt)
+	_openArrayProject=$(basename "${CHRONQC_OPENARRAY_DIR}/${_filename}" .txt)
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openArrayProject is: ${_openArrayProject}."
+	
 	mkdir "${CHRONQC_OPENARRAY_DIR}/${_openArrayProject}"
 	_openArrayProjectDir="${CHRONQC_OPENARRAY_DIR}/${_openArrayProject}/"
 	

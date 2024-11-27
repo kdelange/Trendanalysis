@@ -429,7 +429,7 @@ function processOpenArray() {
 		else {
 			print $1"\t"$2"\tFAIL" }
 			}
-		}' "${_openarrayprojectdir}/${_openarrayproject}" > "${_openarrayprojectdir}/${_openarrayproject}.samples.csv"
+		}' "${_openarrayprojectdir}/${_openarrayproject}.txt" > "${_openarrayprojectdir}/${_openarrayproject}.samples.csv"
 
 	# remove last line, and replace header.
 	head -n -1 "${_openarrayprojectdir}/${_openarrayproject}.samples.csv" > "${CHRONQC_TMP}/${_openarrayproject}.samples.csv.temp" 

@@ -784,11 +784,12 @@ else
 	done
 fi
 
-readarray -t csvfiles < <(find "${TMP_TRENDANALYSE_DIR}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/||")
-if [[ "${#csvfiles[@]:-0}" -eq '0' ]]
+readarray -t csvdir < <(find "${TMP_TRENDANALYSE_DIR}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/||")
+if [[ "${#csvdir[@]:-0}" -eq '0' ]]
 then
 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No files found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/${openarrayProject}."
 else
+	openarrayProject=$(basename "${openarrayProject}" .txt)
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking project ${openarrayProject}/."
 	OPENARRAY_JOB_CONTROLE_LINE_BASE="${openarrayProject}.${SCRIPT_NAME}_processOpenarrayToDB"
 	touch "${LOGS_DIR}/process.openarray_trendanalysis."{finished,failed,started}
@@ -796,7 +797,7 @@ else
 	then
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed openarray project ${openarrayProject}."
 	else
-		for csvfile in "${csvfiles[@]}"
+		for csvfile in "${csvdir[@]}"
 		do
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${csvfile}."
 			dataType=$(echo "${csvfile}" | cut -d '.' -f2)

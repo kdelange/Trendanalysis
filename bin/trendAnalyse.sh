@@ -784,7 +784,7 @@ else
 	done
 fi
 
-readarray -t csvfiles < <(find "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/||")
+readarray -t csvfiles < <(find "${TMP_TRENDANALYSE_DIR}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/openarray/||")
 if [[ "${#csvfiles[@]:-0}" -eq '0' ]]
 then
 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No files found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/${openarrayProject}."

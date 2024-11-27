@@ -397,7 +397,7 @@ function processOpenArray() {
 		}' "${_openarrayprojectdir}/${_openarrayproject}.txt" > "${_openarrayprojectdir}/${_openarrayproject}.snps.csv"
 
 	# remove last two rows, and replace header.
-	head -n -2 "${_openarrayprojectdir}/${_openarrayproject}.snps.csv" > "${CHRONQC_TMP}/${_openArrayp_openarrayprojectroject}.snps.csv.temp" 
+	head -n -2 "${_openarrayprojectdir}/${_openarrayproject}.snps.csv" > "${CHRONQC_TMP}/${_openarrayproject}.snps.csv.temp" 
 	sed '1 s/.*/Sample\tAssay ID\tAssay Call Rate\tQC_PASS/' "${CHRONQC_TMP}/${_openarrayproject}.snps.csv.temp" > "${_openarrayprojectdir}/${_openarrayproject}.snps.csv"
 
 	#create ChronQC snp samplesheet

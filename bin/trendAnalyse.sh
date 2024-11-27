@@ -770,10 +770,6 @@ then
 else
 	for openarrayProject in "${openarraydata[@]}"
 	do
-		
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting with project ${openarrayProject} found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/."
-		processOpenArray "${openarrayProject}"
-
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Checking project ${openarrayProject}/."
 		OPENARRAY_JOB_CONTROLE_LINE_BASE="${openarrayProject}.${SCRIPT_NAME}_processOpenarrayToDB"
 		touch "${LOGS_DIR}/process.openarray_trendanalysis."{finished,failed,started}
@@ -781,6 +777,9 @@ else
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed openarray project ${openarrayProject}."
 		else
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting with project ${openarrayProject} found @ ${TMP_TRENDANALYSE_DIR}/openarraydata/."
+			processOpenArray "${openarrayProject}"
+
 			updateOrCreateDatabase run "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.run.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.run.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 			updateOrCreateDatabase samples "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.samples.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.samples.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray
 			updateOrCreateDatabase snps "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.snps.csv" "${TMP_TRENDANALYSE_DIR}/openarray/${openarrayProject}/${openarrayProject}.snps.run_date_info.csv" openarray "${OPENARRAY_JOB_CONTROLE_LINE_BASE}" openarray

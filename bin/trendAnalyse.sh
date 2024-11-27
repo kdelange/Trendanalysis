@@ -368,11 +368,11 @@ function processDarwinToDB() {
 
 function processOpenArray() {
 
-	local _openarrayproject="${1}"
-	local _openarrayprojectdir="${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/"
 	CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 	CHRONQC_OPENARRAY_DIR="${TMP_TRENDANALYSE_DIR}/openarray/"
-	
+	local _openarrayproject="${1}"
+	local _openarrayprojectdir="${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/"
+
 	rm -rf "${CHRONQC_TMP:-missing}"/*
 
 	dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/${_openarrayproject}.txt"

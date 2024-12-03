@@ -458,7 +458,8 @@ else
 		if [[ -e "${QCFile}" ]]
 		then 
 			controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
-			OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${QCFile}.${SCRIPT_NAME}"
+			baseQCFile=$(basename "${QCFile}" .txt)
+			OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${baseQCFile}.${SCRIPT_NAME}"
 			if [[ -e "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished" ]]
 			then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present"
@@ -469,7 +470,7 @@ else
 				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} is copied to tmp."
 			fi
 		else
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} not available for project ${openarraydir}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"
 		fi
 	done
 fi

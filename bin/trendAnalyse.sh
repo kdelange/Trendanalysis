@@ -372,12 +372,14 @@ function processOpenArray() {
 	CHRONQC_OPENARRAY_DIR="${TMP_TRENDANALYSE_DIR}/openarray/"
 	local _openarrayproject="${1}"
 	local _openarrayprojectdir="${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/"
-
+	local _openarrayfile="${_openarrayproject}"*_QC_Summary.txt
+	
 	rm -rf "${CHRONQC_TMP:-missing}"/*
 
-	dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/${_openarrayproject}.txt"
-
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayproject}."
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayfile is: ${_openarrayfile}."
+
+	dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/${_openarrayproject}.txt"
 
 	project=$(grep '# Study Name : ' "${_openarrayprojectdir}/${_openarrayproject}.txt" | awk 'BEGIN{FS=" "}{print $5}')
 	year=$(grep  '# Export Date : ' "${_openarrayprojectdir}/${_openarrayproject}.txt" | awk 'BEGIN{FS=" "}{print $5}' | awk 'BEGIN{FS="/"}{print $3}')

@@ -319,10 +319,10 @@ fi
 infoServerLocation="${HOSTNAME_PRM}"
 infoLocation="/groups/${group}/${PRM_LFS}/trendanalysis/"
 hashedSource="$(printf '%s:%s' "${infoServerLocation}" "${infoLocation}" | md5sum | awk '{print $1}')"
-lockFile="${WORKING_DIR}/trendanalysis/logs/${SCRIPT_NAME}_${hashedSource}.lock"
-thereShallBeOnlyOne "${lockFile}"
-log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Successfully got exclusive access to lock file ${lockFile} ..."
-log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written to ${PRM_ROOT_DIR}/trendanalysis/logs/ ..."
+#lockFile="${WORKING_DIR}/trendanalysis/logs/${SCRIPT_NAME}_${hashedSource}.lock"
+#thereShallBeOnlyOne "${lockFile}"
+#log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Successfully got exclusive access to lock file ${lockFile} ..."
+#log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written to ${PRM_ROOT_DIR}/trendanalysis/logs/ ..."
 
 
 #

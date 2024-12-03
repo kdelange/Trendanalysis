@@ -453,7 +453,8 @@ else
 	do
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start proseccing ${openarraydir}"
 		
-		QCFile="${IMPORT_DIR_OPENARRAY}/${openarraydir}/${openarraydir}"*
+		QCFile=$(find "${IMPORT_DIR_OPENARRAY}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
+		#QCFile="${IMPORT_DIR_OPENARRAY}/${openarraydir}/${openarraydir}"*
 		if [[ -e "${QCFile}" ]]
 		then 
 			controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"

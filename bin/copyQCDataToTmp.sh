@@ -440,10 +440,8 @@ fi
 ## check the openarray folder for new data, /groups/umcg-gap/dat06/openarray/
 #
 
-IMPORT_DIR_OPENARRAY="/groups/umcg-gap/${DAT_LFS}/openarray/"
-DAT_OPENARRAY_LOGS_DIR="/groups/umcg-gap/${DAT_LFS}/logs/openarray/"
-
-mkdir -p "${DAT_OPENARRAY_LOGS_DIR}"
+IMPORT_DIR_OPENARRAY="/groups/${OPARGROUP}/${DAT_LFS}/openarray/"
+DAT_OPENARRAY_LOGS_DIR="/groups/${OPARGROUP}/${DAT_LFS}/logs/openarray/"
 
 readarray -t openarraydata < <(find "${IMPORT_DIR_OPENARRAY}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${IMPORT_DIR_OPENARRAY}/||")
 

@@ -188,8 +188,10 @@ function copyOpenarrayQCData() {
 
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_qcfile} to tmp, start rsyncing.."
 	touch "${_openarray_job_controle_file_base}.started"
-
-	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_import_dir_openarray}/${_openarraydir}/${_qcfile}" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/openarray/" \
+	
+	log4bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "sudo -u ${group}-ateambot rsync ${_import_dir_openarray}/${_openarraydir}/${_qcfile} ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/openarray/${_openarraydir}/"
+	
+	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_import_dir_openarray}/${_openarraydir}/${_qcfile}" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/openarray/${_openarraydir}/" \
 	|| {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_qcfile}."
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_import_dir_openarray}/${_openarraydir}/"

@@ -454,17 +454,21 @@ else
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start proseccing ${openarraydir}"
 		
 		QCFile="${openarraydir}/${openarraydir}"*"_QC_Summary.txt"
-		controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
-		OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${QCFile}.${SCRIPT_NAME}"
-
-		if [[ -e "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished" ]]
-		then
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present"
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} data is already processed, but there is new data on dat05, check if previous rsync went okay"
+		if [[ -e "${QCFile}" ]]
+		then 
+			controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
+			OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${QCFile}.${SCRIPT_NAME}"
+			if [[ -e "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished" ]]
+			then
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} data is already processed, but there is new data on dat05, check if previous rsync went okay"
+			else
+				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present, starting rsyncing ${QCFile}."
+				copyOpenarrayQCData "${QCFile}" "${openarraydir}" "${IMPORT_DIR_OPENARRAY}" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
+				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} is copied to tmp."
+			fi
 		else
-			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present, starting rsyncing ${QCFile}."
-			copyOpenarrayQCData "${QCFile}" "${openarraydir}" "${IMPORT_DIR_OPENARRAY}" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
-			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} is copied to tmp."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} not available for project ${openarraydir}"
 		fi
 	done
 fi

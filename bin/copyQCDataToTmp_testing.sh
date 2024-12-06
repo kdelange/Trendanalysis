@@ -67,7 +67,6 @@ function copyQCRawdataToTmp() {
 		sed -i "|${_line_base}.started|${_line_base}.failed|" "${_rawdata_job_controle_file_base}"
 			return
 			}
-		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_tableFile} with ${_dataLabel} was stored in Chronqc database."
 		sed -i "|${_line_base}.started|${_line_base}.finished|" "${_rawdata_job_controle_file_base}"
 
 	else

@@ -56,7 +56,7 @@ function copyQCRawdataToTmp() {
 	if [[ -e "${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun.csv" ]]
 	then
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Sequencerun ${_rawdata} is not yet copied to tmp, start rsyncing.."
-		echo "${_line_base}" >> "${_rawdata_job_controle_file_base}"
+		echo "${_line_base}.started" >> "${_rawdata_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_rawdata} found on ${PRM_ROOT_DIR}, start rsyncing.."
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/rawdata/${_rawdata}/" \
 		|| {

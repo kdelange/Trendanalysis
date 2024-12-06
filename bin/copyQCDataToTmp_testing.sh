@@ -68,6 +68,8 @@ function copyQCRawdataToTmp() {
 		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
 			return
 			}
+		sed "|${_line_base}.failed|d" "${_rawdata_job_controle_file_base}"  > "${_rawdata_job_controle_file_base}.tmp"
+		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
 		sed "s|${_line_base}.started|${_line_base}.finished|" "${_rawdata_job_controle_file_base}"  > "${_rawdata_job_controle_file_base}.tmp"
 		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
 	else

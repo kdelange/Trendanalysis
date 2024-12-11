@@ -64,14 +64,17 @@ function copyQCRawdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_rawdata_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/"
 		
-		sed "s|${_line_base}.started|${_line_base}.failed|" "${_rawdata_job_controle_file_base}" > "${_rawdata_job_controle_file_base}.tmp"
+		echo "${_line_base}.failed" >> "${_rawdata_job_controle_file_base}.tmp"
+#		sed -i "/${_line_base}.failed/d" "${_rawdata_job_controle_file_base}" > "${_rawdata_job_controle_file_base}.tmp"
 		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
 			return
 			}
-		sed "|${_line_base}.failed|d" "${_rawdata_job_controle_file_base}"  > "${_rawdata_job_controle_file_base}.tmp"
+		sed -i "/${_line_base}.failed/d" "${_rawdata_job_controle_file_base}" > "${_rawdata_job_controle_file_base}.tmp"
+		sed -i "/${_line_base}.started/d" "${_rawdata_job_controle_file_base}" > "${_rawdata_job_controle_file_base}.tmp"
+		echo "${_line_base}.finished" >> "${_rawdata_job_controle_file_base}.tmp"
 		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
-		sed "s|${_line_base}.started|${_line_base}.finished|" "${_rawdata_job_controle_file_base}"  > "${_rawdata_job_controle_file_base}.tmp"
-		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying rawdata: ${_rawdata}"
+
 	else
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For sequencerun ${_rawdata} there is no QC data, nothing to rsync.."
 	fi

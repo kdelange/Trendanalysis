@@ -435,7 +435,7 @@ do
 			tableFile="${fileType}_${fileDate}.csv"
 			runinfoCSV="${runinfoFile}.csv"
 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			DARWIN_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.darwin"
+			DARWIN_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.darwin"
 			DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}-${fileDate}_${SCRIPT_NAME}"
 			if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished" "${DARWIN_JOB_CONTROLE_FILE_BASE}"
 			then

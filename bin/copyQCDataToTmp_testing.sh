@@ -412,12 +412,12 @@ do
 			PROJECT_JOB_CONTROLE_LINE_BASE="${project}_${SCRIPT_NAME}"
 			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
-			if grep -Fxq "${PROJECT_JOB_CONTROLE_FILE_BASE}.finished" "${PROJECT_JOB_CONTROLE_LINE_BASE}"
+			if grep -Fxq "${PROJECT_JOB_CONTROLE_LINE_BASE}.finished" "${PROJECT_JOB_CONTROLE_FILE_BASE}"
 			then
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
 				continue
 			else
-				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.ginished present, starting rsync QC data for project ${project}."
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, starting rsync QC data for project ${project}."
 				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
 			fi
 		done

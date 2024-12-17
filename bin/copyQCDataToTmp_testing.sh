@@ -408,7 +408,7 @@ do
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBas}/${prm_dir}.${SCRIPT_NAME}.projects"
+			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
 			PROJECT_JOB_CONTROLE_LINE_BASE="${project}_${SCRIPT_NAME}"
 			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."

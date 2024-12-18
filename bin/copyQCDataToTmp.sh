@@ -229,9 +229,9 @@ function copyOpenarrayQCData() {
 	return
 	}
 	sed "/${_line_base}.failed/d" "${_openarray_job_controle_file_base}" > "${_openarray_job_controle_file_base}.tmp"
-	sed "/${_line_base}.started/d" "${_openarray_job_controle_file_base}.tmp" > "${_openarray_job_controle_file_base}.tmp2"
-	echo "${_line_base}.finished" >> "${_openarray_job_controle_file_base}.tmp2"
-	mv "${_openarray_job_controle_file_base}.tmp2" "${_openarray_job_controle_file_base}"
+	sed "/${_line_base}.started/d" "${_openarray_job_controle_file_base}" > "${_openarray_job_controle_file_base}.tmp"
+	echo "${_line_base}.finished" >> "${_openarray_job_controle_file_base}.tmp"
+	mv "${_openarray_job_controle_file_base}.tmp" "${_openarray_job_controle_file_base}"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${qcfile} is copied to tmp."
 
 }
@@ -495,7 +495,7 @@ do
 				controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
 				baseQCFile=$(basename "${QCFile}" .txt)
 				OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.openarray"
-				OPENARRAY_JOB_CONTROLE_LINE_BASE="${QCFile}_${SCRIPT_NAME}"
+				OPENARRAY_JOB_CONTROLE_LINE_BASE="${baseQCFile}_${SCRIPT_NAME}"
 				if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
 				then
 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present"

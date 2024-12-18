@@ -477,7 +477,7 @@ done
 for dat_dir in "${ALL_DAT[@]}"
 do
 	IMPORT_DIR_OPENARRAY="/groups/${OPARGROUP}/${dat_dir}/openarray/"
-	DAT_OPENARRAY_LOGS_DIR="/groups/${OPARGROUP}/${dat_dir}/logs/"
+	DAT_OPENARRAY_LOGS_DIR="/groups/${group}/${dat_dir}/logs/trendanalysis/"
 	
 	readarray -t openarraydata < <(find "${IMPORT_DIR_OPENARRAY}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${IMPORT_DIR_OPENARRAY}/||")
 	
@@ -487,7 +487,7 @@ do
 	else
 		for openarraydir in "${openarraydata[@]}"
 		do
-			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start proseccing ${openarraydir}"
+			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${openarraydir}"
 			
 			QCFile=$(find "${IMPORT_DIR_OPENARRAY}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
 			if [[ -e "${QCFile}" ]]
@@ -496,16 +496,15 @@ do
 				baseQCFile=$(basename "${QCFile}" .txt)
 				OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.openarray"
 				OPENARRAY_JOB_CONTROLE_LINE_BASE="${QCFile}_${SCRIPT_NAME}"
-				if [[ -e "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished" ]]
+				if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
 				then
-					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present"
+					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present"
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} data is already processed"
 				else
-					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_FILE_BASE}.finished present, starting rsyncing ${QCFile}."
+					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${QCFile}."
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "IMPORT_DIR_OPENARRAY=${IMPORT_DIR_OPENARRAY}"
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "openarraydir=${openarraydir}"
 					copyOpenarrayQCData "${QCFile}" "${openarraydir}" "${IMPORT_DIR_OPENARRAY}" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}" "${OPENARRAY_JOB_CONTROLE_LINE_BASE}"
-
 				fi
 			else
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"

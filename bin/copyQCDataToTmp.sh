@@ -232,7 +232,7 @@ function copyOpenarrayQCData() {
 	sed "/${_line_base}.started/d" "${_openarray_job_controle_file_base}" > "${_openarray_job_controle_file_base}.tmp"
 	echo "${_line_base}.finished" >> "${_openarray_job_controle_file_base}.tmp"
 	mv "${_openarray_job_controle_file_base}.tmp" "${_openarray_job_controle_file_base}"
-	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${qcfile} is copied to tmp."
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${_qcfile} is copied to tmp."
 
 }
 
@@ -383,7 +383,7 @@ do
 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
 			RAWDATA_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.rawdata"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
-			RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}_${SCRIPT_NAME}"
+			RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}"
 			touch "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
 			if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}.finished" "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
 			then
@@ -415,10 +415,12 @@ do
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
-			PROJECT_JOB_CONTROLE_LINE_BASE="${project}_${SCRIPT_NAME}"
 			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
+			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
+			PROJECT_JOB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_FILE_BASE= ${PROJECT_JOB_CONTROLE_FILE_BASE}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_LINE_BASE= ${PROJECT_JOB_CONTROLE_LINE_BASE}"
 			if grep -Fxq "${PROJECT_JOB_CONTROLE_LINE_BASE}.finished" "${PROJECT_JOB_CONTROLE_FILE_BASE}"
 			then
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
@@ -456,7 +458,7 @@ do
 			runinfoCSV="${runinfoFile}.csv"
 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
 			DARWIN_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.darwin"
-			DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}-${fileDate}_${SCRIPT_NAME}"
+			DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}-${fileDate}.${SCRIPT_NAME}"
 			if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished" "${DARWIN_JOB_CONTROLE_FILE_BASE}"
 			then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present"

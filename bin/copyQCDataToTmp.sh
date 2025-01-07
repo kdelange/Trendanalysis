@@ -390,6 +390,7 @@ do
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
 				continue
 			else
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "starting function copyQCRawdataToTmp for rawdata ${rawdata}."
 #				copyQCRawdataToTmp "${rawdata}" "${RAWDATA_JOB_CONTROLE_FILE_BASE}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
 			fi
 		done

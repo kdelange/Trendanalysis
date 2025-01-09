@@ -110,10 +110,10 @@ function copyQCProjectdataToTmp() {
 		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
-		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" >> "${_project_job_controle_file_base}.tmp"
-		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}" >> "${_project_job_controle_file_base}.tmp"
-		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp"
-		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying project: ${_project}"
 	# The inhouse projects (Exoom, targeted) will be copied to ${TMP_ROOT_DIR}/trendanalysis/projects/
 	elif [[ -e "${_prm_project_dir}/${_project}/run01/results/multiqc_data/${_project}.run_date_info.csv" ]]
@@ -137,10 +137,10 @@ function copyQCProjectdataToTmp() {
 		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
-		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" >> "${_project_job_controle_file_base}.tmp"
-		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}" >> "${_project_job_controle_file_base}.tmp"
-		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp"
-		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying project: ${_project}"
 	# The Dragen project (Exoom, WGS, sWGS) wil be copied to ${TMP_ROOT_DIR}/trendanalysis/dragen/
 	elif  [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/statistics/${_project}.Dragen_runinfo.csv" ]]
@@ -165,10 +165,10 @@ function copyQCProjectdataToTmp() {
 		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 		return
 		}
-		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" >> "${_project_job_controle_file_base}.tmp"
-		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}" >> "${_project_job_controle_file_base}.tmp"
-		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp"
-		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying project: ${_project}"
 	else
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} there is no QC data, nothing to rsync.."

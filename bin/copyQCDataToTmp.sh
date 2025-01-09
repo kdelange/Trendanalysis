@@ -399,126 +399,126 @@ done
 
 
 
-# Loops through all project data folders and checks if the QC data  is already copied to tmp. If not than call function copyQCProjectdataToTmp
-
-log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for project QC data"
-
-for prm_dir in "${ALL_PRM[@]}"
-do
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
-	readarray -t projectdata < <(find "/groups/${group}/${prm_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/projects/||")
-
-	if [[ "${#projectdata[@]}" -eq '0' ]]
-	then
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No projectdata found @ ${PRM_ROOT_DIR}/projects/."
-	else
-		for project in "${projectdata[@]}"
-		do
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
-			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
-			PROJECT_JOB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}"
-			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_FILE_BASE= ${PROJECT_JOB_CONTROLE_FILE_BASE}"
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_LINE_BASE= ${PROJECT_JOB_CONTROLE_LINE_BASE}"
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if grep -Fxq \"${PROJECT_JOB_CONTROLE_LINE_BASE}.finished\" \"${PROJECT_JOB_CONTROLE_FILE_BASE}\""
-			if grep -Fxq "${PROJECT_JOB_CONTROLE_LINE_BASE}.finished" "${PROJECT_JOB_CONTROLE_FILE_BASE}"
-			then
-				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
-				continue
-			else
-				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, checking QC data for project ${project}."
-#				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
-			fi
-		done
-		rm -vf "${PROJECT_JOB_CONTROLE_FILE_BASE}.tmp"
-	fi
-done
-
-
-#
-## check if darwin left any new files for us on dat05 to copy to tmp05
-#
-
-for dat_dir in "${ALL_DAT[@]}"
-do
-	IMPORT_DIR="/groups/${group}/${dat_dir}/trendanalysis/"
-
-	readarray -t darwindata < <(find "${IMPORT_DIR}/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${IMPORT_DIR}/||")
-	
-	if [[ "${#darwindata[@]}" -eq '0' ]]
-	then
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new darwin files present in ${IMPORT_DIR}"
-	else
-		for darwinfile in "${darwindata[@]}"
-		do
-			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start proseccing ${darwinfile}"
-			runinfoFile=$(basename "${darwinfile}" .csv)
-			fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
-			fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
-			tableFile="${fileType}_${fileDate}.csv"
-			runinfoCSV="${runinfoFile}.csv"
-			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			DARWIN_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.darwin"
-			DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}-${fileDate}.${SCRIPT_NAME}"
-			if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished" "${DARWIN_JOB_CONTROLE_FILE_BASE}"
-			then
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present"
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on dat05, check if previous rsync went okay"
-			else
-				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
-#				copyDarwinQCData "${runinfoCSV}" "${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_FILE_BASE}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
-				
-			fi
-		done
-		rm -vf "${DARWIN_JOB_CONTROLE_FILE_BASE}.tmp"
-	fi
-done
-
-#
-## check the openarray folder for new data, /groups/umcg-gap/dat06/openarray/
-#
-
-for dat_dir in "${ALL_DAT[@]}"
-do
-	IMPORT_DIR_OPENARRAY="/groups/${OPARGROUP}/${dat_dir}/openarray/"
-	DAT_OPENARRAY_LOGS_DIR="/groups/${group}/${dat_dir}/logs/trendanalysis/"
-	
-	readarray -t openarraydata < <(find "${IMPORT_DIR_OPENARRAY}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${IMPORT_DIR_OPENARRAY}/||")
-	
-	if [[ "${#openarraydata[@]}" -eq '0' ]]
-	then
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new openarray files present in ${IMPORT_DIR_OPENARRAY}"
-	else
-		for openarraydir in "${openarraydata[@]}"
-		do
-			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${openarraydir}"
-			
-			QCFile=$(find "${IMPORT_DIR_OPENARRAY}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
-			if [[ -e "${QCFile}" ]]
-			then 
-				controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
-				baseQCFile=$(basename "${QCFile}" .txt)
-				OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.openarray"
-				OPENARRAY_JOB_CONTROLE_LINE_BASE="${baseQCFile}_${SCRIPT_NAME}"
-				if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
-				then
-					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present"
-					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} data is already processed"
-				else
-					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${QCFile}."
-					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "IMPORT_DIR_OPENARRAY=${IMPORT_DIR_OPENARRAY}"
-					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "openarraydir=${openarraydir}"
-#					copyOpenarrayQCData "${QCFile}" "${openarraydir}" "${IMPORT_DIR_OPENARRAY}" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}" "${OPENARRAY_JOB_CONTROLE_LINE_BASE}"
-				fi
-			else
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"
-			fi
-		done
-		rm -vf "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.tmp"
-	fi
-done
+# # Loops through all project data folders and checks if the QC data  is already copied to tmp. If not than call function copyQCProjectdataToTmp
+# 
+# log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for project QC data"
+# 
+# for prm_dir in "${ALL_PRM[@]}"
+# do
+# 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
+# 	readarray -t projectdata < <(find "/groups/${group}/${prm_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/projects/||")
+# 
+# 	if [[ "${#projectdata[@]}" -eq '0' ]]
+# 	then
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No projectdata found @ ${PRM_ROOT_DIR}/projects/."
+# 	else
+# 		for project in "${projectdata[@]}"
+# 		do
+# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
+# 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
+# 			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
+# 			PROJECT_JOB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}"
+# 			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
+# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_FILE_BASE= ${PROJECT_JOB_CONTROLE_FILE_BASE}"
+# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_LINE_BASE= ${PROJECT_JOB_CONTROLE_LINE_BASE}"
+# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if grep -Fxq \"${PROJECT_JOB_CONTROLE_LINE_BASE}.finished\" \"${PROJECT_JOB_CONTROLE_FILE_BASE}\""
+# 			if grep -Fxq "${PROJECT_JOB_CONTROLE_LINE_BASE}.finished" "${PROJECT_JOB_CONTROLE_FILE_BASE}"
+# 			then
+# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
+# 				continue
+# 			else
+# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, checking QC data for project ${project}."
+# #				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
+# 			fi
+# 		done
+# 		rm -vf "${PROJECT_JOB_CONTROLE_FILE_BASE}.tmp"
+# 	fi
+# done
+# 
+# 
+# #
+# ## check if darwin left any new files for us on dat05 to copy to tmp05
+# #
+# 
+# for dat_dir in "${ALL_DAT[@]}"
+# do
+# 	IMPORT_DIR="/groups/${group}/${dat_dir}/trendanalysis/"
+# 
+# 	readarray -t darwindata < <(find "${IMPORT_DIR}/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${IMPORT_DIR}/||")
+# 	
+# 	if [[ "${#darwindata[@]}" -eq '0' ]]
+# 	then
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new darwin files present in ${IMPORT_DIR}"
+# 	else
+# 		for darwinfile in "${darwindata[@]}"
+# 		do
+# 			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start proseccing ${darwinfile}"
+# 			runinfoFile=$(basename "${darwinfile}" .csv)
+# 			fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
+# 			fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
+# 			tableFile="${fileType}_${fileDate}.csv"
+# 			runinfoCSV="${runinfoFile}.csv"
+# 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
+# 			DARWIN_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.darwin"
+# 			DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}-${fileDate}.${SCRIPT_NAME}"
+# 			if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished" "${DARWIN_JOB_CONTROLE_FILE_BASE}"
+# 			then
+# 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present"
+# 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on dat05, check if previous rsync went okay"
+# 			else
+# 				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
+# #				copyDarwinQCData "${runinfoCSV}" "${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_FILE_BASE}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
+# 				
+# 			fi
+# 		done
+# 		rm -vf "${DARWIN_JOB_CONTROLE_FILE_BASE}.tmp"
+# 	fi
+# done
+# 
+# #
+# ## check the openarray folder for new data, /groups/umcg-gap/dat06/openarray/
+# #
+# 
+# for dat_dir in "${ALL_DAT[@]}"
+# do
+# 	IMPORT_DIR_OPENARRAY="/groups/${OPARGROUP}/${dat_dir}/openarray/"
+# 	DAT_OPENARRAY_LOGS_DIR="/groups/${group}/${dat_dir}/logs/trendanalysis/"
+# 	
+# 	readarray -t openarraydata < <(find "${IMPORT_DIR_OPENARRAY}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${IMPORT_DIR_OPENARRAY}/||")
+# 	
+# 	if [[ "${#openarraydata[@]}" -eq '0' ]]
+# 	then
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new openarray files present in ${IMPORT_DIR_OPENARRAY}"
+# 	else
+# 		for openarraydir in "${openarraydata[@]}"
+# 		do
+# 			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${openarraydir}"
+# 			
+# 			QCFile=$(find "${IMPORT_DIR_OPENARRAY}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
+# 			if [[ -e "${QCFile}" ]]
+# 			then 
+# 				controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
+# 				baseQCFile=$(basename "${QCFile}" .txt)
+# 				OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.openarray"
+# 				OPENARRAY_JOB_CONTROLE_LINE_BASE="${baseQCFile}_${SCRIPT_NAME}"
+# 				if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
+# 				then
+# 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present"
+# 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} data is already processed"
+# 				else
+# 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${QCFile}."
+# 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "IMPORT_DIR_OPENARRAY=${IMPORT_DIR_OPENARRAY}"
+# 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "openarraydir=${openarraydir}"
+# #					copyOpenarrayQCData "${QCFile}" "${openarraydir}" "${IMPORT_DIR_OPENARRAY}" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}" "${OPENARRAY_JOB_CONTROLE_LINE_BASE}"
+# 				fi
+# 			else
+# 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"
+# 			fi
+# 		done
+# 		rm -vf "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.tmp"
+# 	fi
+# done
 
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' 'Finished!'
 

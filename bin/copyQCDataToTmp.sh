@@ -69,11 +69,10 @@ function copyQCRawdataToTmp() {
 			return
 			}
 		sed "/${_line_base}.failed/d" "${_rawdata_job_controle_file_base}" > "${_rawdata_job_controle_file_base}.tmp"
-		sed "/${_line_base}.started/d" "${_rawdata_job_controle_file_base}" > "${_rawdata_job_controle_file_base}.tmp"
-		echo "${_line_base}.finished" >> "${_rawdata_job_controle_file_base}.tmp"
-		mv "${_rawdata_job_controle_file_base}.tmp" "${_rawdata_job_controle_file_base}"
+		sed "/${_line_base}.started/d" "${_rawdata_job_controle_file_base}.tmp" > "${_rawdata_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_rawdata_job_controle_file_base}.tmp2"
+		mv "${_rawdata_job_controle_file_base}.tmp2" "${_rawdata_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying rawdata: ${_rawdata}"
-
 	else
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For sequencerun ${_rawdata} there is no QC data, nothing to rsync.."
 	fi
@@ -197,9 +196,9 @@ function copyDarwinQCData() {
 		return
 		}
 	sed "/${_line_base}.failed/d" "${_darwin_job_controle_file_base}" > "${_darwin_job_controle_file_base}.tmp"
-	sed "/${_line_base}.started/d" "${_darwin_job_controle_file_base}" > "${_darwin_job_controle_file_base}.tmp"
-	echo "${_line_base}.finished" >> "${_darwin_job_controle_file_base}.tmp"
-	mv "${_darwin_job_controle_file_base}.tmp" "${_darwin_job_controle_file_base}"
+	sed "/${_line_base}.started/d" "${_darwin_job_controle_file_base}.tmp" > "${_darwin_job_controle_file_base}.tmp2"
+	echo "${_line_base}.finished" >> "${_darwin_job_controle_file_base}.tmp2"
+	mv "${_darwin_job_controle_file_base}.tmp2" "${_darwin_job_controle_file_base}"
 	mv "${IMPORT_DIR}/${_filetype}"*"${_filedate}.csv" "${IMPORT_DIR}/archive/"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying Darwin data: ${_filetype}_${_filedate}.csv"
 
@@ -391,9 +390,10 @@ do
 				continue
 			else
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "starting function copyQCRawdataToTmp for rawdata ${rawdata}."
-#				copyQCRawdataToTmp "${rawdata}" "${RAWDATA_JOB_CONTROLE_FILE_BASE}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
+				copyQCRawdataToTmp "${rawdata}" "${RAWDATA_JOB_CONTROLE_FILE_BASE}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
 			fi
 		done
+		rm -vf "${RAWDATA_JOB_CONTROLE_FILE_BASE}.tmp"
 	fi
 done
 
@@ -429,10 +429,10 @@ do
 				continue
 			else
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, checking QC data for project ${project}."
-				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
+#				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
 			fi
 		done
-		rm "${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects.tmp"
+		rm -vf "${PROJECT_JOB_CONTROLE_FILE_BASE}.tmp"
 	fi
 done
 
@@ -472,6 +472,7 @@ do
 				
 			fi
 		done
+		rm -vf "${DARWIN_JOB_CONTROLE_FILE_BASE}.tmp"
 	fi
 done
 
@@ -515,6 +516,7 @@ do
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"
 			fi
 		done
+		rm -vf "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.tmp"
 	fi
 done
 

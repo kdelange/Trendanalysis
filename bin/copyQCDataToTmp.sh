@@ -428,10 +428,11 @@ do
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
 				continue
 			else
-				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, starting rsync QC data for project ${project}."
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, checking QC data for project ${project}."
 				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
 			fi
 		done
+		rm "${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects.tmp"
 	fi
 done
 

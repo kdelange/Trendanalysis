@@ -86,7 +86,7 @@ function copyQCProjectdataToTmp() {
 	local _prm_project_dir="${4}" #"/groups/${group}/${prm_dir}/projects/"
 	
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Working on ${_prm_project_dir}/${_project}"
-	echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
+	echo "${_line_base}.started" >> "${_project_job_controle_file_base}.tmp"
 	# The RNA projects will be copied to ${TMP_ROOT_DIR}/trendanalysis/RNAprojects/
 	if [[ -e "${_prm_project_dir}/${_project}/run01/results/multiqc_data/${_project}.run_date_info.csv" && "${_project}" =~ "RNA" ]]
 	then

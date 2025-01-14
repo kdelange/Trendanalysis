@@ -56,7 +56,7 @@ function copyQCRawdataToTmp() {
 	if [[ -e "${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun.csv" ]]
 	then
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Sequencerun ${_rawdata} is not yet copied to tmp, start rsyncing.."
-		echo "${_line_base}.started" >> "${_rawdata_job_controle_file_base}.tmp"
+		echo "${_line_base}.started" >> "${_rawdata_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_rawdata} found on ${_prm_rawdata_dir}, start rsyncing.."
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/rawdata/${_rawdata}/" \
 		|| {
@@ -86,7 +86,7 @@ function copyQCProjectdataToTmp() {
 	local _prm_project_dir="${4}" #"/groups/${group}/${prm_dir}/projects/"
 	
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Working on ${_prm_project_dir}/${_project}"
-	echo "${_line_base}.started" >> "${_project_job_controle_file_base}.tmp"
+	echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
 	# The RNA projects will be copied to ${TMP_ROOT_DIR}/trendanalysis/RNAprojects/
 	if [[ -e "${_prm_project_dir}/${_project}/run01/results/multiqc_data/${_project}.run_date_info.csv" && "${_project}" =~ "RNA" ]]
 	then
@@ -185,7 +185,7 @@ function copyDarwinQCData() {
 	local _line_base="${6}"
 
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_runinfofile} to tmp, start rsyncing.."
-	echo "${_line_base}.started" >> "${_darwin_job_controle_file_base}.tmp"
+	echo "${_line_base}.started" >> "${_darwin_job_controle_file_base}"
 	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${IMPORT_DIR}/${_filetype}"*"${_filedate}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/darwin/" \
 	|| {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_filetype}"*"${_filedate}.csv"
@@ -214,7 +214,7 @@ function copyOpenarrayQCData() {
 	local _qcfiledir=$(basename "${_qcfile}" .txt)
 
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_qcfile} from dir: ${_qcfiledir} to tmp, start rsyncing.."
-	echo "${_line_base}.started" >> "${_openarray_job_controle_file_base}.tmp"
+	echo "${_line_base}.started" >> "${_openarray_job_controle_file_base}"
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "sudo -u ${group}-ateambot rsync ${_qcfile} ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/openarray/${_qcfiledir}/"
 

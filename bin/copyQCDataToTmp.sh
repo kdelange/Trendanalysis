@@ -364,77 +364,77 @@ log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written 
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for raw QC data"
 mkdir -p "${DAT_ROOT_DIR}/logs/trendanalysis/"
 
-# for prm_dir in "${ALL_PRM[@]}"
-# do
-# 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
-# 
-# 
-# 	readarray -t rawdataArray < <(find "/groups/${group}/${prm_dir}/rawdata/ngs/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/rawdata/ngs/||")
-# 
-# 	if [[ "${#rawdataArray[@]}" -eq '0' ]]
-# 	then
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No rawdata found @ /groups/${group}/${prm_dir}/rawdata/ngs/."
-# 	else
-# 		for rawdata in "${rawdataArray[@]}"
-# 		do
-# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
-# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs folder: /groups/${group}/${prm_dir}/logs/trendanalysis/${rawdata}"
-# 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-# 			RAWDATA_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.rawdata"
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
-# 			RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}"
-# 			touch "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
-# 			if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}.finished" "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
-# 			then
-# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
-# 				continue
-# 			else
-# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "starting function copyQCRawdataToTmp for rawdata ${rawdata}."
-# 				copyQCRawdataToTmp "${rawdata}" "${RAWDATA_JOB_CONTROLE_FILE_BASE}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
-# 			fi
-# 		done
-# 		rm -vf "${RAWDATA_JOB_CONTROLE_FILE_BASE}.tmp"
-# 	fi
-# done
-# 
-# 
-# 
-# # Loops through all project data folders and checks if the QC data  is already copied to tmp. If not than call function copyQCProjectdataToTmp
-# 
-# log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for project QC data"
-# 
-# for prm_dir in "${ALL_PRM[@]}"
-# do
-# 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
-# 	readarray -t projectdata < <(find "/groups/${group}/${prm_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/projects/||")
-# 
-# 	if [[ "${#projectdata[@]}" -eq '0' ]]
-# 	then
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No projectdata found @ ${PRM_ROOT_DIR}/projects/."
-# 	else
-# 		for project in "${projectdata[@]}"
-# 		do
-# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
-# 			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-# 			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
-# 			PROJECT_JOB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}"
-# 			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
-# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_FILE_BASE= ${PROJECT_JOB_CONTROLE_FILE_BASE}"
-# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_LINE_BASE= ${PROJECT_JOB_CONTROLE_LINE_BASE}"
-# 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if grep -Fxq \"${PROJECT_JOB_CONTROLE_LINE_BASE}.finished\" \"${PROJECT_JOB_CONTROLE_FILE_BASE}\""
-# 			if grep -Fxq "${PROJECT_JOB_CONTROLE_LINE_BASE}.finished" "${PROJECT_JOB_CONTROLE_FILE_BASE}"
-# 			then
-# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
-# 				continue
-# 			else
-# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, checking QC data for project ${project}."
-# 				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
-# 			fi
-# 		done
-# 		rm -vf "${PROJECT_JOB_CONTROLE_FILE_BASE}.tmp"
-# 	fi
-# done
+for prm_dir in "${ALL_PRM[@]}"
+do
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
+
+
+	readarray -t rawdataArray < <(find "/groups/${group}/${prm_dir}/rawdata/ngs/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/rawdata/ngs/||")
+
+	if [[ "${#rawdataArray[@]}" -eq '0' ]]
+	then
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No rawdata found @ /groups/${group}/${prm_dir}/rawdata/ngs/."
+	else
+		for rawdata in "${rawdataArray[@]}"
+		do
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs folder: /groups/${group}/${prm_dir}/logs/trendanalysis/${rawdata}"
+			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
+			RAWDATA_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.rawdata"
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
+			RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}"
+			touch "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
+			if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}.finished" "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
+			then
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
+				continue
+			else
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "starting function copyQCRawdataToTmp for rawdata ${rawdata}."
+				copyQCRawdataToTmp "${rawdata}" "${RAWDATA_JOB_CONTROLE_FILE_BASE}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
+			fi
+		done
+		rm -vf "${RAWDATA_JOB_CONTROLE_FILE_BASE}.tmp"
+	fi
+done
+
+
+
+# Loops through all project data folders and checks if the QC data  is already copied to tmp. If not than call function copyQCProjectdataToTmp
+
+log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for project QC data"
+
+for prm_dir in "${ALL_PRM[@]}"
+do
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
+	readarray -t projectdata < <(find "/groups/${group}/${prm_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/projects/||")
+
+	if [[ "${#projectdata[@]}" -eq '0' ]]
+	then
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No projectdata found @ ${PRM_ROOT_DIR}/projects/."
+	else
+		for project in "${projectdata[@]}"
+		do
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
+			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
+			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
+			PROJECT_JOB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}"
+			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_FILE_BASE= ${PROJECT_JOB_CONTROLE_FILE_BASE}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "PROJECT_JOB_CONTROLE_LINE_BASE= ${PROJECT_JOB_CONTROLE_LINE_BASE}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if grep -Fxq \"${PROJECT_JOB_CONTROLE_LINE_BASE}.finished\" \"${PROJECT_JOB_CONTROLE_FILE_BASE}\""
+			if grep -Fxq "${PROJECT_JOB_CONTROLE_LINE_BASE}.finished" "${PROJECT_JOB_CONTROLE_FILE_BASE}"
+			then
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${project}."
+				continue
+			else
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${PROJECT_JOB_CONTROLE_LINE_BASE}.finished present, in file ${PROJECT_JOB_CONTROLE_FILE_BASE}, checking QC data for project ${project}."
+				copyQCProjectdataToTmp "${project}" "${PROJECT_JOB_CONTROLE_FILE_BASE}" "${PROJECT_JOB_CONTROLE_LINE_BASE}" "/groups/${group}/${prm_dir}/projects/"
+			fi
+		done
+		rm -vf "${PROJECT_JOB_CONTROLE_FILE_BASE}.tmp"
+	fi
+done
 
 
 #

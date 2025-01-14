@@ -697,36 +697,36 @@ else
 	done
 fi
 
-# #
-# ## Checks for new Darwin import files. Than calls function 'processDarwinToDB'
-# ## to add the new files to the database
-# #
-# 
-# readarray -t darwindata < <(find "${TMP_TRENDANALYSE_DIR}/darwin/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/darwin/||")
-# if [[ "${#darwindata[@]:-0}" -eq '0' ]]
-# then
-# 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/darwin/."
-# else
-# 	for darwinfile in "${darwindata[@]}"
-# 	do
-# 		runinfoFile=$(basename "${darwinfile}" .csv)
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
-# 		fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
-# 		fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
-# 		tableFile="${fileType}_${fileDate}.csv"
-# 		DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}_${fileDate}.${SCRIPT_NAME}_processDarwinToDB"
-# 		touch "${LOGS_DIR}/process.darwin_trendanalysis."{finished,failed,started}
-# 		if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.finished"
-# 		then
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
-# 		else
-# 			echo "${DARWIN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.darwin_trendanalysis.started"
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New darwin data from ${fileDate} will be processed."
-# 			processDarwinToDB "${TMP_TRENDANALYSE_DIR}/darwin/${darwinfile}" "${TMP_TRENDANALYSE_DIR}/darwin/${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
-# 		fi
-# 	done
-# fi
-# 
+#
+## Checks for new Darwin import files. Than calls function 'processDarwinToDB'
+## to add the new files to the database
+#
+
+readarray -t darwindata < <(find "${TMP_TRENDANALYSE_DIR}/darwin/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/darwin/||")
+if [[ "${#darwindata[@]:-0}" -eq '0' ]]
+then
+	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/darwin/."
+else
+	for darwinfile in "${darwindata[@]}"
+	do
+		runinfoFile=$(basename "${darwinfile}" .csv)
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
+		fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
+		fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
+		tableFile="${fileType}_${fileDate}.csv"
+		DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}_${fileDate}.${SCRIPT_NAME}_processDarwinToDB"
+		touch "${LOGS_DIR}/process.darwin_trendanalysis."{finished,failed,started}
+		if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.finished"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
+		else
+			echo "${DARWIN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.darwin_trendanalysis.started"
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New darwin data from ${fileDate} will be processed."
+			processDarwinToDB "${TMP_TRENDANALYSE_DIR}/darwin/${darwinfile}" "${TMP_TRENDANALYSE_DIR}/darwin/${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
+		fi
+	done
+fi
+
 # #
 # ## Checks dragen data, and adds the new files to the database
 # #

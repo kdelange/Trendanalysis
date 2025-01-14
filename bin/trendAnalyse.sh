@@ -669,34 +669,34 @@ fi
 # 	done
 # fi
 # 
-# #
-# ## Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processRNAprojectsToDB "${project}" "${run}" to process this project.'
-# #
-# 
-# readarray -t RNAprojects < <(find "${TMP_TRENDANALYSE_DIR}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/RNAprojects/||")
-# if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
-# then
-# 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/RNAprojects/."
-# else
-# 	for RNAproject in "${RNAprojects[@]}"
-# 	do
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing RNAproject ${RNAproject} ..."
-# 		echo "Working on ${RNAproject}" > "${lockFile}"
-# 		PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE="${RNAproject}.${SCRIPT_NAME}_processRNAProjectToDB"
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${RNAproject}/ ..."
-# 		touch "${LOGS_DIR}/process.RNAproject_trendanalysis."{finished,failed,started}
-# 		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
-# 		then
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
-# 		else
-# 			echo "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${RNAproject} will be processed."
-# 			processRNAProjectToDB "${RNAproject}" "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
-# 		fi
-# 	done
-# fi
-# 
+#
+## Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processRNAprojectsToDB "${project}" "${run}" to process this project.'
+#
+
+readarray -t RNAprojects < <(find "${TMP_TRENDANALYSE_DIR}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/RNAprojects/||")
+if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
+then
+	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/RNAprojects/."
+else
+	for RNAproject in "${RNAprojects[@]}"
+	do
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing RNAproject ${RNAproject} ..."
+		echo "Working on ${RNAproject}" > "${lockFile}"
+		PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE="${RNAproject}.${SCRIPT_NAME}_processRNAProjectToDB"
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${RNAproject}/ ..."
+		touch "${LOGS_DIR}/process.RNAproject_trendanalysis."{finished,failed,started}
+		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
+		else
+			echo "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${RNAproject} will be processed."
+			processRNAProjectToDB "${RNAproject}" "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
+		fi
+	done
+fi
+
 # #
 # ## Checks for new Darwin import files. Than calls function 'processDarwinToDB'
 # ## to add the new files to the database

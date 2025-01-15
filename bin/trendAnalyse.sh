@@ -729,45 +729,45 @@ LOGS_DIR="${TMP_ROOT_DIR}/logs/trendanalysis/"
 # 	done
 # fi
 
-# #
-# ## Checks dragen data, and adds the new files to the database
-# #
-# 
-# readarray -t dragendata < <(find "${TMP_TRENDANALYSE_DIR}/dragen/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/dragen/||")
-# if [[ "${#dragendata[@]:-0}" -eq '0' ]]
-# then
-# 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/dragen/."
-# else
-# 	for dragenProject in "${dragendata[@]}"
-# 	do
-# 		runinfoFile="${dragenProject}".Dragen_runinfo.csv
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
-# 		tableFile="${dragenProject}".Dragen.csv
-# 		dataType=$(echo "${dragenProject}" | cut -d '_' -f2 | cut -d '-' -f2)
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "dataType is ${dataType} for the dragen data."
-# 		DRAGEN_JOB_CONTROLE_LINE_BASE="${dragenProject}.${SCRIPT_NAME}_processDragenToDB"
-# 		touch "${LOGS_DIR}/process.dragen_trendanalysis."{finished,failed,started}
-# 		if grep -Fxq "${DRAGEN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.dragen_trendanalysis.finished"
-# 		then
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed dragen project ${dragenProject}."
-# 		else
-# 			echo "${DRAGEN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.dragen_trendanalysis.started"
-# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."
-# 			if [[ "${dataType}" == 'Exoom' ]]
-# 			then
-# 				updateOrCreateDatabase dragenExoom "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
-# 			elif [[ "${dataType}" == 'WGS' ]]
-# 			then
-# 				updateOrCreateDatabase dragenWGS "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
-# 			elif [[ "${dataType}" == 'sWGS' ]]
-# 			then
-# 				updateOrCreateDatabase dragenSWGS "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenSWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
-# 			else
-# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Exoom, WGS and sWGS datatypes are processed, there is room for more types."
-# 			fi
-# 		fi
-# 	done
-# fi
+#
+## Checks dragen data, and adds the new files to the database
+#
+
+readarray -t dragendata < <(find "${TMP_TRENDANALYSE_DIR}/dragen/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/dragen/||")
+if [[ "${#dragendata[@]:-0}" -eq '0' ]]
+then
+	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/dragen/."
+else
+	for dragenProject in "${dragendata[@]}"
+	do
+		runinfoFile="${dragenProject}".Dragen_runinfo.csv
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
+		tableFile="${dragenProject}".Dragen.csv
+		dataType=$(echo "${dragenProject}" | cut -d '_' -f2 | cut -d '-' -f2)
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "dataType is ${dataType} for the dragen data."
+		DRAGEN_JOB_CONTROLE_LINE_BASE="${dragenProject}.${SCRIPT_NAME}_processDragenToDB"
+		touch "${LOGS_DIR}/process.dragen_trendanalysis."{finished,failed,started}
+		if grep -Fxq "${DRAGEN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.dragen_trendanalysis.finished"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed dragen project ${dragenProject}."
+		else
+			echo "${DRAGEN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.dragen_trendanalysis.started"
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."
+			if [[ "${dataType}" == 'Exoom' ]]
+			then
+				updateOrCreateDatabase dragenExoom "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+			elif [[ "${dataType}" == 'WGS' ]]
+			then
+				updateOrCreateDatabase dragenWGS "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+			elif [[ "${dataType}" == 'sWGS' ]]
+			then
+				updateOrCreateDatabase dragenSWGS "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${tableFile}" "${TMP_TRENDANALYSE_DIR}/dragen/${dragenProject}/${runinfoFile}" dragenSWGS "${DRAGEN_JOB_CONTROLE_LINE_BASE}" dragen
+			else
+				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Exoom, WGS and sWGS datatypes are processed, there is room for more types."
+			fi
+		fi
+	done
+fi
 
 #
 ## Checks openarray data, and adds the new files to the database

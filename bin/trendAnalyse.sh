@@ -379,7 +379,7 @@ function processOpenArray() {
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayproject}."
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayfile is: ${_openarrayfile}."
 	
-	if [[ -e "${_openarrayprojectdir}/${_openarrayfile}" ]]
+	if [[ -e "${_openarrayprojectdir}/"*"_QC_Summary.txt" ]]
 	then
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "processing ${_openarrayfile}"
 		dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/${_openarrayproject}.txt"

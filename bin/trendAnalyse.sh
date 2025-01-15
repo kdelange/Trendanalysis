@@ -376,6 +376,7 @@ function processOpenArray() {
 	
 	rm -rf "${CHRONQC_TMP:-missing}"/*
 
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayprojectdir}."
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayproject}."
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayfile is: ${_openarrayfile}."
 	

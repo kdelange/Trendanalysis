@@ -606,40 +606,40 @@ CHRONQC_TMP="${TMP_TRENDANALYSE_DIR}/tmp/"
 CHRONQC_DATABASE_NAME="${TMP_TRENDANALYSE_DIR}/database/"
 LOGS_DIR="${TMP_ROOT_DIR}/logs/trendanalysis/"
 
-readarray -t rawdataArray < <(find "${TMP_TRENDANALYSE_DIR}/rawdata/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/rawdata/||")
-if [[ "${#rawdataArray[@]:-0}" -eq '0' ]]
-then
-	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/rawdata/."
-else
-	for rawdata in "${rawdataArray[@]}"
-	do
-		TMP_RAWDATA_DIR="${TMP_TRENDANALYSE_DIR}/rawdata/${rawdata}/"
-		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
-		rm -rf "${CHRONQC_TMP:-missing}"/*
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
-		echo "Working on ${rawdata}" > "${lockFile}"
-		RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}_processRawdatatoDB"
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${RAWDATA_JOB_CONTROLE_LINE_BASE}"
-		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
-		touch "${LOGS_DIR}/process.rawdata_trendanalysis."{finished,failed,started}
-		sequencer=$(echo "${rawdata}" | cut -d '_' -f2)
-		if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
-		then
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
-		else
-			echo "${RAWDATA_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.rawdata_trendanalysis.started"
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New batch ${rawdata} will be processed."
-			if [[ -e "${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv" ]]
-			then
-				cp "${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv"
-				cp "${TMP_RAWDATA_DIR}/SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv"
-				updateOrCreateDatabase SequenceRun "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv" "${sequencer}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" rawdata
-			else
-				log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} for sequence run ${_rawdata}, no sequencer statistics were stored "
-			fi
-		fi
-	done
-fi
+# readarray -t rawdataArray < <(find "${TMP_TRENDANALYSE_DIR}/rawdata/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/rawdata/||")
+# if [[ "${#rawdataArray[@]:-0}" -eq '0' ]]
+# then
+# 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/rawdata/."
+# else
+# 	for rawdata in "${rawdataArray[@]}"
+# 	do
+# 		TMP_RAWDATA_DIR="${TMP_TRENDANALYSE_DIR}/rawdata/${rawdata}/"
+# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${CHRONQC_TMP} ..."
+# 		rm -rf "${CHRONQC_TMP:-missing}"/*
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
+# 		echo "Working on ${rawdata}" > "${lockFile}"
+# 		RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}_processRawdatatoDB"
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${RAWDATA_JOB_CONTROLE_LINE_BASE}"
+# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
+# 		touch "${LOGS_DIR}/process.rawdata_trendanalysis."{finished,failed,started}
+# 		sequencer=$(echo "${rawdata}" | cut -d '_' -f2)
+# 		if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
+# 		then
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
+# 		else
+# 			echo "${RAWDATA_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.rawdata_trendanalysis.started"
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New batch ${rawdata} will be processed."
+# 			if [[ -e "${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv" ]]
+# 			then
+# 				cp "${TMP_RAWDATA_DIR}/SequenceRun_run_date_info.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv"
+# 				cp "${TMP_RAWDATA_DIR}/SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv"
+# 				updateOrCreateDatabase SequenceRun "${CHRONQC_TMP}/${rawdata}.SequenceRun.csv" "${CHRONQC_TMP}/${rawdata}.SequenceRun_run_date_info.csv" "${sequencer}" "${RAWDATA_JOB_CONTROLE_LINE_BASE}" rawdata
+# 			else
+# 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} for sequence run ${_rawdata}, no sequencer statistics were stored "
+# 			fi
+# 		fi
+# 	done
+# fi
 
 #
 ## Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processProjectToDB "${project}" "${run}" to process this project.'
@@ -673,59 +673,59 @@ fi
 ## Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processRNAprojectsToDB "${project}" "${run}" to process this project.'
 #
 
-readarray -t RNAprojects < <(find "${TMP_TRENDANALYSE_DIR}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/RNAprojects/||")
-if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
-then
-	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/RNAprojects/."
-else
-	for RNAproject in "${RNAprojects[@]}"
-	do
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing RNAproject ${RNAproject} ..."
-		echo "Working on ${RNAproject}" > "${lockFile}"
-		PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE="${RNAproject}.${SCRIPT_NAME}_processRNAProjectToDB"
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
-		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${RNAproject}/ ..."
-		touch "${LOGS_DIR}/process.RNAproject_trendanalysis."{finished,failed,started}
-		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
-		then
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
-		else
-			echo "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${RNAproject} will be processed."
-			processRNAProjectToDB "${RNAproject}" "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
-		fi
-	done
-fi
+# readarray -t RNAprojects < <(find "${TMP_TRENDANALYSE_DIR}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/RNAprojects/||")
+# if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
+# then
+# 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/RNAprojects/."
+# else
+# 	for RNAproject in "${RNAprojects[@]}"
+# 	do
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing RNAproject ${RNAproject} ..."
+# 		echo "Working on ${RNAproject}" > "${lockFile}"
+# 		PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE="${RNAproject}.${SCRIPT_NAME}_processRNAProjectToDB"
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs line: ${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
+# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${RNAproject}/ ..."
+# 		touch "${LOGS_DIR}/process.RNAproject_trendanalysis."{finished,failed,started}
+# 		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
+# 		then
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
+# 		else
+# 			echo "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${RNAproject} will be processed."
+# 			processRNAProjectToDB "${RNAproject}" "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}"
+# 		fi
+# 	done
+# fi
 
 #
 ## Checks for new Darwin import files. Than calls function 'processDarwinToDB'
 ## to add the new files to the database
 #
-
-readarray -t darwindata < <(find "${TMP_TRENDANALYSE_DIR}/darwin/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/darwin/||")
-if [[ "${#darwindata[@]:-0}" -eq '0' ]]
-then
-	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/darwin/."
-else
-	for darwinfile in "${darwindata[@]}"
-	do
-		runinfoFile=$(basename "${darwinfile}" .csv)
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
-		fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
-		fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
-		tableFile="${fileType}_${fileDate}.csv"
-		DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}_${fileDate}.${SCRIPT_NAME}_processDarwinToDB"
-		touch "${LOGS_DIR}/process.darwin_trendanalysis."{finished,failed,started}
-		if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.finished"
-		then
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
-		else
-			echo "${DARWIN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.darwin_trendanalysis.started"
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New darwin data from ${fileDate} will be processed."
-			processDarwinToDB "${TMP_TRENDANALYSE_DIR}/darwin/${darwinfile}" "${TMP_TRENDANALYSE_DIR}/darwin/${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
-		fi
-	done
-fi
+# 
+# readarray -t darwindata < <(find "${TMP_TRENDANALYSE_DIR}/darwin/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${TMP_TRENDANALYSE_DIR}/darwin/||")
+# if [[ "${#darwindata[@]:-0}" -eq '0' ]]
+# then
+# 	log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${TMP_TRENDANALYSE_DIR}/darwin/."
+# else
+# 	for darwinfile in "${darwindata[@]}"
+# 	do
+# 		runinfoFile=$(basename "${darwinfile}" .csv)
+# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
+# 		fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
+# 		fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
+# 		tableFile="${fileType}_${fileDate}.csv"
+# 		DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}_${fileDate}.${SCRIPT_NAME}_processDarwinToDB"
+# 		touch "${LOGS_DIR}/process.darwin_trendanalysis."{finished,failed,started}
+# 		if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.finished"
+# 		then
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
+# 		else
+# 			echo "${DARWIN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.darwin_trendanalysis.started"
+# 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New darwin data from ${fileDate} will be processed."
+# 			processDarwinToDB "${TMP_TRENDANALYSE_DIR}/darwin/${darwinfile}" "${TMP_TRENDANALYSE_DIR}/darwin/${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"
+# 		fi
+# 	done
+# fi
 
 # #
 # ## Checks dragen data, and adds the new files to the database

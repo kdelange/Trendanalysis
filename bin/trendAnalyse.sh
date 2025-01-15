@@ -376,11 +376,11 @@ function processOpenArray() {
 	
 	rm -rf "${CHRONQC_TMP:-missing}"/*
 
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayprojectdir}."
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayprojectdir is: ${_openarrayprojectdir}."
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayproject is: ${_openarrayproject}."
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "_openarrayfile is: ${_openarrayfile}."
 	
-	if [[ -e "${_openarrayprojectdir}/"*"_QC_Summary.txt" ]]
+	if [[ -e "${_openarrayprojectdir}/${_openarrayproject}.txt" ]]
 	then
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "processing ${_openarrayfile}"
 		dos2unix "${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/${_openarrayproject}.txt"

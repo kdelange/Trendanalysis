@@ -697,6 +697,9 @@ else
 		if grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed RNAproject ${RNAproject}."
+		elif grep -Fxq "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.RNAproject_trendanalysis.failed"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "RNAproject ${RNAproject} is not in the correct format, skipping."
 		else
 			echo "${PROCESSRNAPROJECTTODB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.RNAproject_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New project ${RNAproject} will be processed."
@@ -726,7 +729,10 @@ else
 		touch "${LOGS_DIR}/process.darwin_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.finished"
 		then
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed darwin data from ${fileDate}."
+		elif grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.darwin_trendanalysis.failed"
+		then 
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${fileDate} is not in the correct format, skipping."
 		else
 			echo "${DARWIN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.darwin_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New darwin data from ${fileDate} will be processed."
@@ -755,7 +761,10 @@ else
 		touch "${LOGS_DIR}/process.dragen_trendanalysis."{finished,failed,started}
 		if grep -Fxq "${DRAGEN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.dragen_trendanalysis.finished"
 		then
-			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed dragen project ${dragenProject}."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed dragen project ${dragenProject}."
+		elif grep -Fxq "${DRAGEN_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.dragen_trendanalysis.failed"
+		then
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "dragen project ${dragenProject}, is not in the correct format, skipping."
 		else
 			echo "${DRAGEN_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.dragen_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."

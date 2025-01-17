@@ -628,6 +628,9 @@ else
 		if grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.rawdata_trendanalysis.finished"
 		then
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
+		elif grep -Fxq "${RAWDATA_JOB_CONTROLE_LINE_BASE}" "${LOGS_DIR}/process.rawdata_trendanalysis.failed"
+		then
+			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Batch ${rawdata} is not in the correct format, skipping."
 		else
 			echo "${RAWDATA_JOB_CONTROLE_LINE_BASE}" >> "${LOGS_DIR}/process.rawdata_trendanalysis.started"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New batch ${rawdata} will be processed."

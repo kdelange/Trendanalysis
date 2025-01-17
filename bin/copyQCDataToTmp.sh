@@ -213,9 +213,10 @@ function copyOpenarrayQCData() {
 	local _import_dir_openarray="${3}"
 	local _openarray_job_controle_file_base="${4}"
 	local _line_base="${5}"
-
-	local _qcfiledir=$(basename "${_qcfile}" .txt)
-
+	
+	_qcfiledir=$(basename "${_qcfile}" .txt)
+	local _qcfiledir
+	
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_qcfile} from dir: ${_qcfiledir} to tmp, start rsyncing.."
 	echo "${_line_base}.started" >> "${_openarray_job_controle_file_base}"
 
@@ -355,7 +356,7 @@ fi
 infoServerLocation="${HOSTNAME_PRM}"
 infoLocation="/groups/${group}/${PRM_LFS}/trendanalysis/"
 hashedSource="$(printf '%s:%s' "${infoServerLocation}" "${infoLocation}" | md5sum | awk '{print $1}')"
-lockFile="/groups/${GROUP}/${DAT_LFS}/trendanalysis/logs/${SCRIPT_NAME}_${hashedSource}.lock"
+lockFile="/groups/${group}/${DAT_LFS}/trendanalysis/logs/${SCRIPT_NAME}_${hashedSource}.lock"
 thereShallBeOnlyOne "${lockFile}"
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Successfully got exclusive access to lock file ${lockFile} ..."
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written to ${PRM_ROOT_DIR}/trendanalysis/logs/ ..."

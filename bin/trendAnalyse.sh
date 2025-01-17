@@ -372,7 +372,7 @@ function processOpenArray() {
 	CHRONQC_OPENARRAY_DIR="${TMP_TRENDANALYSE_DIR}/openarray/"
 	local _openarrayproject="${1}"
 	local _openarrayprojectdir="${CHRONQC_OPENARRAY_DIR}/${_openarrayproject}/"
-	local _openarrayfile=$(echo "${_openarrayproject}.txt")
+	local _openarrayfile="${_openarrayproject}.txt"
 	
 	rm -rf "${CHRONQC_TMP:-missing}"/*
 

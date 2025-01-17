@@ -213,9 +213,8 @@ function copyOpenarrayQCData() {
 	local _import_dir_openarray="${3}"
 	local _openarray_job_controle_file_base="${4}"
 	local _line_base="${5}"
-	
-	_qcfiledir=$(basename "${_qcfile}" .txt)
 	local _qcfiledir
+	_qcfiledir=$(basename "${_qcfile}" .txt)
 	
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_qcfile} from dir: ${_qcfiledir} to tmp, start rsyncing.."
 	echo "${_line_base}.started" >> "${_openarray_job_controle_file_base}"
@@ -457,7 +456,7 @@ do
 	else
 		for darwinfile in "${darwindata[@]}"
 		do
-			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start proseccing ${darwinfile}"
+			log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${darwinfile}"
 			runinfoFile=$(basename "${darwinfile}" .csv)
 			fileType=$(cut -d '_' -f1 <<< "${runinfoFile}")
 			fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
@@ -469,7 +468,7 @@ do
 			if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished" "${DARWIN_JOB_CONTROLE_FILE_BASE}"
 			then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present"
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on dat05, check if previous rsync went okay"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on ${dat_dir}, check if previous rsync went okay"
 			else
 				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${DARWIN_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
 				copyDarwinQCData "${runinfoCSV}" "${tableFile}" "${fileType}" "${fileDate}" "${DARWIN_JOB_CONTROLE_FILE_BASE}" "${DARWIN_JOB_CONTROLE_LINE_BASE}"

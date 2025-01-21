@@ -46,7 +46,7 @@ If you would like to copy the QC data again to TMP, just remove whole file: ${PR
 Run by the umcg-gd-ateambot on TMP, `trendAnalyse.sh` will process each datatype to make it fit for the SQLite database. `/groups/${GROUP}/${TMP}/trendanalysis/${dataType}`
 Basically you need a runDateInfo file and a table file. 
 The runDateInfo.csv file contains a table with the sample name, project and date, and is comma separated.
-The table.csv file will contain also the sample name, and the QC data, and it tab separated.
+The table.csv file will contains the sample name and QC data separated by tabs.
 Using ChronQC in the script trendAnalyse.sh, the database will be filled with all the different datatypes, or it will add new projects to an existing database.
 The database is in `/groups/${GROUP}/${TMP}/trendanalysis/database/chronqc_db/chronqc.stats.sqlite`. 
 There is 1 database for all data types. Each datatype has it's own table.

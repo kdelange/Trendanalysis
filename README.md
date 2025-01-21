@@ -71,7 +71,7 @@ You can run chronQC with the runDateInfo file and the table file.
 You can play with the different table types. Adjust the .json file you use to generate the plots. The *.json files are in the /template/ folder in the Trendanalysis repo.
 
 Then, in the trendAnalyse.sh script, the file templates/reports.sh is sourced.
-In this file the commands are noted so you can generate the report files you like, for the data types you want.
+In this file the commands are noted so you can generate the report files you like for the data types you want.
 In the command to generate the reports a json file is needed. These are also in the /templates/ folder in the Trendanalysis repo.
 In these json files you can note which type of graphs you want to see in the report, which is in html file format.
 

@@ -87,8 +87,7 @@ TMP location: `/groups/${GROUP}/${TMP}/trendanalysis/reports/${date}/chronqc_out
 PRM location: `/groups/${GROUP}/${PRM}/trendanalysis/reports/${date}/chronqc_output/`
 
 ## Important
-When creating a new database for production, it is important to know that a new inhouse NGS project (generated with NGS_DNA-4.2.2 or newer) is added first, 
-this is due to different columns in comparison with an older version. 
+When creating a new database, a new inhouse NGS project (generated with NGS_DNA-4.2.2 or newer) must be added first, because the newer data contains different columns in comparison to data from older versions. 
 When old data is added first the newer data cannot be added to the database.
 
 ## Debugging

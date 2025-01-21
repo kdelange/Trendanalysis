@@ -366,6 +366,7 @@ log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written 
 #
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for raw QC data"
 mkdir -p "${DAT_ROOT_DIR}/logs/trendanalysis/"
+DAT_LOGS_DIR="${DAT_ROOT_DIR}/logs/trendanalysis/"
 
 for prm_dir in "${ALL_PRM[@]}"
 do
@@ -382,8 +383,7 @@ do
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs folder: /groups/${group}/${prm_dir}/logs/trendanalysis/${rawdata}"
-			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			RAWDATA_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.rawdata"
+			RAWDATA_JOB_CONTROLE_FILE_BASE="${DAT_LOGS_DIR}/${prm_dir}.${SCRIPT_NAME}.rawdata"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
 			RAWDATA_JOB_CONTROLE_LINE_BASE="${rawdata}.${SCRIPT_NAME}"
 			touch "${RAWDATA_JOB_CONTROLE_FILE_BASE}"
@@ -418,8 +418,7 @@ do
 		for project in "${projectdata[@]}"
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing project ${project} ..."
-			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			PROJECT_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${prm_dir}.${SCRIPT_NAME}.projects"
+			PROJECT_JOB_CONTROLE_FILE_BASE="${DAT_LOGS_DIR}/${prm_dir}.${SCRIPT_NAME}.projects"
 			PROJECT_JOB_CONTROLE_LINE_BASE="${project}.${SCRIPT_NAME}"
 			touch "${PROJECT_JOB_CONTROLE_FILE_BASE}"
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${project} ..."
@@ -462,8 +461,7 @@ do
 			fileDate=$(cut -d '_' -f3 <<< "${runinfoFile}")
 			tableFile="${fileType}_${fileDate}.csv"
 			runinfoCSV="${runinfoFile}.csv"
-			controlFileBase="${DAT_ROOT_DIR}/logs/trendanalysis/"
-			DARWIN_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.darwin"
+			DARWIN_JOB_CONTROLE_FILE_BASE="${DAT_LOGS_DIR}/${dat_dir}.${SCRIPT_NAME}.darwin"
 			DARWIN_JOB_CONTROLE_LINE_BASE="${fileType}-${fileDate}.${SCRIPT_NAME}"
 			if grep -Fxq "${DARWIN_JOB_CONTROLE_LINE_BASE}.finished" "${DARWIN_JOB_CONTROLE_FILE_BASE}"
 			then
@@ -486,7 +484,6 @@ done
 for dat_dir in "${ALL_DAT[@]}"
 do
 	IMPORT_DIR_OPENARRAY="/groups/${OPARGROUP}/${dat_dir}/openarray/"
-	DAT_OPENARRAY_LOGS_DIR="/groups/${group}/${dat_dir}/logs/trendanalysis/"
 	
 	readarray -t openarraydata < <(find "${IMPORT_DIR_OPENARRAY}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${IMPORT_DIR_OPENARRAY}/||")
 	
@@ -501,9 +498,8 @@ do
 			QCFile=$(find "${IMPORT_DIR_OPENARRAY}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
 			if [[ -e "${QCFile}" ]]
 			then 
-				controlFileBase="${DAT_OPENARRAY_LOGS_DIR}"
 				baseQCFile=$(basename "${QCFile}" .txt)
-				OPENARRAY_JOB_CONTROLE_FILE_BASE="${controlFileBase}/${dat_dir}.${SCRIPT_NAME}.openarray"
+				OPENARRAY_JOB_CONTROLE_FILE_BASE="${DAT_LOGS_DIR}/${dat_dir}.${SCRIPT_NAME}.openarray"
 				OPENARRAY_JOB_CONTROLE_LINE_BASE="${baseQCFile}_${SCRIPT_NAME}"
 				if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
 				then

@@ -13,7 +13,7 @@
             "y_value": "duplicate_reads"
         }
     },
-        {
+    {
         "table_name": "dragenExoom",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {

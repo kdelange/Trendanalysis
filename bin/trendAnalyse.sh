@@ -59,8 +59,8 @@ Options:
 
 		-h   Show this help.
 		-g   Group.
-		-d dragen|projects|RNAprojects|ogm|darwin|openarray|rawdata
-		     dataType (missing runs all types) 
+		-d dragen|projects|RNAprojects|ogm|darwin|openarray|rawdata|all
+		     dataType (missing or providing "all" will run all types) 
 		-l   Log level.
 		Must be one of TRACE, DEBUG, INFO (default), WARN, ERROR or FATAL.
 
@@ -478,7 +478,7 @@ function generateReports() {
 #
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Parsing commandline arguments ..."
 declare group=''
-declare dataType=''
+declare dataType='all'
 
 while getopts ":g:l:d:h" opt
 do
@@ -519,11 +519,11 @@ case "${dataType}" in
 		ogm)
 			log4Bash 'FATAL' "${LINENO}" "${FUNCNAME[0]:-main}" '1' "Unhandled option. ogm is not jet up."
 			;;
-		dragen|projects|RNAprojects|darwin|openarray|rawdata)
+		dragen|projects|RNAprojects|darwin|openarray|rawdata|all)
 			;;
 		*)
 			log4Bash 'FATAL' "${LINENO}" "${FUNCNAME[0]:-main}" '1' "Unhandled option. Try $(basename "${0}") -h for help."
-		
+			;;
 esac
 #
 # Source config files.
@@ -608,9 +608,9 @@ tmp_trendanalyse_dir="${TMP_ROOT_DIR}/trendanalysis/"
 logs_dir="${TMP_ROOT_DIR}/logs/trendanalysis/"
 mkdir -p "${TMP_ROOT_DIR}/logs/trendanalysis/"
 chronqc_tmp="${tmp_trendanalyse_dir}/tmp/"
-chronqc_database_name="${tmp_trendanalyse_dir}/database/"
+CHRONQC_DATABASE_NAME="${tmp_trendanalyse_dir}/database/"
 
-if [[ "x${dataType}" == "x" ]] || [[ "${dataType}" == "rawdata" ]]; then
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "rawdata" ]]; then
 	readarray -t rawdataArray < <(find "${tmp_trendanalyse_dir}/rawdata/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/rawdata/||")
 	if [[ "${#rawdataArray[@]:-0}" -eq '0' ]]
 	then
@@ -652,7 +652,7 @@ fi
 
 # Loops over all runs and projects and checks if it is already in chronQC database. If not then call function 'processProjectToDB "${project}" "${run}" to process this project.'
 
-if [[ "x${dataType}" == "x" ]] || [[ "${dataType}" == "projects" ]]; then
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "projects" ]]; then
 	readarray -t projects < <(find "${tmp_trendanalyse_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/projects/||")
 	if [[ "${#projects[@]:-0}" -eq '0' ]]
 	then
@@ -683,7 +683,7 @@ fi
 
 # Loops over all runs and projects and checks if it is already in chronQC database. If not than call function 'processRNAprojectsToDB "${project}" "${run}" to process this project.'
 
-if [[ "x${dataType}" == "x" ]] || [[ "${dataType}" == "RNAprojects" ]]; then
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "RNAprojects" ]]; then
 	readarray -t RNAprojects < <(find "${tmp_trendanalyse_dir}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/RNAprojects/||")
 	if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
 	then
@@ -715,7 +715,7 @@ fi
 # Checks for new Darwin import files. Than calls function 'processDarwinToDB'
 # to add the new files to the database
 
-if [[ "x${dataType}" == "x" ]] || [[ "${dataType}" == "darwin" ]]; then
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "darwin" ]]; then
 	readarray -t darwindata < <(find "${tmp_trendanalyse_dir}/darwin/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${tmp_trendanalyse_dir}/darwin/||")
 	if [[ "${#darwindata[@]:-0}" -eq '0' ]]
 	then
@@ -749,7 +749,7 @@ fi
 ## Checks dragen data, and adds the new files to the database
 #
 
-if [[ "x${dataType}" == "x" ]] || [[ "${dataType}" == "dragen" ]]; then
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "dragen" ]]; then
 	readarray -t dragendata < <(find "${tmp_trendanalyse_dir}/dragen/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/dragen/||")
 	if [[ "${#dragendata[@]:-0}" -eq '0' ]]
 	then
@@ -794,7 +794,7 @@ fi
 ## Checks openarray data, and adds the new files to the database
 #
 
-if [[ "x${dataType}" == "x" ]] || [[ "${dataType}" == "openarray" ]]; then
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "openarray" ]]; then
 	readarray -t openarraydata < <(find "${tmp_trendanalyse_dir}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/openarray/||")
 	if [[ "${#openarraydata[@]:-0}" -eq '0' ]]
 	then

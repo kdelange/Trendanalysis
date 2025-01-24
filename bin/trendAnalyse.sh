@@ -87,12 +87,12 @@ function updateOrCreateDatabase() {
 	local _job_controle_line_base="${5}" #"${_rawdata_job_controle_line_base}"
 	local _logtype="${6}"
 
-	if [[ -e "${chronqc_database_name}/chronqc_db/chronqc.stats.sqlite" ]]
+	if [[ -e "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" ]]
 		then
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${_runDateInfo}. Updating ChronQC database with ${_tableFile}."
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Importing ${_tableFile}"
 
-		chronqc database --update --db "${chronqc_database_name}/chronqc_db/chronqc.stats.sqlite" \
+		chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \
 			"${_tableFile}" \
 			--db-table "${_db_table}" \
 			--run-date-info "${_runDateInfo}" \
@@ -110,7 +110,7 @@ function updateOrCreateDatabase() {
 	else
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}."
 		chronqc database --create \
-			-o "${chronqc_database_name}" \
+			-o "${CHRONQC_DATABASE_NAME}" \
 			"${_tableFile}" \
 			--run-date-info "${_runDateInfo}" \
 			--db-table "${_db_table}" \
@@ -247,7 +247,7 @@ function processRNAProjectToDB {
 	local _chronqc_rnaprojects_dir
 	_chronqc_rnaprojects_dir="${tmp_trendanalyse_dir}/RNAprojects/${_rnaproject}/"
 
-	chronqc_database_name="${tmp_trendanalyse_dir}/database/"
+	CHRONQC_DATABASE_NAME="${tmp_trendanalyse_dir}/database/"
 
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${chronqc_tmp} ..."
 	rm -rf "${chronqc_tmp:-missing}"/*

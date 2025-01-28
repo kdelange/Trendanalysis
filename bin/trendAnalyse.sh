@@ -59,8 +59,8 @@ Options:
 
 		-h   Show this help.
 		-g   Group.
-		-d dragen|projects|RNAprojects|ogm|darwin|openarray|rawdata|all
-		     dataType (missing or providing "all" will run all types) 
+		-d dataType dragen|projects|RNAprojects|ogm|darwin|openarray|rawdata|all
+		Providing dataType to run only specific data type or "all" to run all types) 
 		-l   Log level.
 		Must be one of TRACE, DEBUG, INFO (default), WARN, ERROR or FATAL.
 

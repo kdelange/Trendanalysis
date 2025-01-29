@@ -451,6 +451,83 @@ function processOpenArray() {
 	fi
 }
 
+function processOGM() {
+	
+	local _mainfile="${1}"
+	local _inputfile="${2}"
+	local _ogm_job_controle_line_base="${3}"
+	
+	today=$(date '+%Y%m%d')
+	
+	#_mainfile=mainMetrics.csv
+	#_inputfile=metricsInput/metrics_90_days_2025-01-22T12_19_05.111Z.csv
+	
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "using mainfile: ${_mainfile} and inputfile ${_inputfile}"
+	
+	tail -n +2 "${_mainfile}" > "${_mainfile}".tmp
+	tail -n +2 "${_inputfile}" > "${_inputfile}".tmp
+	
+	mainHeader=$(head -1 "${_inputfile}")
+	echo -e "${mainHeader}" > metricsFile_"${today}".csv
+	
+	sort -u "${_mainfile}".tmp "${_inputfile}".tmp >> metricsFile_"${today}".csv
+	
+	runFile=metricsFile_"${today}".csv
+	
+	declare -a statsFileColumnNames=()
+	declare -A statsFileColumnOffsets=()
+
+	IFS=$',' read -r -a statsFileColumnNames <<< "$(head -1 ${runFile})"
+	
+	for (( offset = 0 ; offset < ${#statsFileColumnNames[@]} ; offset++ ))
+	do
+		columnName="${statsFileColumnNames[${offset}]}"
+			statsFileColumnOffsets["${columnName}"]="${offset}"
+	done
+
+	chipRunUIDFieldIndex=$((${statsFileColumnOffsets['Chip run uid']} + 1))
+	FlowCellFielIndex=$((${statsFileColumnOffsets['Flow cell']} + 1))
+	TotalDNAFieldIndex=$((${statsFileColumnOffsets['Total DNA (>= 150Kbp)']} + 1))
+	N50FieldIndex=$((${statsFileColumnOffsets['N50 (>= 150Kbp)']} + 1))
+	AverageLabelDensityFieldIndex=$((${statsFileColumnOffsets['Average label density (>= 150Kbp)']} + 1))
+	MapRateFieldIndex=$((${statsFileColumnOffsets['Map rate (%)']} + 1))
+	DNAPerScanFieldIndex=$((${statsFileColumnOffsets['DNA per scan (Gbp)']} + 1))
+	LongestMolecuulFieldIndex=$((${statsFileColumnOffsets['Longest molecule (Kbp)']} + 1))
+	TimeStampFieldIndex=$((${statsFileColumnOffsets['Timestamp']} + 1))
+
+	echo -e 'Sample,Run,Date' > OGM_runDateInfo_"${today}".csv
+	
+	while read line
+	do
+		dateField=$(echo "${line}" | cut -d ',' -f"${TimeStampFieldIndex}")
+			sampleField=$(echo "${line}" | cut -d ',' -f"${chipRunUIDFieldIndex}")
+			runField=$(echo "${line}" | cut -d ',' -f"${FlowCellFielIndex}")
+			correctDate=$(date -d "${dateField}" '+%d/%m/%Y')
+			echo -e "${sampleField},${runField},${correctDate}" >> OGM_runDateInfo_"${today}".csv
+	done < <(tail -n +2 "${runFile}")
+	
+	echo -e 'Sample\tFlow_cell\tTotal_DNA(>=150Kbp)\tN50(>=150Kbp)\tAverage_label_density(>=150Kbp)\tMap_rate(%)\tDNA_per_scan(Gbp)\tLongest_molecule(Kbp)' > "OGM_"${today}".csv"
+	awk -v s="${chipRunUIDFieldIndex}" \
+			-v s1="${FlowCellFielIndex}" \
+			-v s2="${TotalDNAFieldIndex}" \
+			-v s3="${N50FieldIndex}" \
+			-v s4="${AverageLabelDensityFieldIndex}" \
+			-v s5="${MapRateFieldIndex}" \
+			-v s6="${DNAPerScanFieldIndex}" \
+			-v s7="${LongestMolecuulFieldIndex}" \
+			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${runFile}" >> OGM_"${today}".csv
+	
+	rm "${_mainfile}"
+	rm "${_mainfile}".tmp
+	rm "${_inputfile}".tmp
+	cp metricsFile_"${today}".csv "${_mainfile}"
+	
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM_${today}.csv and OGM_runDateInfo_${today}.csv"
+	updateOrCreateDatabase bionano OGM_"${today}".csv OGM_runDateInfo_"${today}".csv OGM "${_ogm_job_controle_line_base}" OGM
+
+}
+
+
 
 function generateReports() {
 
@@ -819,6 +896,30 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "openarray" ]]; then
 				updateOrCreateDatabase samples "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.samples.csv" "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.samples.run_date_info.csv" openarray "${openarray_job_controle_line_base}" openarray
 				updateOrCreateDatabase snps "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.snps.csv" "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.snps.run_date_info.csv" openarray "${openarray_job_controle_line_base}" openarray
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done updating the database with ${openarrayProject}"
+			fi
+		done
+	fi
+fi
+
+if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
+	readarray -t ogmdata < <(find "${tmp_trendanalyse_dir}/ogm/metricsInput/" -maxdepth 1 -mindepth 1 -type f -name "metrics*" | sed -e "s|^${tmp_trendanalyse_dir}/ogm/metricsInput/||")
+	if [[ "${#ogmdata[@]:-0}" -eq '0' ]]
+	then
+		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."
+	else
+		for ogmfile in "${ogmdata[@]}"
+		do
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmfile ${ogmfile}."
+			ogmfilename=$(basename "${ogmfile}" .csv)
+			mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
+			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmToDB"
+			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
+			if grep -Fxq "${ogm_job_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
+			then
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed ogm file ${ogmfilename}."
+			else
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
+				processOGM "${mainfile}" "${ogmfile}" "${ogm_job_controle_line_base}"
 			fi
 		done
 	fi

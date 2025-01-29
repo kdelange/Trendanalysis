@@ -916,7 +916,7 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed ogm file ${ogmfilename}."
 			else
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
-				processOGM "${mainfile}" "${ogmfile}" "${ogm_job_controle_line_base}"
+				processOGM "${mainfile}" "${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmfile}" "${ogm_job_controle_line_base}"
 			fi
 		done
 	fi

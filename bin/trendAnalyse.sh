@@ -593,10 +593,7 @@ then
 	log4Bash 'FATAL' "${LINENO}" "${FUNCNAME:-main}" '1' 'Must specify a group with -g.'
 fi
 case "${dataType}" in 
-		ogm)
-			log4Bash 'FATAL' "${LINENO}" "${FUNCNAME[0]:-main}" '1' "Unhandled option. ogm is not jet up."
-			;;
-		dragen|projects|RNAprojects|darwin|openarray|rawdata|all)
+		dragen|projects|RNAprojects|darwin|openarray|rawdata|ogm|all)
 			;;
 		*)
 			log4Bash 'FATAL' "${LINENO}" "${FUNCNAME[0]:-main}" '1' "Unhandled option. Try $(basename "${0}") -h for help."

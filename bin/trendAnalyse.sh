@@ -888,7 +888,7 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 		mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
 		for ogmcsvfile in "${ogmdata[@]}"
 		do
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmfile ${ogmfile}."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
 			ogmfilename=$(basename "${ogmcsvfile}" .csv)
 			ogmfile="${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmcsvfile}"
 			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"

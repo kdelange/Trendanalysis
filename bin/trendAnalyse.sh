@@ -900,17 +900,17 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "adding ${ogmfilename} to ${mainfile}."
 				
 				tail -n +2 "${mainfile}" > "${mainfile}.tmp"
-				tail -n +2 "${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmfile}" > "${inputfile}.tmp"
+				tail -n +2 "${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmfile}" > "${ogmfile}.tmp"
 	
 				mainHeader=$(head -1 "${ogmfile}")
-				echo -e "${mainHeader}" > metricsFile_"${today}".csv
-				sort -u "${mainfile}.tmp" "${inputfile}.tmp" >> "metricsFile_${today}.csv"
+				echo -e "${mainHeader}" > "metricsFile_${today}.csv"
+				sort -u "${mainfile}.tmp" "${ogmfile}.tmp" >> "metricsFile_${today}.csv"
 
 				rm "${mainfile}"
-				rm "${mainfile}".tmp
-				rm "${inputfile}".tmp
-				cp metricsFile_"${today}".csv "${mainfile}"
-				mv metricsFile_"${today}".csv "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+				rm "${mainfile}.tmp"
+				rm "${ogmfile}.tmp"
+				cp "metricsFile_${today}.csv" "${mainfile}"
+				mv "metricsFile_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added %{inputfile}"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"
 				sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.failed"

@@ -40,7 +40,7 @@
         "table_name": "samples",
         "chart_type": "time_series_with_stacked_bar_plot",
         "chart_properties": {
-            "chart_title": "bar plot samples pass/faill",
+            "chart_title": "bar plot samples pass/fail",
             "y_value": "QC_PASS",
             "categories": "PASS, FAIL"
         }
@@ -68,7 +68,7 @@
         "table_name": "snps",
         "chart_type": "time_series_with_stacked_bar_plot",
         "chart_properties": {
-            "chart_title": "bar plot snps pass/faill",
+            "chart_title": "bar plot snps pass/fail",
             "y_value": "QC_PASS",
             "categories": "PASS, FAIL"
         }

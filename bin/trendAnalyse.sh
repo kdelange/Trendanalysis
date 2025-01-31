@@ -454,35 +454,20 @@ function processOpenArray() {
 function processOGM() {
 	
 	local _mainfile="${1}"
-	local _inputfile="${2}"
-	local _ogm_job_controle_line_base="${3}"
+	local _ogm_job_controle_line_base="${2}"
 	
-	today=$(date '+%Y%m%d')
-	
-	#_mainfile=mainMetrics.csv
-	#_inputfile=metricsInput/metrics_90_days_2025-01-22T12_19_05.111Z.csv
-	
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "using mainfile: ${_mainfile} and inputfile ${_inputfile}"
-	
-	tail -n +2 "${_mainfile}" > "${_mainfile}".tmp
-	tail -n +2 "${_inputfile}" > "${_inputfile}".tmp
-	
-	mainHeader=$(head -1 "${_inputfile}")
-	echo -e "${mainHeader}" > metricsFile_"${today}".csv
-	
-	sort -u "${_mainfile}".tmp "${_inputfile}".tmp >> metricsFile_"${today}".csv
-	
-	runFile=metricsFile_"${today}".csv
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "using mainfile: ${_mainfile}"
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "ogm log line: ${_ogm_job_controle_line_base}"
 	
 	declare -a statsFileColumnNames=()
 	declare -A statsFileColumnOffsets=()
 
-	IFS=$',' read -r -a statsFileColumnNames <<< "$(head -1 ${runFile})"
+	IFS=$',' read -r -a statsFileColumnNames <<< "$(head -1 ${_mainfile})"
 	
 	for (( offset = 0 ; offset < ${#statsFileColumnNames[@]} ; offset++ ))
 	do
 		columnName="${statsFileColumnNames[${offset}]}"
-			statsFileColumnOffsets["${columnName}"]="${offset}"
+		statsFileColumnOffsets["${columnName}"]="${offset}"
 	done
 
 	chipRunUIDFieldIndex=$((${statsFileColumnOffsets['Chip run uid']} + 1))
@@ -496,7 +481,7 @@ function processOGM() {
 	TimeStampFieldIndex=$((${statsFileColumnOffsets['Timestamp']} + 1))
 
 	echo -e 'Sample,Run,Date' > OGM_runDateInfo_"${today}".csv
-	
+
 	while read line
 	do
 		dateField=$(echo "${line}" | cut -d ',' -f"${TimeStampFieldIndex}")
@@ -504,9 +489,9 @@ function processOGM() {
 			runField=$(echo "${line}" | cut -d ',' -f"${FlowCellFielIndex}")
 			correctDate=$(date -d "${dateField}" '+%d/%m/%Y')
 			echo -e "${sampleField},${runField},${correctDate}" >> OGM_runDateInfo_"${today}".csv
-	done < <(tail -n +2 "${runFile}")
-	
-	echo -e 'Sample\tFlow_cell\tTotal_DNA(>=150Kbp)\tN50(>=150Kbp)\tAverage_label_density(>=150Kbp)\tMap_rate(%)\tDNA_per_scan(Gbp)\tLongest_molecule(Kbp)' > "OGM_"${today}".csv"
+	done < <(tail -n +2 "${_mainfile}")
+
+	echo -e 'Sample\tFlow_cell\tTotal_DNA(>=150Kbp)\tN50(>=150Kbp)\tAverage_label_density(>=150Kbp)\tMap_rate(%)\tDNA_per_scan(Gbp)\tLongest_molecule(Kbp)' > "OGM_${today}.csv"
 	awk -v s="${chipRunUIDFieldIndex}" \
 			-v s1="${FlowCellFielIndex}" \
 			-v s2="${TotalDNAFieldIndex}" \
@@ -515,15 +500,10 @@ function processOGM() {
 			-v s5="${MapRateFieldIndex}" \
 			-v s6="${DNAPerScanFieldIndex}" \
 			-v s7="${LongestMolecuulFieldIndex}" \
-			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${runFile}" >> OGM_"${today}".csv
-	
-	rm "${_mainfile}"
-	rm "${_mainfile}".tmp
-	rm "${_inputfile}".tmp
-	cp metricsFile_"${today}".csv "${_mainfile}"
-	
+			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${_mainfile}" >> "OGM_${today}.csv"
+
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM_${today}.csv and OGM_runDateInfo_${today}.csv"
-	updateOrCreateDatabase bionano OGM_"${today}".csv OGM_runDateInfo_"${today}".csv OGM "${_ogm_job_controle_line_base}" OGM
+	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" OGM "${_ogm_job_controle_line_base}" OGM
 
 }
 
@@ -683,6 +663,7 @@ logs_dir="${TMP_ROOT_DIR}/logs/trendanalysis/"
 mkdir -p "${TMP_ROOT_DIR}/logs/trendanalysis/"
 chronqc_tmp="${tmp_trendanalyse_dir}/tmp/"
 CHRONQC_DATABASE_NAME="${tmp_trendanalyse_dir}/database/"
+today=$(date '+%Y%m%d')
 
 if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "rawdata" ]]; then
 	readarray -t rawdataArray < <(find "${tmp_trendanalyse_dir}/rawdata/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/rawdata/||")
@@ -904,21 +885,47 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."
 	else
+		mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
 		for ogmfile in "${ogmdata[@]}"
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmfile ${ogmfile}."
 			ogmfilename=$(basename "${ogmfile}" .csv)
-			mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
-			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmToDB"
+			
+			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
 			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
 			if grep -Fxq "${ogm_job_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
 			then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed ogm file ${ogmfilename}."
 			else
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
-				processOGM "${mainfile}" "${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmfile}" "${ogm_job_controle_line_base}"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "adding ${ogmfilename} to ${mainfile}."
+				
+				tail -n +2 "${mainfile}" > "${mainfile}.tmp"
+				tail -n +2 "${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmfile}" > "${inputfile}.tmp"
+	
+				mainHeader=$(head -1 "${ogmfile}")
+				echo -e "${mainHeader}" > metricsFile_"${today}".csv
+				sort -u "${mainfile}.tmp" "${inputfile}.tmp" >> "metricsFile_${today}.csv"
+
+				rm "${mainfile}"
+				rm "${mainfile}".tmp
+				rm "${inputfile}".tmp
+				cp metricsFile_"${today}".csv "${mainfile}"
+				mv metricsFile_"${today}".csv "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added %{inputfile}"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"
+				sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.failed"
+				sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.started"
+				echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.finished"
 			fi
 		done
+		update_db_ogm_controle_line_base="${today}.${SCRIPT_NAME}_processOgmToDB"
+		if grep -Fxq "${update_db_ogm_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
+		then
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database ${today}."
+		else
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
+			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}"
+		fi
 	fi
 fi
 
@@ -930,7 +937,6 @@ rm -rf "${chronqc_tmp:-missing}"/*
 ## Function for generating a list of ChronQC plots.
 #
 
-today=$(date '+%Y%m%d')
 job_controle_file_base="${logs_dir}/generate_plots.${today}_${SCRIPT_NAME}"
 
 if [[ -e "${job_controle_file_base}.finished" ]]

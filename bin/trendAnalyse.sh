@@ -886,11 +886,11 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."
 	else
 		mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
-		for ogmfile in "${ogmdata[@]}"
+		for ogmcsvfile in "${ogmdata[@]}"
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmfile ${ogmfile}."
-			ogmfilename=$(basename "${ogmfile}" .csv)
-			
+			ogmfilename=$(basename "${ogmcsvfile}" .csv)
+			ogmfile="${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmcsvfile}"
 			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
 			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
 			if grep -Fxq "${ogm_job_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"

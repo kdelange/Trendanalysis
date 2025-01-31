@@ -488,7 +488,7 @@ function processOGM() {
 			sampleField=$(echo "${line}" | cut -d ',' -f"${chipRunUIDFieldIndex}")
 			runField=$(echo "${line}" | cut -d ',' -f"${FlowCellFielIndex}")
 			correctDate=$(date -d "${dateField}" '+%d/%m/%Y')
-			echo -e "${sampleField},${runField},${correctDate}" >> OGM_runDateInfo_"${today}".csv
+			echo -e "${sampleField},${runField},${correctDate}" >> "OGM_runDateInfo_${today}.csv"
 	done < <(tail -n +2 "${_mainfile}")
 
 	echo -e 'Sample\tFlow_cell\tTotal_DNA(>=150Kbp)\tN50(>=150Kbp)\tAverage_label_density(>=150Kbp)\tMap_rate(%)\tDNA_per_scan(Gbp)\tLongest_molecule(Kbp)' > "OGM_${today}.csv"
@@ -503,7 +503,7 @@ function processOGM() {
 			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${_mainfile}" >> "OGM_${today}.csv"
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM_${today}.csv and OGM_runDateInfo_${today}.csv"
-	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" OGM "${_ogm_job_controle_line_base}" OGM
+	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" ogm "${_ogm_job_controle_line_base}" ogm
 
 }
 

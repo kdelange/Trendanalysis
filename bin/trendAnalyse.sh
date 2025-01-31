@@ -504,7 +504,8 @@ function processOGM() {
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM_${today}.csv and OGM_runDateInfo_${today}.csv"
 	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" ogm "${_ogm_job_controle_line_base}" ogm
-
+	mv "OGM_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+	mv "OGM_runDateInfo_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 }
 
 
@@ -921,7 +922,7 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 		update_db_ogm_controle_line_base="${today}.${SCRIPT_NAME}_processOgmToDB"
 		if grep -Fxq "${update_db_ogm_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
 		then
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database ${today}."
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database with the ogm data on ${today}."
 		else
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
 			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}"

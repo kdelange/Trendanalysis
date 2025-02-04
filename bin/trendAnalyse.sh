@@ -885,6 +885,7 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."
 	else
 		mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
+		touch "${mainfile}"
 		for ogmcsvfile in "${ogmdata[@]}"
 		do
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
@@ -900,16 +901,16 @@ if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "ogm" ]]; then
 				
 				tail -n +2 "${mainfile}" > "${mainfile}.tmp"
 				tail -n +2 "${ogmfile}" > "${ogmfile}.tmp"
-	
+				metricsfiletoday="${tmp_trendanalyse_dir}/ogm/metricsFile_${today}.csv"
 				mainHeader=$(head -1 "${ogmfile}")
-				echo -e "${mainHeader}" > "metricsFile_${today}.csv"
-				sort -u "${mainfile}.tmp" "${ogmfile}.tmp" >> "metricsFile_${today}.csv"
+				echo -e "${mainHeader}" > "${metricsfiletoday}"
+				sort -u "${mainfile}.tmp" "${ogmfile}.tmp" >> "${metricsfiletoday}"
 
 				rm "${mainfile}"
 				rm "${mainfile}.tmp"
 				rm "${ogmfile}.tmp"
-				cp "metricsFile_${today}.csv" "${mainfile}"
-				mv "metricsFile_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+				cp "${metricsfiletoday}" "${mainfile}"
+				mv "${metricsfiletoday}" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added ${ogmfile}"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"
 				sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.failed"

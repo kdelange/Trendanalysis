@@ -508,8 +508,6 @@ function processOGM() {
 	mv "OGM_runDateInfo_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 }
 
-
-
 function generateReports() {
 
 	local _job_controle_file_base="${1}"

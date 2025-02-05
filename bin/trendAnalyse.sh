@@ -87,7 +87,7 @@ function updateOrCreateDatabase() {
 	local _job_controle_line_base="${5}" #"${_rawdata_job_controle_line_base}"
 	local _logtype="${6}"
 
-	if [[ "${_logtype}" == 'ogm' ]]
+	if [[ "${_logtype}" == 'ogm' ]] || [[ "${_logtype}" == 'darwin' ]]
 	then
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}, _logtype= ${_logtype}."
 		chronqc database --create -f \

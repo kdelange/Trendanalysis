@@ -910,6 +910,7 @@ fi
 ## Checks openarray data, and adds the new files to the database
 #
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${tmp_trendanalyse_dir}/openarray/"
+log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "openarray" ]]; then"
 if [[ "${dataType}" == "all" ]] || [[ "${dataType}" == "openarray" ]]; then
 	readarray -t openarraydata < <(find "${tmp_trendanalyse_dir}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/openarray/||")
 	if [[ "${#openarraydata[@]:-0}" -eq '0' ]]

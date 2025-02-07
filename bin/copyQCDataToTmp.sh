@@ -49,7 +49,7 @@ function copyQCdataToTmp() {
 	local _data="${1}" #rawdata
 	local _log_controle_file_base="${2}"
 	local _log_line_base="${3}"
-	local _prm_qc_dir="${4}" #"${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun/"*
+	local _prm_qc_dir="${4}" #"${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun"*
 	local _tmp_qc_dir="${5}" #${TMP_ROOT_DIR}/trendanalysis/rawdata/${_rawdata}/
 	
 
@@ -444,7 +444,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 					if [[ -e "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun.csv" ]]
 					then
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Sequencerun ${rawdata} is not yet copied to tmp, start rsyncing.."
-						copyQCdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun"*".csv" "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
+						copyQCdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun*.csv" "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
 					else
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "There are no QC files for sequencerun ${rawdata}, skipping.."
 #						copyQCRawdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "/groups/${group}/${prm_dir}/rawdata/ngs/"

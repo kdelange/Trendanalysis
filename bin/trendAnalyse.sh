@@ -67,9 +67,9 @@ Options:
 Config and dependencies:
 
 		This script needs 3 config files, which must be located in ${CFG_DIR}:
-		1. <group>.cfg	   for the group specified with -g
-		2. <host>.cfg		   for this server. E.g.:"${HOSTNAME_SHORT}.cfg"
-		3. sharedConfig.cfg  for all groups and all servers.
+		1. <group>.cfg		for the group specified with -g
+		2. <host>.cfg		for this server. E.g.:"${HOSTNAME_SHORT}.cfg"
+		3. sharedConfig.cfg	for all groups and all servers.
 		In addition the library sharedFunctions.bash is required and this one must be located in ${LIB_DIR}.
 ===============================================================================================================
 
@@ -147,47 +147,6 @@ function updateOrCreateDatabase() {
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "The line ${_job_controle_line_base} added to process.dataToTrendanalysis.finished file."
 		fi
 	fi
-
-#origninal part
-# 	if [[ -e "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" ]]
-# 		then
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${_runDateInfo}. Updating ChronQC database with ${_tableFile}."
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Importing ${_tableFile}"
-# 
-# 		chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \
-# 			"${_tableFile}" \
-# 			--db-table "${_db_table}" \
-# 			--run-date-info "${_runDateInfo}" \
-# 			"${_dataLabel}" || {
-# 				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
-# 				sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
-# 				echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.failed"
-# 				return
-# 			}
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
-# 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.failed"
-# 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
-# 		echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.finished"
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Added ${_job_controle_line_base} to process.${_logtype}_trendanalysis.finished file."
-# 	else
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}."
-# 		chronqc database --create \
-# 			-o "${CHRONQC_DATABASE_NAME}" \
-# 			"${_tableFile}" \
-# 			--run-date-info "${_runDateInfo}" \
-# 			--db-table "${_db_table}" \
-# 			"${_dataLabel}" -f || {
-# 				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to create database and import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
-# 				sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
-# 				echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.failed"
-# 				return
-# 			}
-# 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_tableFile} with ${_dataLabel} was stored in Chronqc database."
-# 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.failed"
-# 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
-# 		echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.finished"
-# 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "The line ${_job_controle_line_base} added to process.dataToTrendanalysis.finished file."
-# 	fi
 
 }
 
@@ -395,13 +354,10 @@ function processDarwinToDB() {
 
 	if [[ "${_filetype}"  == 'ArrayInzetten' ]]
 	then
-
 		head -1 "${_runinfo}" > "${chronqc_tmp}/ArrayInzettenLabpassed_runinfo_${_fileDate}.csv"
 		head -1 "${_tablefile}" > "${chronqc_tmp}/ArrayInzettenLabpassed_${_fileDate}.csv"
-		
 		grep labpassed "${_runinfo}" >> "${chronqc_tmp}/ArrayInzettenLabpassed_runinfo_${_fileDate}.csv"
 		grep labpassed "${_tablefile}" >> "${chronqc_tmp}/ArrayInzettenLabpassed_${_fileDate}.csv"
-		
 
 		updateOrCreateDatabase "${_filetype}All" "${_tablefile}" "${_runinfo}" all "${_darwin_job_controle_line_base}" darwin
 		updateOrCreateDatabase "${_filetype}Labpassed" "${chronqc_tmp}/ArrayInzettenLabpassed_${_fileDate}.csv" "${chronqc_tmp}/ArrayInzettenLabpassed_runinfo_${_fileDate}.csv" labpassed "${_darwin_job_controle_line_base}" darwin
@@ -454,7 +410,7 @@ function processOpenArray() {
 		#select snps, and flag snps with SD > 80% as PASS.
 		awk '/Assay Name/,/Experiment Name/ {
 			sub("%$","",$3); {
-			if ($3+0 > 80.0 ) {
+			if ($3+0 > 75.0 ) {
 				print $1"\t"$2"\t"$3"\tPASS"}
 			else {
 				print $1"\t"$2"\t"$3"\tFAIL" }
@@ -489,7 +445,7 @@ function processOpenArray() {
 		#awk '/Sample ID/,/^$/; sub("%$","",$2) ' "${_filename}" > ${_filename%.*}.samples.csv
 		awk '/Sample ID/,/^$/ {
 			sub("%$","",$2); {
-			if ($2+0 > 80 ) {
+			if ($2+0 > 75 ) {
 				print $1"\t"$2"\tPASS"}
 			else {
 				print $1"\t"$2"\tFAIL" }
@@ -505,7 +461,6 @@ function processOpenArray() {
 		tail -n +2 "${_openarrayprojectdir}/${_openarrayproject}.samples.csv" | awk -v project="${project}"  -v date="${date}" '{ print $1","project","date }' >> "${_openarrayprojectdir}/${_openarrayproject}.samples.run_date_info.csv"
 	
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "generated ${_openarrayprojectdir}/${_openarrayproject}.samples.run_date_info.csv"
-	
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "__________________function processOpenArray is done___________________"
 	else
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Project: ${_openarrayprojectdir}/${_openarrayproject} is not accrording to standard formatting, skipping"
@@ -693,26 +648,7 @@ thereShallBeOnlyOne "${lockFile}"
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Successfully got exclusive access to lock file ${lockFile} ..."
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written to ${TMP_ROOT_DIR}/logs ..."
 
-#
-# Use multiplexing to reduce the amount of SSH connections created
-# when rsyncing using the group's data manager account.
-#
-#  1. Become the "${DATA_MANAGER} user who will rsync the data to prm and
-#  2. Add to ~/.ssh/config:
-#								  ControlMaster auto
-#								  ControlPath ~/.ssh/tmp/%h_%p_%r
-#								  ControlPersist 5m
-#  3. Create ~/.ssh/tmp dir:
-#								  mkdir -p -m 700 ~/.ssh/tmp
-#  4. Recursively restrict access to the ~/.ssh dir to allow only the owner/user:
-#								  chmod -R go-rwx ~/.ssh
-#
-
-#
-# Get a list of all projects for this group, loop over their run analysis ("run") sub dirs and check if there are any we need to rsync.
-#
 # shellcheck disable=SC2029
-
 module load "chronqc/${CHRONQC_VERSION}"
 
 #
@@ -930,7 +866,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]];
 			else
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting with project ${openarrayProject} found @ ${tmp_trendanalyse_dir}/openarraydata/."
 				processOpenArray "${openarrayProject}"
-	
 				updateOrCreateDatabase run "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.run.csv" "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.run.run_date_info.csv" openarray "${openarray_job_controle_line_base}" openarray
 				updateOrCreateDatabase samples "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.samples.csv" "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.samples.run_date_info.csv" openarray "${openarray_job_controle_line_base}" openarray
 				updateOrCreateDatabase snps "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.snps.csv" "${tmp_trendanalyse_dir}/openarray/${openarrayProject}/${openarrayProject}.snps.run_date_info.csv" openarray "${openarray_job_controle_line_base}" openarray
@@ -960,14 +895,12 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed ogm file ${ogmfilename}."
 			else
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "adding ${ogmfilename} to ${mainfile}."
-				
 				tail -n +2 "${mainfile}" > "${mainfile}.tmp"
 				tail -n +2 "${ogmfile}" > "${ogmfile}.tmp"
 				metricsfiletoday="${tmp_trendanalyse_dir}/ogm/metricsFile_${today}.csv"
 				mainHeader=$(head -1 "${ogmfile}")
 				echo -e "${mainHeader}" > "${metricsfiletoday}"
 				sort -u "${mainfile}.tmp" "${ogmfile}.tmp" >> "${metricsfiletoday}"
-
 				rm "${mainfile}"
 				rm "${mainfile}.tmp"
 				rm "${ogmfile}.tmp"

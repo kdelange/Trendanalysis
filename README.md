@@ -20,16 +20,18 @@ umcg-gd
 	- sWGS
 - RNA projects (sequenced by genomescan, project data generated inhouse) /groups/umcg-gd/${PRM}/projects/
 - DARWIN (Lab related QC values) /groups/umcg-gd/dat06/trendanalysis/
-	- Array* (this will be changed into the open array early 2025)
+	- Array (this will be changed into the open array early 2025)
 	- DNA concentrations
 	- NGS lab values
 
 umcg-gap
 - openarray /groups/umcg-gap/${DAT}/openarray/
+ 
+umcg-ogm
+- Optical Genome Mapping /groups/umcg-ogm/prm67/.....
 
- *The Array data we receive from Darwin, together with other lab results. Thats why it is all together in 1 folder in the umcg-gd group.
 
-The `copyQCDataToTmp.sh` checks every PRM (PRM05, PRM06 and PRM07), and copies the QC data to TMP. 
+The `copyQCDataToTmp.sh` run by the umcg-gd-ateambot user, checks every PRM (PRM05, PRM06 and PRM07), and copies the QC data to TMP. 
 If the script runs on PRM06, the data will be copied to TMP06. Each data type will end-up on TMP in their own data folder.
 `/groups/${GROUP}/${TMP}/trendanalysis/${dataType}`
 
@@ -66,9 +68,13 @@ These log files are in `/groups/umcg-gd/${TMP}/logs/trendanalysis/`.
 
 If you want to generate the database again, remove the database and the log files.
 Run trendAnalyse.sh again, all datatypes are added which are on ${TMP}.
+
 If you want to test with 1 datatype, see https://chronqc.readthedocs.io/en/latest/run_chronqc.html.
 You can run chronQC with the runDateInfo file and the table file.
-You can play with the different table types. Adjust the .json file you use to generate the plots. The *.json files are in the /template/ folder in the Trendanalysis repo.
+
+trendAnalyse.sh has a `-d` `inputDataType` option. Then your are able to only add the data of 1 data type to the database. 
+
+You can play with the different graph types. Adjust the .json file you use to generate the plots. The *.json files are in the /template/ folder in the Trendanalysis repo.
 
 Then, in the trendAnalyse.sh script, the file templates/reports.sh is sourced.
 In this file the commands are noted so you can generate the report files you like for the data types you want.

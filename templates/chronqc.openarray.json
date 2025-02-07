@@ -1,5 +1,33 @@
 [
     {
+        "table_name": "samples",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "Sample_Call_Rate",
+            "y_value": "Sample_Call_Rate",
+            "y_label": "Sample_Call_Rate"
+        }
+    },
+    {
+        "table_name": "samples",
+        "chart_type": "time_series_with_percentage_of_samples_above_threshold",
+        "chart_properties": {
+            "chart_title": "Sample_Call_Rate (% sample above 75%)",
+            "y_value": "Sample_Call_Rate",
+            "threshold": 75,
+            "y_label": "% of samples above 75%"
+        }
+    },
+    {
+        "table_name": "samples",
+        "chart_type": "time_series_with_stacked_bar_plot",
+        "chart_properties": {
+            "chart_title": "bar plot samples pass/fail",
+            "y_value": "QC_PASS",
+            "categories": "PASS, FAIL"
+        }
+    },
+    {
         "table_name": "run",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
@@ -18,34 +46,6 @@
         }
     },
     {
-        "table_name": "samples",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "chart_title": "Sample_Call_Rate",
-            "y_value": "Sample_Call_Rate",
-            "y_label": "Sample_Call_Rate"
-        }
-    },
-    {
-        "table_name": "samples",
-        "chart_type": "time_series_with_percentage_of_samples_above_threshold",
-        "chart_properties": {
-            "chart_title": "Sample_Call_Rate (% sample above 80%)",
-            "y_value": "Sample_Call_Rate",
-            "threshold": 80,
-            "y_label": "% of samples above 80%"
-        }
-    },
-    {
-        "table_name": "samples",
-        "chart_type": "time_series_with_stacked_bar_plot",
-        "chart_properties": {
-            "chart_title": "bar plot samples pass/fail",
-            "y_value": "QC_PASS",
-            "categories": "PASS, FAIL"
-        }
-    },
-    {
         "table_name": "snps",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
@@ -58,17 +58,17 @@
         "table_name": "snps",
         "chart_type": "time_series_with_percentage_of_samples_above_threshold",
         "chart_properties": {
-            "chart_title": "Assay_Call_Rate (% snps above 80%)",
+            "chart_title": "Assay_Call_Rate (% snps above 75%)",
             "y_value": "Assay_Call_Rate",
-            "threshold": 80,
-            "y_label": "% of snps above 80%"
+            "threshold": 75,
+            "y_label": "% of snps above 75%"
         }
     },
     {
         "table_name": "snps",
         "chart_type": "time_series_with_stacked_bar_plot",
         "chart_properties": {
-            "chart_title": "bar plot snps pass/fail",
+            "chart_title": "bar plot snps pass/fail, snps above 75% is pass ",
             "y_value": "QC_PASS",
             "categories": "PASS, FAIL"
         }

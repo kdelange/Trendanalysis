@@ -412,8 +412,8 @@ log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written 
 ## Loops through all rawdata folders and checks if the QC data  is already copied to tmp. If not than call function copyQCRawdataToTmp
 #
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for raw QC data"
-mkdir -p "${DAT_ROOT_DIR}/logs/trendanalysis/"
-datLogsDir="${DAT_ROOT_DIR}/logs/trendanalysis/"
+mkdir -p "${DAT_ROOT_DIR}/trendanalysis/logs/"
+datLogsDir="${DAT_ROOT_DIR}/trendanalysis/logs/"
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; then
 	for prm_dir in "${ALL_PRM[@]}"

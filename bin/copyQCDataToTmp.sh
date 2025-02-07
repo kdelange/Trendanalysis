@@ -56,7 +56,7 @@ function copyQCdataToTmp() {
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Data ${_data} is not yet copied to tmp, start rsyncing.."
 	echo "${_log_line_base}.started" >> "${_log_controle_file_base}"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_data} found on ${_prm_qc_dir}, start rsyncing.."
-	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_qc_dir}" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}" \
+	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" ${_prm_qc_dir} "${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}" \
 	|| {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
@@ -444,7 +444,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 					if [[ -e "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun.csv" ]]
 					then
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Sequencerun ${rawdata} is not yet copied to tmp, start rsyncing.."
-						copyQCdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun.csv" "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
+						copyQCdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun"*".csv" "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
 					else
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "There are no QC files for sequencerun ${rawdata}, skipping.."
 #						copyQCRawdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "/groups/${group}/${prm_dir}/rawdata/ngs/"

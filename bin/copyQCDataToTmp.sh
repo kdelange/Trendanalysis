@@ -419,7 +419,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 	for prm_dir in "${ALL_PRM[@]}"
 	do
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
-
 		readarray -t rawdataArray < <(find "/groups/${group}/${prm_dir}/rawdata/ngs/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/rawdata/ngs/||")
 	
 		if [[ "${#rawdataArray[@]}" -eq '0' ]]
@@ -428,15 +427,14 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 		else
 			for rawdata in "${rawdataArray[@]}"
 			do
-				
-				
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs folder: /groups/${group}/${prm_dir}/logs/trendanalysis/${rawdata}"
 				rawdata_job_controle_file_base="${datLogsDir}/${prm_dir}.${SCRIPT_NAME}.rawdata"
-				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs file: ${rawdata_job_controle_file_base}"
 				rawdata_job_controle_line_base="${rawdata}.${SCRIPT_NAME}"
 				prm_rawdata_dir="/groups/${group}/${prm_dir}/rawdata/ngs/"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "checking: ${prm_rawdata_dir}"
 				touch "${rawdata_job_controle_file_base}"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if grep -Fxq ${rawdata_job_controle_line_base}.finished ${rawdata_job_controle_file_base}"
 				if grep -Fxq "${rawdata_job_controle_line_base}.finished" "${rawdata_job_controle_file_base}"
 				then
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."

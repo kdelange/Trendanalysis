@@ -428,19 +428,29 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 		else
 			for rawdata in "${rawdataArray[@]}"
 			do
+				
+				
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing rawdata ${rawdata} ..."
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Creating logs folder: /groups/${group}/${prm_dir}/logs/trendanalysis/${rawdata}"
 				rawdata_job_controle_file_base="${datLogsDir}/${prm_dir}.${SCRIPT_NAME}.rawdata"
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing run ${rawdata} ..."
 				rawdata_job_controle_line_base="${rawdata}.${SCRIPT_NAME}"
+				prm_rawdata_dir="/groups/${group}/${prm_dir}/rawdata/ngs/"
 				touch "${rawdata_job_controle_file_base}"
 				if grep -Fxq "${rawdata_job_controle_line_base}.finished" "${rawdata_job_controle_file_base}"
 				then
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed batch ${rawdata}."
 					continue
 				else
-					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "starting function copyQCRawdataToTmp for rawdata ${rawdata}."
-					copyQCRawdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
+					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "starting function copyQCdataToTmp for rawdata ${rawdata}."
+					if [[ -e "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun.csv" ]]
+					then
+						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Sequencerun ${rawdata} is not yet copied to tmp, start rsyncing.."
+						copyQCdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun/"* "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
+					else
+						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "There are no QC files for sequencerun ${rawdata}, skipping.."
+#						copyQCRawdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "/groups/${group}/${prm_dir}/rawdata/ngs/"
+					fi
 				fi
 			done
 			rm -vf "${rawdata_job_controle_file_base}.tmp"

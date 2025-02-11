@@ -876,7 +876,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]];
 fi
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
-	readarray -t ogmdata < <(find "${tmp_trendanalyse_dir}/ogm/metricsInput/" -maxdepth 1 -mindepth 1 -type f -name "metrics*" | sed -e "s|^${tmp_trendanalyse_dir}/ogm/metricsInput/||")
+	readarray -t ogmdata < <(find "${tmp_trendanalyse_dir}/ogm/metricsInput/" -maxdepth 1 -mindepth 1 -type f -name "bas*" | sed -e "s|^${tmp_trendanalyse_dir}/ogm/metricsInput/||")
 	if [[ "${#ogmdata[@]:-0}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."

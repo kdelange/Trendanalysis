@@ -907,7 +907,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 				rm "${mainfile}"
 				rm "${mainfile}.tmp"
 				rm "${ogmfile}.tmp"
-				cp "${metricsfiletoday}" "${mainfile}-${basmachine}"
+				cp "${metricsfiletoday}" "${mainfile}"
 				mv "${metricsfiletoday}" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added ${ogmfile}"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"

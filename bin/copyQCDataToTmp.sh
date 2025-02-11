@@ -467,7 +467,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${ogm_job_controle_line_base}.finished present, starting rsyncing ${baseogmfile}."
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "OGMTRENDANALYSIS=${OGMTRENDANALYSIS}"
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "baseogmfile=${baseogmfile}"
-					copyQCdataToTmp "${baseogmfile}" "${ogm_job_controle_file_base}" "${ogm_job_controle_line_base}" "${OGMTRENDANALYSIS}/${baseogmfile}" "${TMP_ROOT_DIR}/trendanalysis/ogm/metricsInput/"
+					copyQCdataToTmp "${baseogmfile}" "${ogm_job_controle_file_base}" "${ogm_job_controle_line_base}" "${OGMTRENDANALYSIS}/${ogmfile}" "${TMP_ROOT_DIR}/trendanalysis/ogm/metricsInput/"
 				fi
 			done
 			rm -vf "${ogm_job_controle_file_base}.tmp"

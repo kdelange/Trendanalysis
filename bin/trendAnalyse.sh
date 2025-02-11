@@ -496,8 +496,10 @@ function processOGM() {
 	DNAPerScanFieldIndex=$((${statsFileColumnOffsets['DNA per scan (Gbp)']} + 1))
 	LongestMolecuulFieldIndex=$((${statsFileColumnOffsets['Longest molecule (Kbp)']} + 1))
 	TimeStampFieldIndex=$((${statsFileColumnOffsets['Timestamp']} + 1))
-
-	echo -e 'Sample,Run,Date' > OGM_runDateInfo_"${today}".csv
+	
+	
+	
+	echo -e 'Sample,Run,Date' > "OGM-${_basmachine}_runDateInfo_${today}.csv"
 
 	while read line
 	do
@@ -505,10 +507,10 @@ function processOGM() {
 			sampleField=$(echo "${line}" | cut -d ',' -f"${chipRunUIDFieldIndex}")
 			runField=$(echo "${line}" | cut -d ',' -f"${FlowCellFielIndex}")
 			correctDate=$(date -d "${dateField}" '+%d/%m/%Y')
-			echo -e "${sampleField},${runField},${correctDate}" >> "OGM_runDateInfo_${today}.csv"
+			echo -e "${sampleField},${runField},${correctDate}" >> "OGM-${_basmachine}_runDateInfo_${today}.csv"
 	done < <(tail -n +2 "${_mainfile}")
 
-	echo -e 'Sample\tFlow_cell\tTotal_DNA(>=150Kbp)\tN50(>=150Kbp)\tAverage_label_density(>=150Kbp)\tMap_rate(%)\tDNA_per_scan(Gbp)\tLongest_molecule(Kbp)' > "OGM_${today}.csv"
+	echo -e 'Sample\tFlow_cell\tTotal_DNA(>=150Kbp)\tN50(>=150Kbp)\tAverage_label_density(>=150Kbp)\tMap_rate(%)\tDNA_per_scan(Gbp)\tLongest_molecule(Kbp)' > "OGM-${_basmachine}_${today}.csv"
 	awk -v s="${chipRunUIDFieldIndex}" \
 			-v s1="${FlowCellFielIndex}" \
 			-v s2="${TotalDNAFieldIndex}" \
@@ -517,12 +519,12 @@ function processOGM() {
 			-v s5="${MapRateFieldIndex}" \
 			-v s6="${DNAPerScanFieldIndex}" \
 			-v s7="${LongestMolecuulFieldIndex}" \
-			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${_mainfile}" >> "OGM_${today}.csv"
+			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${_mainfile}" >> "OGM-${_basmachine}_${today}.csv"
 
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM_${today}.csv and OGM_runDateInfo_${today}.csv"
-	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" "${_basmachine}" "${_ogm_job_controle_line_base}" ogm
-	mv "OGM_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
-	mv "OGM_runDateInfo_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM-${_basmachine}_${today}.csv and OGM-${_basmachine}_runDateInfo_${today}.csv"
+	updateOrCreateDatabase bionano "OGM-${_basmachine}_${today}.csv" "OGM-${_basmachine}_runDateInfo_${today}.csv" "${_basmachine}" "${_ogm_job_controle_line_base}" ogm
+	mv "OGM-${_basmachine}_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+	mv "OGM-${_basmachine}_runDateInfo_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 }
 
 function generateReports() {

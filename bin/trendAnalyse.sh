@@ -881,14 +881,15 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."
 	else
-		mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics.csv"
-		touch "${mainfile}"
 		for ogmcsvfile in "${ogmdata[@]}"
 		do
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
 			ogmfilename=$(basename "${ogmcsvfile}" .csv)
 			ogmfile="${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmcsvfile}"
 			basmachine=$(echo "${ogmfilename}" | cut -d '.' -f1)
+			mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics-${basmachine}.csv"
+			touch "${mainfile}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
+			
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "basmachine: ${basmachine}"
 			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
 			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
@@ -906,7 +907,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 				rm "${mainfile}"
 				rm "${mainfile}.tmp"
 				rm "${ogmfile}.tmp"
-				cp "${metricsfiletoday}" "${mainfile}"
+				cp "${metricsfiletoday}" "${mainfile}-${basmachine}"
 				mv "${metricsfiletoday}" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added ${ogmfile}"
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"
@@ -921,7 +922,8 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database with the ogm data on ${today}."
 		else
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
-			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}" "${basmachine}"
+			baslabel=$(basename "${mainfile}" .csv | cut -d '-' -f2)
+			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}" "${baslabel}" 
 		fi
 	fi
 fi

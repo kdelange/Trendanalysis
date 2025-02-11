@@ -472,7 +472,7 @@ function processOGM() {
 	
 	local _mainfile="${1}"
 	local _ogm_job_controle_line_base="${2}"
-	
+	local _basmachine="${3}"
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "using mainfile: ${_mainfile}"
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "ogm log line: ${_ogm_job_controle_line_base}"
 	
@@ -520,7 +520,7 @@ function processOGM() {
 			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${_mainfile}" >> "OGM_${today}.csv"
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM_${today}.csv and OGM_runDateInfo_${today}.csv"
-	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" ogm "${_ogm_job_controle_line_base}" ogm
+	updateOrCreateDatabase bionano "OGM_${today}.csv" "OGM_runDateInfo_${today}.csv" "${_basmachine}" "${_ogm_job_controle_line_base}" ogm
 	mv "OGM_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 	mv "OGM_runDateInfo_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 }
@@ -888,6 +888,8 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
 			ogmfilename=$(basename "${ogmcsvfile}" .csv)
 			ogmfile="${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmcsvfile}"
+			basmachine=$(echo "${ogmfilename}" | cut -d '.' -f1)
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "basmachine: ${basmachine}"
 			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
 			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
 			if grep -Fxq "${ogm_job_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
@@ -919,7 +921,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database with the ogm data on ${today}."
 		else
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
-			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}"
+			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}" "${basmachine}"
 		fi
 	fi
 fi

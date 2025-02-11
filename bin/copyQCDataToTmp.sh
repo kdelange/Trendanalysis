@@ -111,35 +111,6 @@ function copyQCProjectdataToTmp() {
 
 }
 
-function copyDarwinQCData() {
-
-	local _runinfofile="${1}"
-	local _tablefile="${2}"
-	local _filetype="${3}"
-	local _filedate="${4}"
-	local _darwin_job_controle_file_base="${5}"
-	local _line_base="${6}"
-
-	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_runinfofile} to tmp, start rsyncing.."
-	echo "${_line_base}.started" >> "${_darwin_job_controle_file_base}"
-	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${IMPORT_DIR}/${_filetype}"*"${_filedate}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/darwin/" \
-	|| {
-	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_filetype}"*"${_filedate}.csv"
-	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${IMPORT_DIR}/"
-	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/"
-	echo "${_line_base}.failed" >> "${_darwin_job_controle_file_base}.tmp"
-	mv "${_darwin_job_controle_file_base}.tmp" "${_darwin_job_controle_file_base}"
-		return
-		}
-	sed "/${_line_base}.failed/d" "${_darwin_job_controle_file_base}" > "${_darwin_job_controle_file_base}.tmp"
-	sed "/${_line_base}.started/d" "${_darwin_job_controle_file_base}.tmp" > "${_darwin_job_controle_file_base}.tmp2"
-	echo "${_line_base}.finished" >> "${_darwin_job_controle_file_base}.tmp2"
-	mv "${_darwin_job_controle_file_base}.tmp2" "${_darwin_job_controle_file_base}"
-	mv "${IMPORT_DIR}/${_filetype}"*"${_filedate}.csv" "${IMPORT_DIR}/archive/"
-	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying Darwin data: ${_filetype}_${_filedate}.csv"
-}
-
-
 function showHelp() {
 	#
 	# Display commandline help on STDOUT.
@@ -387,7 +358,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "darwin" ]]; th
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on ${dat_dir}, check if previous rsync went okay"
 				else
 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${darwin_job_controle_line_base}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
-				#	copyDarwinQCData "${runinfoCSV}" "${tableFile}" "${fileType}" "${fileDate}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}"
 					copyQCdataToTmp "${runinfoFile}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}" ""${IMPORT_DIR}/${fileType}"*"${fileDate}.csv"" "${TMP_ROOT_DIR}/trendanalysis/darwin/"
 				fi
 			done

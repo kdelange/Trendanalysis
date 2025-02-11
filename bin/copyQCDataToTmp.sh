@@ -70,7 +70,6 @@ function copyQCdataToTmp() {
 	echo "${_log_line_base}.finished" >> "${_log_controle_file_base}.tmp2"
 	mv "${_log_controle_file_base}.tmp2" "${_log_controle_file_base}"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_data}"
-
 }
 
 function copyQCProjectdataToTmp() {
@@ -138,7 +137,6 @@ function copyDarwinQCData() {
 	mv "${_darwin_job_controle_file_base}.tmp2" "${_darwin_job_controle_file_base}"
 	mv "${IMPORT_DIR}/${_filetype}"*"${_filedate}.csv" "${IMPORT_DIR}/archive/"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying Darwin data: ${_filetype}_${_filedate}.csv"
-
 }
 
 
@@ -324,7 +322,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 	done
 fi
 
-
 # Loops through all project data folders and checks if the QC data  is already copied to tmp. If not than call function copyQCProjectdataToTmp
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "projects" ]]; then
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting checking the prm's for project QC data"
@@ -332,7 +329,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "projects" ]]; 
 	do
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping through ${prm_dir}"
 		readarray -t projectdata < <(find "/groups/${group}/${prm_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm_dir}/projects/||")
-	
 		if [[ "${#projectdata[@]}" -eq '0' ]]
 		then
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "No projectdata found @ ${PRM_ROOT_DIR}/projects/."
@@ -391,8 +387,8 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "darwin" ]]; th
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on ${dat_dir}, check if previous rsync went okay"
 				else
 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${darwin_job_controle_line_base}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
-					copyDarwinQCData "${runinfoCSV}" "${tableFile}" "${fileType}" "${fileDate}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}"
-					
+				#	copyDarwinQCData "${runinfoCSV}" "${tableFile}" "${fileType}" "${fileDate}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}"
+					copyQCdataToTmp "${runinfoFile}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}" ""${IMPORT_DIR}/${fileType}"*"${fileDate}.csv"" "${TMP_ROOT_DIR}/trendanalysis/darwin/"
 				fi
 			done
 			rm -vf "${darwin_job_controle_file_base}.tmp"
@@ -406,9 +402,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]];
 	for dat_dir in "${ALL_DAT[@]}"
 	do
 		import_dir_openarray="/groups/${OPARGROUP}/${dat_dir}/openarray/"
-		
 		readarray -t openarraydata < <(find "${import_dir_openarray}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${import_dir_openarray}/||")
-		
 		if [[ "${#openarraydata[@]}" -eq '0' ]]
 		then
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new openarray files present in ${import_dir_openarray}"
@@ -416,7 +410,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]];
 			for openarraydir in "${openarraydata[@]}"
 			do
 				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${openarraydir}"
-				
 				QCFile=$(find "${import_dir_openarray}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
 				if [[ -e "${QCFile}" ]]
 				then 

@@ -462,7 +462,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]];
 					else
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${openarray_job_controle_line_base}.finished present, starting rsyncing ${QCFile}."
 						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "baseQCFile=${baseQCFile}"
-						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "baseQCFile=${baseQCFile}"
+						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QCFile=${QCFile}"
 						copyQCdataToTmp "${baseQCFile}" "${openarray_job_controle_file_base}" "${openarray_job_controle_line_base}" "${QCFile}" "${TMP_ROOT_DIR}/trendanalysis/openarray/${baseQCFile}/"
 					#	copyOpenarrayQCData "${baseQCFile}" "${openarraydir}" "${openarray_job_controle_file_base}" "${openarray_job_controle_line_base}"
 					fi

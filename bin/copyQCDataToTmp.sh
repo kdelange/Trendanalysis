@@ -447,11 +447,11 @@ fi
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 	for dat_dir in "${ALL_DAT[@]}"
 	do
-		readarray -t ogmdata < <(find "${OGMTRENDANALYSIS}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${OGMTRENDANALYSIS}/||")
+		readarray -t ogmdata < <(find "${OGMTRENDANALYSIS}/" -maxdepth 1 -mindepth 1 -type f -name "[!.]*" | sed -e "s|^${OGMTRENDANALYSIS}/||")
 		
 		if [[ "${#ogmdata[@]}" -eq '0' ]]
 		then
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new ogmy files present in ${OGMTRENDANALYSIS}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new ogm files present in ${OGMTRENDANALYSIS}"
 		else
 			for ogmfile in "${ogmdata[@]}"
 			do

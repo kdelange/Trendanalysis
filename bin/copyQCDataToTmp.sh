@@ -51,7 +51,6 @@ function copyQCdataToTmp() {
 	local _log_line_base="${3}"
 	local _prm_qc_dir="${4}" #"${_prm_rawdata_dir}/${_rawdata}/Info/SequenceRun"*
 	local _tmp_qc_dir="${5}" #${TMP_ROOT_DIR}/trendanalysis/rawdata/${_rawdata}/
-	
 
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Data ${_data} is not yet copied to tmp, start rsyncing.."
 	echo "${_log_line_base}.started" >> "${_log_controle_file_base}"
@@ -142,37 +141,6 @@ function copyDarwinQCData() {
 
 }
 
-function copyOpenarrayQCData() {
-	local _qcfile="${1}"
-	local _openarraydir="${2}"
-	local _openarray_job_controle_file_base="${3}"
-	local _line_base="${4}"
-	local _qcfiledir
-	_qcfiledir=$(basename "${_qcfile}" .txt)
-	
-	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Copying ${_qcfile} from dir: ${_qcfiledir} to tmp, start rsyncing.."
-	echo "${_line_base}.started" >> "${_openarray_job_controle_file_base}"
-
-	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "sudo -u ${group}-ateambot rsync ${_qcfile} ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/openarray/${_qcfiledir}/"
-
-# 
-# 
-# 	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_qcfile}" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/openarray/${_qcfiledir}/" \
-# 	|| {
-# 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_qcfile}."
-# 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_import_dir_openarray}/${_openarraydir}/"
-# 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/"
-# 	echo "${_line_base}.failed" >> "${_openarray_job_controle_file_base}.tmp"
-# 	mv "${_openarray_job_controle_file_base}.tmp" "${_openarray_job_controle_file_base}"
-# 	return
-# 	}
-# 	sed "/${_line_base}.failed/d" "${_openarray_job_controle_file_base}" > "${_openarray_job_controle_file_base}.tmp"
-# 	sed "/${_line_base}.started/d" "${_openarray_job_controle_file_base}.tmp" > "${_openarray_job_controle_file_base}.tmp2"
-# 	echo "${_line_base}.finished" >> "${_openarray_job_controle_file_base}.tmp2"
-# 	mv "${_openarray_job_controle_file_base}.tmp2" "${_openarray_job_controle_file_base}"
-	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${_qcfile} is copied to tmp."
-
-}
 
 function showHelp() {
 	#
@@ -464,7 +432,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]];
 						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "baseQCFile=${baseQCFile}"
 						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QCFile=${QCFile}"
 						copyQCdataToTmp "${baseQCFile}" "${openarray_job_controle_file_base}" "${openarray_job_controle_line_base}" "${QCFile}" "${TMP_ROOT_DIR}/trendanalysis/openarray/${baseQCFile}/"
-					#	copyOpenarrayQCData "${baseQCFile}" "${openarraydir}" "${openarray_job_controle_file_base}" "${openarray_job_controle_line_base}"
 					fi
 				else
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"
@@ -480,39 +447,30 @@ fi
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 	for dat_dir in "${ALL_DAT[@]}"
 	do
-		import_dir_ogm="/groups/${OGMGROUP}/${OGMPRM}/TrendAnalysis/"
-		
-		readarray -t ogmdata < <(find "${import_dir_ogm}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${import_dir_ogm}/||")
+		readarray -t ogmdata < <(find "${OGMTRENDANALYSIS}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${OGMTRENDANALYSIS}/||")
 		
 		if [[ "${#ogmdata[@]}" -eq '0' ]]
 		then
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new ogmy files present in ${import_dir_ogm}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "no new ogmy files present in ${OGMTRENDANALYSIS}"
 		else
-			for openarraydir in "${openarraydata[@]}"
+			for ogmfile in "${ogmdata[@]}"
 			do
-				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${openarraydir}"
-				
-				QCFile=$(find "${IMPORT_DIR_OPENARRAY}/${openarraydir}/" -maxdepth 1 -mindepth 1 -type f -name "*_QC_Summary.txt")
-				if [[ -e "${QCFile}" ]]
-				then 
-					baseQCFile=$(basename "${QCFile}" .txt)
-					OPENARRAY_JOB_CONTROLE_FILE_BASE="${datLogsDir}/${dat_dir}.${SCRIPT_NAME}.openarray"
-					openarray_job_controle_line_base="${baseQCFile}_${SCRIPT_NAME}"
-					if grep -Fxq "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}"
-					then
-						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present"
-						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${QCFile} data is already processed"
-					else
-						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${OPENARRAY_JOB_CONTROLE_LINE_BASE}.finished present, starting rsyncing ${QCFile}."
-						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "IMPORT_DIR_OPENARRAY=${IMPORT_DIR_OPENARRAY}"
-						log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "openarraydir=${openarraydir}"
-						copyOpenarrayQCData "${QCFile}" "${openarraydir}" "${IMPORT_DIR_OPENARRAY}" "${OPENARRAY_JOB_CONTROLE_FILE_BASE}" "${OPENARRAY_JOB_CONTROLE_LINE_BASE}"
-					fi
+				log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Start processing ${ogmfile}"
+				baseogmfile=$(basename "${ogmfile}" .csv)
+				ogm_job_controle_file_base="${datLogsDir}/${OGMPRM}.${SCRIPT_NAME}.ogm"
+				ogm_job_controle_line_base="${baseogmfile}_${SCRIPT_NAME}"
+				if grep -Fxq "${ogm_job_controle_line_base}.finished" "${ogm_job_controle_file_base}"
+				then
+					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "${ogm_job_controle_line_base}.finished present"
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${baseogmfile} data is already processed"
 				else
-					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "QC file for project ${openarraydir} is not available"
+					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${ogm_job_controle_line_base}.finished present, starting rsyncing ${baseogmfile}."
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "OGMTRENDANALYSIS=${OGMTRENDANALYSIS}"
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "baseogmfile=${baseogmfile}"
+					copyQCdataToTmp "${baseogmfile}" "${ogm_job_controle_file_base}" "${ogm_job_controle_line_base}" "${OGMTRENDANALYSIS}/${baseogmfile}" "${TMP_ROOT_DIR}/trendanalysis/ogm/metricsInput/"
 				fi
 			done
-			rm -vf "${OPENARRAY_JOB_CONTROLE_FILE_BASE}.tmp"
+			rm -vf "${ogm_job_controle_file_base}.tmp"
 		fi
 	done
 fi

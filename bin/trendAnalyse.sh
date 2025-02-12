@@ -522,7 +522,7 @@ function processOGM() {
 			'BEGIN {FS=","}{OFS="\t"}{if (NR>1){print $s,$s1,$s2,$s3,$s4,$s5,$s6,$s7}}' "${_mainfile}" >> "OGM-${_basmachine}_${today}.csv"
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "starting to update or create database using OGM-${_basmachine}_${today}.csv and OGM-${_basmachine}_runDateInfo_${today}.csv"
-	updateOrCreateDatabase bionano "OGM-${_basmachine}_${today}.csv" "OGM-${_basmachine}_runDateInfo_${today}.csv" "${_basmachine}" "${_ogm_job_controle_line_base}" ogm
+	updateOrCreateDatabase "${_basmachine}" "OGM-${_basmachine}_${today}.csv" "OGM-${_basmachine}_runDateInfo_${today}.csv" "${_basmachine}" "${_ogm_job_controle_line_base}" ogm
 	mv "OGM-${_basmachine}_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 	mv "OGM-${_basmachine}_runDateInfo_${today}.csv" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
 }

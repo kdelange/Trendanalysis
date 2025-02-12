@@ -496,9 +496,7 @@ function processOGM() {
 	DNAPerScanFieldIndex=$((${statsFileColumnOffsets['DNA per scan (Gbp)']} + 1))
 	LongestMolecuulFieldIndex=$((${statsFileColumnOffsets['Longest molecule (Kbp)']} + 1))
 	TimeStampFieldIndex=$((${statsFileColumnOffsets['Timestamp']} + 1))
-	
-	
-	
+
 	echo -e 'Sample,Run,Date' > "OGM-${_basmachine}_runDateInfo_${today}.csv"
 
 	while read line
@@ -918,7 +916,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 				echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.finished"
 			fi
 		done
-		update_db_ogm_controle_line_base="${today}.${SCRIPT_NAME}_processOgmToDB"
+		update_db_ogm_controle_line_base="${today}-${baslabel}.${SCRIPT_NAME}_processOgmToDB"
 		readarray -t mainogmdata< <(find "${tmp_trendanalyse_dir}/ogm/" -maxdepth 1 -mindepth 1 -type f -name "mainMetrics*")
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping trough ${mainogmdata}."
 		if [[ "${#mainogmdata[@]:-0}" -eq '0' ]]

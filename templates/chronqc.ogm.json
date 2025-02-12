@@ -1,41 +1,41 @@
 [
     {
-        "table_name": "bionano",
+        "table_name": "bas1",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "Average_label_density(>=150Kbp)"
         }
     },
     {
-        "table_name": "bionano",
+        "table_name": "bas1",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "DNA_per_scan(Gbp)"
         }
     },
     {
-        "table_name": "bionano",
+        "table_name": "bas1",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "Longest_molecule(Kbp)"
         }
     },
     {
-        "table_name": "bionano",
+        "table_name": "bas1",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "Map_rate(%)"
         }
     },
     {
-        "table_name": "bionano",
+        "table_name": "bas1",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "N50(>=150Kbp)"
         }
     },
     {
-        "table_name": "bionano",
+        "table_name": "bas1",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "y_value": "Total_DNA(>=150Kbp)"

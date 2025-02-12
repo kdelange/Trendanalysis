@@ -919,14 +919,17 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			fi
 		done
 		update_db_ogm_controle_line_base="${today}.${SCRIPT_NAME}_processOgmToDB"
-		if grep -Fxq "${update_db_ogm_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
-		then
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database with the ogm data on ${today}."
-		else
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${ogmfilename}, adding it to the database."
+		for mainbasfile in "${mainfile}"
+		do
 			baslabel=$(basename "${mainfile}" .csv | cut -d '-' -f2)
-			processOGM "${mainfile}" "${update_db_ogm_controle_line_base}" "${baslabel}" 
-		fi
+			if grep -Fxq "${update_db_ogm_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
+			then
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database with the ogm data from ${baslabel} on ${today}."
+			else
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ogm file ${mainbasfile}, adding it to the database."
+				processOGM "${mainbasfile}" "${update_db_ogm_controle_line_base}" "${baslabel}" 
+			fi
+		done
 	fi
 fi
 

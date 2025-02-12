@@ -916,7 +916,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 				echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.finished"
 			fi
 		done
-		update_db_ogm_controle_line_base="${today}-${baslabel}.${SCRIPT_NAME}_processOgmToDB"
+		
 		readarray -t mainogmdata< <(find "${tmp_trendanalyse_dir}/ogm/" -maxdepth 1 -mindepth 1 -type f -name "mainMetrics*")
 		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping trough ${mainogmdata}."
 		if [[ "${#mainogmdata[@]:-0}" -eq '0' ]]
@@ -926,6 +926,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			for mainbasfile in "${mainogmdata[@]}"
 			do
 				baslabel=$(basename "${mainbasfile}" .csv | cut -d '-' -f2)
+				update_db_ogm_controle_line_base="${today}-${baslabel}.${SCRIPT_NAME}_processOgmToDB"
 				if grep -Fxq "${update_db_ogm_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
 				then
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already updated the database with the ogm data from ${baslabel} on ${today}."

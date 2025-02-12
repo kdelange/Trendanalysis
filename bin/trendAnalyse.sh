@@ -919,6 +919,9 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			fi
 		done
 		update_db_ogm_controle_line_base="${today}.${SCRIPT_NAME}_processOgmToDB"
+		
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping trough ${mainfile}."
+
 		for mainbasfile in "${mainfile}"
 		do
 			baslabel=$(basename "${mainfile}" .csv | cut -d '-' -f2)

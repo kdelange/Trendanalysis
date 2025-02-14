@@ -1,18 +1,16 @@
 [
     {
-        "table_name": "fastqc",
+        "table_name": "insertSize",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
-            "y_value": "%GC"
+            "y_value": "MEAN_INSERT_SIZE"
         }
     },
     {
-        "table_name": "fastqc",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "table_name": "insertSize",
+        "chart_type": "time_series_with_box_whisker_plot",
         "chart_properties": {
-            "chart_title": "percentage unique reads",
-            "y_value": "total_deduplicated_percentage",
-            "y_label": "fastqc_percentage_unique_reads"
+            "y_value": "MEAN_INSERT_SIZE"
         }
     },
     {
@@ -38,20 +36,6 @@
         "chart_properties": {
             "chart_title": "Percent target bp 100x",
             "y_value": "PCT_TARGET_BASES_100X"
-        }
-    },
-    {
-        "table_name": "insertSize",
-        "chart_type": "time_series_with_mean_and_stdev",
-        "chart_properties": {
-            "y_value": "MEAN_INSERT_SIZE"
-        }
-    },
-    {
-        "table_name": "insertSize",
-        "chart_type": "time_series_with_box_whisker_plot",
-        "chart_properties": {
-            "y_value": "MEAN_INSERT_SIZE"
         }
     },
     {
@@ -132,6 +116,22 @@
         "chart_properties": {
             "chart_title": "PF unique aligned reads",
             "y_value": "PF_UQ_READS_ALIGNED"
+        }
+    },
+        {
+        "table_name": "fastqc",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "y_value": "%GC"
+        }
+    },
+    {
+        "table_name": "fastqc",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "percentage unique reads",
+            "y_value": "total_deduplicated_percentage",
+            "y_label": "fastqc_percentage_unique_reads"
         }
     }
 ]

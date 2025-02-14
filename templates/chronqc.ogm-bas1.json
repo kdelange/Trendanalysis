@@ -1,43 +1,52 @@
 [
     {
         "table_name": "bas1",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
+            "chart_title": "Average_label_density(>=150Kbp)",
+            "lower_threshold": 14,
+            "upper_threshold": 17,
             "y_value": "Average_label_density(>=150Kbp)"
         }
     },
     {
         "table_name": "bas1",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
             "y_value": "DNA_per_scan(Gbp)"
         }
     },
     {
         "table_name": "bas1",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
             "y_value": "Longest_molecule(Kbp)"
         }
     },
     {
         "table_name": "bas1",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
+            "chart_title": "Map_rate(%)",
+            "lower_threshold": 70,
             "y_value": "Map_rate(%)"
         }
     },
     {
         "table_name": "bas1",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
+            "chart_title": "N50(>=150Kbp)",
+            "lower_threshold": 230,
             "y_value": "N50(>=150Kbp)"
         }
     },
     {
         "table_name": "bas1",
-        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
+            "chart_title": "Total_DNA(>=150Kbp)",
+            "lower_threshold": 1500,
             "y_value": "Total_DNA(>=150Kbp)"
         }
     }

@@ -362,8 +362,8 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "darwin" ]]; th
 					if grep -Fxq "${darwin_job_controle_line_base}.finished" "${darwin_job_controle_file_base}"
 					then
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "rsyncing ${tableFile} and ${runinfoCSV} done, moving them to /archive/"
-						mv "${tableFile}" "${import_dir}/archive/"
-						mv "${runinfoCSV}" "${import_dir}/archive/"
+						mv "${import_dir}/${tableFile}" "${import_dir}/archive/"
+						mv "${import_dir}/${runinfoCSV}" "${import_dir}/archive/"
 					fi
 				fi
 			done

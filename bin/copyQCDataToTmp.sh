@@ -359,6 +359,12 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "darwin" ]]; th
 				else
 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${darwin_job_controle_line_base}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
 					copyQCdataToTmp "${runinfoFile}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}" ""${IMPORT_DIR}/${fileType}"*"${fileDate}.csv"" "${TMP_ROOT_DIR}/trendanalysis/darwin/"
+					if grep -Fxq "${darwin_job_controle_line_base}.finished" "${darwin_job_controle_file_base}"
+					then
+						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "rsyncing ${tableFile} and ${runinfoCSV} done, moving them to /archive/"
+						mv "${tableFile}" "${import_dir}/archive/"
+						mv "${runinfoCSV}" "${import_dir}/archive/"
+					fi
 				fi
 			done
 			rm -vf "${darwin_job_controle_file_base}.tmp"

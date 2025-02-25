@@ -479,7 +479,7 @@ function processOGM() {
 	declare -a statsFileColumnNames=()
 	declare -A statsFileColumnOffsets=()
 
-	IFS=$',' read -r -a statsFileColumnNames <<< "$(head -1 ${_mainfile})"
+	IFS=',' read -r -a statsFileColumnNames <<< "$(head -1 "${_mainfile}")"
 	
 	for (( offset = 0 ; offset < ${#statsFileColumnNames[@]} ; offset++ ))
 	do
@@ -499,7 +499,7 @@ function processOGM() {
 
 	echo -e 'Sample,Run,Date' > "OGM-${_basmachine}_runDateInfo_${today}.csv"
 
-	while read line
+	while read -r line
 	do
 		dateField=$(echo "${line}" | cut -d ',' -f"${TimeStampFieldIndex}")
 			sampleField=$(echo "${line}" | cut -d ',' -f"${chipRunUIDFieldIndex}")
@@ -889,7 +889,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics-${basmachine}.csv"
 			touch "${mainfile}"
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
-			
+
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "basmachine: ${basmachine}"
 			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
 			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
@@ -916,9 +916,9 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 				echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.finished"
 			fi
 		done
-		
+
 		readarray -t mainogmdata< <(find "${tmp_trendanalyse_dir}/ogm/" -maxdepth 1 -mindepth 1 -type f -name "mainMetrics*")
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping trough ${mainogmdata}."
+		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping trough ${mainogmdata[@]}."
 		if [[ "${#mainogmdata[@]:-0}" -eq '0' ]]
 		then
 			log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No mainMetrics file found @ ${tmp_trendanalyse_dir}/ogm/."

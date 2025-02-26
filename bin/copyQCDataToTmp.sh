@@ -195,8 +195,11 @@ function copyQCProjectdataToTmp() {
 			return
 			}
 		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "sed /${_line_base}.failed/d ${_project_job_controle_file_base} > ${_project_job_controle_file_base}.tmp"
 		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "sed /${_line_base}.started/d ${_project_job_controle_file_base}.tmp > ${_project_job_controle_file_base}.tmp2"
 		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2""
 		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}"
 		# The Dragen project (Exoom, WGS, sWGS) wil be copied to ${TMP_ROOT_DIR}/trendanalysis/dragen/

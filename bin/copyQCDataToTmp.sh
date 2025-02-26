@@ -55,7 +55,7 @@ function copyQCdataToTmp() {
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Data ${_data} is not yet copied to tmp, start rsyncing.."
 	echo "${_log_line_base}.started" >> "${_log_controle_file_base}"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_data} found on ${_prm_qc_dir}, start rsyncing.."
-	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" ""${_prm_qc_dir}"" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}" \
+	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_qc_dir}" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}" \
 	|| {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
@@ -72,6 +72,65 @@ function copyQCdataToTmp() {
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_data}"
 }
 
+function copyQCrawdataToTmp() {
+
+	local _data="${1}" #rawdata
+	local _log_controle_file_base="${2}"
+	local _log_line_base="${3}"
+	local _prm_qc_dir="${4}" #"${_prm_rawdata_dir}/${_rawdata}/Info/"
+	local _tmp_qc_dir="${5}" #${TMP_ROOT_DIR}/trendanalysis/rawdata/${_rawdata}/
+
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Data ${_data} is not yet copied to tmp, start rsyncing.."
+	echo "${_log_line_base}.started" >> "${_log_controle_file_base}"
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_data} found on ${_prm_qc_dir}, start rsyncing.."
+	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_qc_dir}/SequenceRun"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}" \
+	|| {
+	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
+	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
+	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}/"
+	
+	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}.tmp"
+	mv "${_log_controle_file_base}.tmp" "${_log_controle_file_base}"
+		return
+		}
+	sed "/${_log_line_base}.failed/d" "${_log_controle_file_base}" > "${_log_controle_file_base}.tmp"
+	sed "/${_log_line_base}.started/d" "${_log_controle_file_base}.tmp" > "${_log_controle_file_base}.tmp2"
+	echo "${_log_line_base}.finished" >> "${_log_controle_file_base}.tmp2"
+	mv "${_log_controle_file_base}.tmp2" "${_log_controle_file_base}"
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_data}"
+}
+
+function copyQCdarwindataToTmp() {
+
+	local _data="${1}" #rawdata
+	local _log_controle_file_base="${2}"
+	local _log_line_base="${3}"
+	local _prm_qc_dir="${4}" #"${_prm_rawdata_dir}/${_rawdata}/Info/"
+	local _fileType="${5}"
+	local _fileDate="${6}"
+	local _tmp_qc_dir="${7}" #${TMP_ROOT_DIR}/trendanalysis/rawdata/${_rawdata}/
+
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Data ${_data} is not yet copied to tmp, start rsyncing.."
+	echo "${_log_line_base}.started" >> "${_log_controle_file_base}"
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_data} found on ${_prm_qc_dir}, start rsyncing.."
+	rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_qc_dir}/${fileType}"*"${fileDate}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}" \
+	|| {
+	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
+	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
+	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}/"
+	
+	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}.tmp"
+	mv "${_log_controle_file_base}.tmp" "${_log_controle_file_base}"
+		return
+		}
+	sed "/${_log_line_base}.failed/d" "${_log_controle_file_base}" > "${_log_controle_file_base}.tmp"
+	sed "/${_log_line_base}.started/d" "${_log_controle_file_base}.tmp" > "${_log_controle_file_base}.tmp2"
+	echo "${_log_line_base}.finished" >> "${_log_controle_file_base}.tmp2"
+	mv "${_log_controle_file_base}.tmp2" "${_log_controle_file_base}"
+	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_data}"
+}
+
+
 function copyQCProjectdataToTmp() {
 
 	local _project="${1}"
@@ -85,26 +144,90 @@ function copyQCProjectdataToTmp() {
 	if [[ -e "${_prm_project_dir}/${_project}/run01/results/multiqc_data/${_project}.run_date_info.csv" && "${_project}" =~ "RNA" ]]
 	then
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${_project}"
-		copyQCdataToTmp "${_project}" "${_project_job_controle_file_base}" "${_line_base}" ""${_prm_project_dir}/${_project}/run01/results/multiqc_data/"*" "${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/"
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Also copy the samplesheet of ${_project}"
-		copyQCdataToTmp "${_project}" "${_project_job_controle_file_base}" "${_line_base}" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/"
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying project: ${_project}"
+		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/multiqc_data/"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/" \
+		|| {
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/"
+		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}.tmp"
+		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+			return
+			}
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/" \
+		|| {
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/"
+		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}.tmp"
+		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+			return
+			}
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}"
+
 	# The inhouse projects (Exoom, targeted) will be copied to ${TMP_ROOT_DIR}/trendanalysis/projects/
 	elif [[ -e "${_prm_project_dir}/${_project}/run01/results/multiqc_data/${_project}.run_date_info.csv" ]]
 	then
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${_project}"
-		copyQCdataToTmp "${_project}" "${_project_job_controle_file_base}" "${_line_base}" ""${_prm_project_dir}/${_project}/run01/results/multiqc_data/"*" "${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/"
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Also copy the samplesheet of ${_project}"
-		copyQCdataToTmp "${_project}" "${_project_job_controle_file_base}" "${_line_base}" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/"
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying project: ${_project}"
-	# The Dragen project (Exoom, WGS, sWGS) wil be copied to ${TMP_ROOT_DIR}/trendanalysis/dragen/
+		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/multiqc_data/"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/" \
+		|| {
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/"
+		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}.tmp"
+		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+			return
+			}
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/" \
+		|| {
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/"
+		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}.tmp"
+		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+			return
+			}
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}"
+		# The Dragen project (Exoom, WGS, sWGS) wil be copied to ${TMP_ROOT_DIR}/trendanalysis/dragen/
 	elif  [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/statistics/${_project}.Dragen_runinfo.csv" ]]
 	then
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${_project}"
-		copyQCdataToTmp "${_project}" "${_project_job_controle_file_base}" "${_line_base}" ""${_prm_project_dir}/${_project}/run01/results/qc/statistics/"*" "${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Also copy the samplesheet of ${_project}"
-		copyQCdataToTmp "${_project}" "${_project_job_controle_file_base}" "${_line_base}" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying project: ${_project}"
+		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/qc/statistics/"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/" \
+		|| {
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}.tmp"
+		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+			return
+			}
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/" \
+		|| {
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}.tmp"
+		mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
+			return
+			}
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}" 
 	else
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} there is no QC data, nothing to rsync.."
 	fi
@@ -282,7 +405,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "rawdata" ]]; t
 					if [[ -e "${prm_rawdata_dir}/${rawdata}/Info/SequenceRun.csv" ]]
 					then
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Sequencerun ${rawdata} is not yet copied to tmp, start rsyncing.."
-						copyQCdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" ""${prm_rawdata_dir}/${rawdata}/Info/SequenceRun"*".csv"" "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
+						copyQCrawdataToTmp "${rawdata}" "${rawdata_job_controle_file_base}" "${rawdata_job_controle_line_base}" "${prm_rawdata_dir}/${rawdata}/Info/" "${TMP_ROOT_DIR}/trendanalysis/rawdata/${rawdata}/"
 					else
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "There are no QC files for sequencerun ${rawdata}, skipping.."
 					fi
@@ -358,7 +481,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "darwin" ]]; th
 					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "${runinfoFile} data is already processed, but there is new data on ${dat_dir}, check if previous rsync went okay"
 				else
 					log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "no ${darwin_job_controle_line_base}.finished present, starting rsyncing ${tableFile} and ${runinfoCSV}"
-					copyQCdataToTmp "${runinfoFile}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}" ""${import_dir}/${fileType}"*"${fileDate}.csv"" "${TMP_ROOT_DIR}/trendanalysis/darwin/"
+					copyQCdarwindataToTmp "${runinfoFile}" "${darwin_job_controle_file_base}" "${darwin_job_controle_line_base}" "${import_dir}" "${fileType}" "${fileDate}" "${TMP_ROOT_DIR}/trendanalysis/darwin/"
 					if grep -Fxq "${darwin_job_controle_line_base}.finished" "${darwin_job_controle_file_base}"
 					then
 						log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "rsyncing ${tableFile} and ${runinfoCSV} done, moving them to /archive/"

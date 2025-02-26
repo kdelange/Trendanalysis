@@ -918,13 +918,14 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 		done
 
 		readarray -t mainogmdata< <(find "${tmp_trendanalyse_dir}/ogm/" -maxdepth 1 -mindepth 1 -type f -name "mainMetrics*")
-		log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "looping trough ${mainogmdata[@]}."
+
 		if [[ "${#mainogmdata[@]:-0}" -eq '0' ]]
 		then
 			log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No mainMetrics file found @ ${tmp_trendanalyse_dir}/ogm/."
 		else
 			for mainbasfile in "${mainogmdata[@]}"
 			do
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "working on ${mainbasfile}."
 				baslabel=$(basename "${mainbasfile}" .csv | cut -d '-' -f2)
 				update_db_ogm_controle_line_base="${today}-${baslabel}.${SCRIPT_NAME}_processOgmToDB"
 				if grep -Fxq "${update_db_ogm_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"

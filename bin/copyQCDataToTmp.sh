@@ -60,9 +60,7 @@ function copyQCdataToTmp() {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}/"
-	
-	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}.tmp"
-	mv "${_log_controle_file_base}.tmp" "${_log_controle_file_base}"
+	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}"
 		return
 		}
 	sed "/${_log_line_base}.failed/d" "${_log_controle_file_base}" > "${_log_controle_file_base}.tmp"
@@ -88,9 +86,7 @@ function copyQCrawdataToTmp() {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}/"
-	
-	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}.tmp"
-	mv "${_log_controle_file_base}.tmp" "${_log_controle_file_base}"
+	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}"
 		return
 		}
 	sed "/${_log_line_base}.failed/d" "${_log_controle_file_base}" > "${_log_controle_file_base}.tmp"
@@ -118,9 +114,7 @@ function copyQCdarwindataToTmp() {
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_data}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_qc_dir}"
 	log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${_tmp_qc_dir}/"
-	
-	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}.tmp"
-	mv "${_log_controle_file_base}.tmp" "${_log_controle_file_base}"
+	echo "${_log_line_base}.failed" >> "${_log_controle_file_base}"
 		return
 		}
 	sed "/${_log_line_base}.failed/d" "${_log_controle_file_base}" > "${_log_controle_file_base}.tmp"
@@ -129,7 +123,6 @@ function copyQCdarwindataToTmp() {
 	mv "${_log_controle_file_base}.tmp2" "${_log_controle_file_base}"
 	log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_data}"
 }
-
 
 function copyQCProjectdataToTmp() {
 
@@ -152,7 +145,6 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/"
 		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
-		#mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/" \
@@ -161,7 +153,6 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/RNAprojects/${_project}/"
 		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
-		#mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
 		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
@@ -182,7 +173,6 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/"
 		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
-		#mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/" \
@@ -191,7 +181,6 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/projects/${_project}/"
 		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
-		#mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
 		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
@@ -211,7 +200,6 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
 		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
-		#mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/" \
@@ -220,7 +208,6 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
 		log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
 		echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
-		#mv "${_project_job_controle_file_base}.tmp" "${_project_job_controle_file_base}"
 			return
 			}
 		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"

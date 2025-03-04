@@ -3,6 +3,7 @@
         "table_name": "insertSize",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
+            "chart_title": "MEAN_INSERT_SIZE",
             "y_value": "MEAN_INSERT_SIZE"
         }
     },
@@ -10,6 +11,7 @@
         "table_name": "insertSize",
         "chart_type": "time_series_with_box_whisker_plot",
         "chart_properties": {
+            "chart_title": "MEAN_INSERT_SIZE",
             "y_value": "MEAN_INSERT_SIZE"
         }
     },
@@ -122,6 +124,7 @@
         "table_name": "fastqc",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
+            "chart_title": "%GC",
             "y_value": "%GC"
         }
     },

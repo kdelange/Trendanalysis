@@ -15,8 +15,9 @@ chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p seqOverview -f "${CHRONQC
 chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" NGSlab "${CHRONQC_TEMPLATE_DIRS}/chronqc.NGSlab.json"
 chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p Concentratie -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" Nimbus "${CHRONQC_TEMPLATE_DIRS}/chronqc.Concentratie.json"
 
-chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p ArrayInzetten -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" labpassed "${CHRONQC_TEMPLATE_DIRS}/chronqc.ArrayInzetten_labpassed.json"
-chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p ArrayInzetten -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" all "${CHRONQC_TEMPLATE_DIRS}/chronqc.ArrayInzetten_all.json"
+## GSA array is EOL 03-2025
+#chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p ArrayInzetten -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" labpassed "${CHRONQC_TEMPLATE_DIRS}/chronqc.ArrayInzetten_labpassed.json"
+#chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p ArrayInzetten -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" all "${CHRONQC_TEMPLATE_DIRS}/chronqc.ArrayInzetten_all.json"
 
 
 #
@@ -31,8 +32,8 @@ chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p SequenceRun -f "${CHRONQC
 ## Dragen data reports
 #
 chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragenExoom "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragenExoom.json"
-chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p dragen -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" WGS "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragen.json"
-chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p dragen -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" sWGS "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragen.json"
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragenWGS "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragenWGS.json"
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" dragenSWGS "${CHRONQC_TEMPLATE_DIRS}/chronqc.dragenSWGS.json"
 #
 ## RNA data reports
 #
@@ -43,5 +44,9 @@ chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}
 #
 chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" openarray "${CHRONQC_TEMPLATE_DIRS}/chronqc.openarray.json"
 
-
+#
+## ogm report
+#
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p ogm -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" bas1 "${CHRONQC_TEMPLATE_DIRS}/chronqc.ogm-bas1.json"
+chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p ogm -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" bas3 "${CHRONQC_TEMPLATE_DIRS}/chronqc.ogm-bas3.json"
 

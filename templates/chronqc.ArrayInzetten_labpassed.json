@@ -18,7 +18,7 @@
         }
     },
     {
-     	"table_name": "ArrayInzettenLabpassed",
+        "table_name": "ArrayInzettenLabpassed",
         "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
             "chart_title": "CallRate per sample",
@@ -28,13 +28,13 @@
         }
     },
     {
-     	"table_name": "ArrayInzettenLabpassed",
+        "table_name": "ArrayInzettenLabpassed",
         "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
             "chart_title": "StdDev per sample",
             "upper_threshold": 0.2,
             "y_value": "StdDev",
-       	    "per_sample":"True"
+            "per_sample":"True"
         }
     }
 ]

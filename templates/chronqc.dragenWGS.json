@@ -1,0 +1,98 @@
+[
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "total_reads",
+            "y_value": "total_reads"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "hq_mapped_reads",
+            "y_value": "hq_mapped_reads"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "total_bases",
+            "y_value": "total_bases"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "bases_on_target",
+            "y_value": "bases_on_target"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "duplicate_readpairs",
+            "y_value": "duplicate_readpairs"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "mean_insert_size",
+            "y_value": "mean_insert_size"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "mean_coverage_genome",
+            "y_value": "mean_coverage_genome"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "frac_min_1x_coverage",
+            "y_value": "frac_min_1x_coverage"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "frac_min_10x_coverage",
+            "y_value": "frac_min_10x_coverage"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "frac_min_50x_coverage",
+            "y_value": "frac_min_50x_coverage"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "mean_alignment_coverage",
+            "y_value": "mean_alignment_coverage"
+        }
+    },
+    {
+        "table_name": "dragenWGS",
+        "chart_type": "time_series_with_mean_and_stdev",
+        "chart_properties": {
+            "chart_title": "coverage_uniformity",
+            "y_value": "coverage_uniformity"
+        }
+    }
+]

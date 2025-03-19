@@ -885,35 +885,44 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 		do
 			ogmfilename=$(basename "${ogmcsvfile}" .csv)
 			ogmfile="${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmcsvfile}"
-			basmachine=$(echo "${ogmfilename}" | cut -d '.' -f1)
-			mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics-${basmachine}.csv"
-			touch "${mainfile}"
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
-
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "basmachine: ${basmachine}"
-			ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
-			touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
-			if grep -Fxq "${ogm_job_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
+			headercheck='Chip run uid,Flow cell,Instrument,Total DNA (>= 150Kbp),N50 (>= 150Kbp),Average label density (>= 150Kbp),Map rate (%),DNA per scan (Gbp),Longest molecule (Kbp),Timestamp'
+			headerogmfile=$(header -1 "${ogmfile}")
+			if [[ "${headercheck}" == "${headerogmfile}"]]
 			then
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed ogm file ${ogmfilename}."
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "The hearder of ${ogmcsvfile} is in the correct format."
+				basmachine=$(echo "${ogmfilename}" | cut -d '.' -f1)
+				mainfile="${tmp_trendanalyse_dir}/ogm/mainMetrics-${basmachine}.csv"
+				touch "${mainfile}"
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ogmcsvfile ${ogmcsvfile}."
+	
+				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "basmachine: ${basmachine}"
+				ogm_job_controle_line_base="${ogmfilename}.${SCRIPT_NAME}_processOgmMainFile"
+				touch "${logs_dir}/process.ogm_trendanalysis."{finished,failed,started}
+				if grep -Fxq "${ogm_job_controle_line_base}" "${logs_dir}/process.ogm_trendanalysis.finished"
+				then
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed ogm file ${ogmfilename}."
+				else
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "adding ${ogmfilename} to ${mainfile}."
+					tail -n +2 "${mainfile}" > "${mainfile}.tmp"
+					tail -n +2 "${ogmfile}" > "${ogmfile}.tmp"
+					metricsfiletoday="${tmp_trendanalyse_dir}/ogm/metricsFile_${today}.csv"
+					mainHeader=$(head -1 "${ogmfile}")
+					echo -e "${mainHeader}" > "${metricsfiletoday}"
+					sort -u "${mainfile}.tmp" "${ogmfile}.tmp" >> "${metricsfiletoday}"
+					rm "${mainfile}"
+					rm "${mainfile}.tmp"
+					rm "${ogmfile}.tmp"
+					cp "${metricsfiletoday}" "${mainfile}"
+					mv "${metricsfiletoday}" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added ${ogmfile}"
+					log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"
+					sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.failed"
+					sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.started"
+					echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.finished"
+				fi
 			else
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "adding ${ogmfilename} to ${mainfile}."
-				tail -n +2 "${mainfile}" > "${mainfile}.tmp"
-				tail -n +2 "${ogmfile}" > "${ogmfile}.tmp"
-				metricsfiletoday="${tmp_trendanalyse_dir}/ogm/metricsFile_${today}.csv"
-				mainHeader=$(head -1 "${ogmfile}")
-				echo -e "${mainHeader}" > "${metricsfiletoday}"
-				sort -u "${mainfile}.tmp" "${ogmfile}.tmp" >> "${metricsfiletoday}"
-				rm "${mainfile}"
-				rm "${mainfile}.tmp"
-				rm "${ogmfile}.tmp"
-				cp "${metricsfiletoday}" "${mainfile}"
-				mv "${metricsfiletoday}" "${tmp_trendanalyse_dir}/ogm/metricsFinished/"
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "done creating new ${mainfile} added ${ogmfile}"
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "added log line: ${ogm_job_controle_line_base} to ${logs_dir}/process.ogm_trendanalysis.finished"
-				sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.failed"
-				sed -i "/${ogm_job_controle_line_base}/d" "${logs_dir}/process.ogm_trendanalysis.started"
-				echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.finished"
+				echo "${ogm_job_controle_line_base}" >> "${logs_dir}/process.ogm_trendanalysis.failed"
+				log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "${ogmfile} header is not in the correct format, skipping this file."
 			fi
 		done
 

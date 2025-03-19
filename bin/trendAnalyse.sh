@@ -886,7 +886,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 			ogmfilename=$(basename "${ogmcsvfile}" .csv)
 			ogmfile="${tmp_trendanalyse_dir}/ogm/metricsInput/${ogmcsvfile}"
 			headercheck='Chip run uid,Flow cell,Instrument,Total DNA (>= 150Kbp),N50 (>= 150Kbp),Average label density (>= 150Kbp),Map rate (%),DNA per scan (Gbp),Longest molecule (Kbp),Timestamp'
-			headerogmfile=$(header -1 "${ogmfile}")
+			headerogmfile=$(head -1 "${ogmfile}")
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "if [[ ${headercheck} == ${headerogmfile} ]]"
 			if [[ "${headercheck}" == "${headerogmfile}" ]]
 			then

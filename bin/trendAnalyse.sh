@@ -361,7 +361,7 @@ function processDragen() {
 		'BEGIN {FS="\t"}{OFS="\t"}{if (NR>1){print $s1,s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9,$s10,$s11,$s12,$s13}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >>  "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
 	
 	fi
-	echo -e 'Sample,Run,Date' > "${_dragenproject}.Dragen_runinfo.csv"
+	echo -e 'Sample,Run,Date' > "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"
 	awk -v s="${_dragenproject}" -v f="${file_date}" 'BEGIN {FS="\t"}{OFS=","}{if (NR>1){print $1,s,f}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >> "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"
 	
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Done making the run_data_info and table file for project ${_dragenproject}"

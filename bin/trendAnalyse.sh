@@ -262,6 +262,113 @@ function processProjectToDB() {
 
 }
 
+function processDragen() {
+
+	local _dragenproject="${1}"
+	local _statsfilelocation="${2}"
+	local _dragentype="${3}"
+	local _dragen_job_controle_line_base="${4}"
+	
+	
+	file_date=$(date -r "${_statsfilelocation}/${_dragenproject}.stats.tsv" '+%d/%m/%Y')
+	
+	declare -a statsFileColumnNames=()
+	declare -A statsFileColumnOffsets=()
+	
+	IFS=$'\t' read -r -a statsFileColumnNames <<< "$(head -1 ${_statsfilelocation}/${_dragenproject}.stats.tsv)"
+	
+	for (( offset = 0 ; offset < ${#statsFileColumnNames[@]} ; offset++ ))
+	do
+		columnName="${statsFileColumnNames[${offset}]}"
+		statsFileColumnOffsets["${columnName}"]="${offset}"
+	done
+	
+	sampleNameFieldIndex=$((${statsFileColumnOffsets['sample_name']} + 1))
+	totalBasesFieldIndex=$((${statsFileColumnOffsets['total_bases']} + 1))
+	totalReadsFieldIndex=$((${statsFileColumnOffsets['total_reads']} + 1))
+	hq_MappedreadsFieldIndex=$((${statsFileColumnOffsets['hq_mapped_reads']} + 1))
+	duplicateReadPairsFieldIndex=$((${statsFileColumnOffsets['duplicate_readpairs']} + 1))
+	basesOnTargetFieldIndex=$((${statsFileColumnOffsets['bases_on_target']} + 1))
+	meanInsertSizeFieldIndex=$((${statsFileColumnOffsets['mean_insert_size']} + 1))
+	fracMin1xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_1x_coverage']} + 1))
+	
+	if [[ -n "${statsFileColumnOffsets['frac_duplicates']+isset}" ]]
+	then
+		fracDuplicatesFieldIndex=$((${statsFileColumnOffsets['frac_duplicates']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['mean_coverage_genome']+isset}" ]]
+	then
+		meanCoverageGenomeFieldIndex=$((${statsFileColumnOffsets['mean_coverage_genome']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['mean_coverage_target']+isset}" ]]
+	then
+		mean_coverage_targetFieldIndex=$((${statsFileColumnOffsets['mean_coverage_target']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['frac_min_10x_coverage']+isset}" ]]
+	then
+		fracMin10xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_10x_coverage']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['frac_min_50x_coverage']+isset}" ]]
+	then
+		fracMin50xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_50x_coverage']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['frac_min_20x_coverage']+isset}" ]]
+	then
+		fracMin20xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_20x_coverage']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['mean_alignment_coverage']+isset}" ]]
+	then
+		mean_alignment_coverageCoverageFieldIndex=$((${statsFileColumnOffsets['mean_alignment_coverage']} + 1))
+	fi
+	if [[ -n "${statsFileColumnOffsets['coverage_uniformity']+isset}" ]]
+	then
+		coverage_uniformityCoverageFieldIndex=$((${statsFileColumnOffsets['coverage_uniformity']} + 1))
+	fi
+	
+	if [[ "${_dragentype}" == *"sWGS"* ]]
+	then
+		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_duplicates\tmean_coverage_genome'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
+	
+		awk -v s1=${sampleNameFieldIndex} \
+				-v s="${seq_batch}" \
+				-v s2="${totalBasesFieldIndex}" \
+				-v s3="${totalReadsFieldIndex}" \
+				-v s4="${hq_MappedreadsFieldIndex}" \
+				-v s5="${duplicateReadPairsFieldIndex}" \
+				-v s6="${basesOnTargetFieldIndex}" \
+				-v s7="${meanInsertSizeFieldIndex}" \
+				-v s8="${fracMin1xCoverageFieldIndex}" \
+				-v s9="${fracDuplicatesFieldIndex}" \
+				-v s10="${meanCoverageGenomeFieldIndex}" \
+			'BEGIN {FS="\t"}{OFS="\t"}{if (NR>1){print $s1,s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9,$s10}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >>  "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
+	else
+		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_min_10x_coverage\tfrac_min_50x_coverage\tmean_coverage_genome\tmean_alignment_coverage\tcoverage_uniformity'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
+	
+		awk -v s1="${sampleNameFieldIndex}" \
+			-v s="${seq_batch}" \
+			-v s2="${totalBasesFieldIndex}" \
+			-v s3="${totalReadsFieldIndex}" \
+			-v s4="${hq_MappedreadsFieldIndex}" \
+			-v s5="${duplicateReadPairsFieldIndex}" \
+			-v s6="${basesOnTargetFieldIndex}" \
+			-v s7="${meanInsertSizeFieldIndex}" \
+			-v s8="${fracMin1xCoverageFieldIndex}" \
+			-v s9="${fracMin10xCoverageFieldIndex}" \
+			-v s10="${fracMin50xCoverageFieldIndex}" \
+			-v s11="${meanCoverageGenomeFieldIndex}" \
+			-v s12="${mean_alignment_coverageCoverageFieldIndex}" \
+			-v s13="${coverage_uniformityCoverageFieldIndex}" \
+		'BEGIN {FS="\t"}{OFS="\t"}{if (NR>1){print $s1,s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9,$s10,$s11,$s12,$s13}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >>  "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
+	
+	fi
+	echo -e 'Sample,Run,Date' > "${_dragenproject}.Dragen_runinfo.csv"
+	awk -v s="${seq_batch}" -v f="${file_date}" 'BEGIN {FS="\t"}{OFS=","}{if (NR>1){print $1,s,f}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >> "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"
+	
+	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Done making the run_data_info and table file for project ${_dragenproject}"
+	updateOrCreateDatabase "dragen${_dragentype}" "${_statsfilelocation}/${_dragenproject}.Dragen.csv" "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv" "dragen${_dragentype}" "${_dragen_job_controle_line_base}" dragen
+
+}
+
 function processRNAProjectToDB {
 	local _rnaproject="${1}"
 	local _processrnaprojecttodb_controle_line_base="${2}"
@@ -501,9 +608,9 @@ function processOGM() {
 
 	while read -r line
 	do
-		dateField=$(echo "${line}" | cut -d ',' -f"${TimeStampFieldIndex}")
-			sampleField=$(echo "${line}" | cut -d ',' -f"${chipRunUIDFieldIndex}")
-			runField=$(echo "${line}" | cut -d ',' -f"${FlowCellFielIndex}")
+			dateField=$(echo "${line}" | cut -d ',' -f "${TimeStampFieldIndex}")
+			sampleField=$(echo "${line}" | cut -d ',' -f "${chipRunUIDFieldIndex}")
+			runField=$(echo "${line}" | cut -d ',' -f "${FlowCellFielIndex}")
 			correctDate=$(date -d "${dateField}" '+%d/%m/%Y')
 			echo -e "${sampleField},${runField},${correctDate}" >> "OGM-${_basmachine}_runDateInfo_${today}.csv"
 	done < <(tail -n +2 "${_mainfile}")
@@ -809,9 +916,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "dragen" ]]; th
 	else
 		for dragenProject in "${dragendata[@]}"
 		do
-			runinfoFile="${dragenProject}".Dragen_runinfo.csv
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "files to be processed:${runinfoFile}"
-			tableFile="${dragenProject}".Dragen.csv
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ${dragenProject}"
 			dataType=$(echo "${dragenProject}" | cut -d '_' -f2 | cut -d '-' -f2)
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "dataType is ${dataType} for the dragen data."
 			dragen_job_controle_line_base="${dragenProject}.${SCRIPT_NAME}_processDragenToDB"
@@ -827,13 +932,17 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "dragen" ]]; th
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."
 				if [[ "${dataType}" == 'Exoom' ]]
 				then
+					runinfoFile="${dragenProject}".Dragen_runinfo.csv
+					tableFile="${dragenProject}".Dragen.csv
 					updateOrCreateDatabase dragenExoom "${tmp_trendanalyse_dir}/dragen/${dragenProject}/${tableFile}" "${tmp_trendanalyse_dir}/dragen/${dragenProject}/${runinfoFile}" dragenExoom "${dragen_job_controle_line_base}" dragen
 				elif [[ "${dataType}" == 'WGS' ]]
 				then
-					updateOrCreateDatabase dragenWGS "${tmp_trendanalyse_dir}/dragen/${dragenProject}/${tableFile}" "${tmp_trendanalyse_dir}/dragen/${dragenProject}/${runinfoFile}" dragenWGS "${dragen_job_controle_line_base}" dragen
+					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting the fuction processDragen for project ${dragenProject}."
+					processDragen "${dragenProject}" "${tmp_trendanalyse_dir}/dragen/${dragenProject}/" "${dataType}" "${dragen_job_controle_line_base}"
 				elif [[ "${dataType}" == 'sWGS' ]]
 				then
-					updateOrCreateDatabase dragenSWGS "${tmp_trendanalyse_dir}/dragen/${dragenProject}/${tableFile}" "${tmp_trendanalyse_dir}/dragen/${dragenProject}/${runinfoFile}" dragenSWGS "${dragen_job_controle_line_base}" dragen
+					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting the fuction processDragen for project ${dragenProject}."
+					processDragen "${dragenProject}" "${tmp_trendanalyse_dir}/dragen/${dragenProject}/" "${dataType}" "${dragen_job_controle_line_base}"
 				else
 					log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Exoom, WGS and sWGS datatypes are processed, there is room for more types."
 				fi

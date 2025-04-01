@@ -329,8 +329,8 @@ function processDragen() {
 	then
 		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_duplicates\tmean_coverage_genome'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
 	
-		awk -v s1=${sampleNameFieldIndex} \
-				-v s="${seq_batch}" \
+		awk -v s1="${sampleNameFieldIndex}" \
+				-v s="${_dragenproject}" \
 				-v s2="${totalBasesFieldIndex}" \
 				-v s3="${totalReadsFieldIndex}" \
 				-v s4="${hq_MappedreadsFieldIndex}" \
@@ -345,7 +345,7 @@ function processDragen() {
 		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_min_10x_coverage\tfrac_min_50x_coverage\tmean_coverage_genome\tmean_alignment_coverage\tcoverage_uniformity'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
 	
 		awk -v s1="${sampleNameFieldIndex}" \
-			-v s="${seq_batch}" \
+			-v s="${_dragenproject}" \
 			-v s2="${totalBasesFieldIndex}" \
 			-v s3="${totalReadsFieldIndex}" \
 			-v s4="${hq_MappedreadsFieldIndex}" \
@@ -362,7 +362,7 @@ function processDragen() {
 	
 	fi
 	echo -e 'Sample,Run,Date' > "${_dragenproject}.Dragen_runinfo.csv"
-	awk -v s="${seq_batch}" -v f="${file_date}" 'BEGIN {FS="\t"}{OFS=","}{if (NR>1){print $1,s,f}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >> "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"
+	awk -v s="${_dragenproject}" -v f="${file_date}" 'BEGIN {FS="\t"}{OFS=","}{if (NR>1){print $1,s,f}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >> "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"
 	
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Done making the run_data_info and table file for project ${_dragenproject}"
 	updateOrCreateDatabase "dragen${_dragentype}" "${_statsfilelocation}/${_dragenproject}.Dragen.csv" "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv" "dragen${_dragentype}" "${_dragen_job_controle_line_base}" dragen

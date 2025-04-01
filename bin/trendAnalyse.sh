@@ -269,7 +269,7 @@ function processDragen() {
 	local _dragentype="${3}"
 	local _dragen_job_controle_line_base="${4}"
 	
-	
+	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${_dragenproject}"
 	file_date=$(date -r "${_statsfilelocation}/${_dragenproject}.stats.tsv" '+%d/%m/%Y')
 	
 	declare -a statsFileColumnNames=()
@@ -327,6 +327,7 @@ function processDragen() {
 	
 	if [[ "${_dragentype}" == *"sWGS"* ]]
 	then
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${_dragenproject} with data type ${_dragentype}"
 		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_duplicates\tmean_coverage_genome'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
 	
 		awk -v s1="${sampleNameFieldIndex}" \
@@ -341,7 +342,9 @@ function processDragen() {
 				-v s9="${fracDuplicatesFieldIndex}" \
 				-v s10="${meanCoverageGenomeFieldIndex}" \
 			'BEGIN {FS="\t"}{OFS="\t"}{if (NR>1){print $s1,s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9,$s10}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >>  "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
-	else
+	elif [[ "${_dragentype}" == *"WGS"* ]]
+	then
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${_dragenproject} with data type ${_dragentype}"
 		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_min_10x_coverage\tfrac_min_50x_coverage\tmean_coverage_genome\tmean_alignment_coverage\tcoverage_uniformity'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
 	
 		awk -v s1="${sampleNameFieldIndex}" \
@@ -359,7 +362,26 @@ function processDragen() {
 			-v s12="${mean_alignment_coverageCoverageFieldIndex}" \
 			-v s13="${coverage_uniformityCoverageFieldIndex}" \
 		'BEGIN {FS="\t"}{OFS="\t"}{if (NR>1){print $s1,s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9,$s10,$s11,$s12,$s13}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >>  "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
-	
+	else
+		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${_dragenproject} with data type ${_dragentype}"
+# 		echo -e 'Sample\tBatchName\ttotal_bases\ttotal_reads\thq_mapped_reads\tduplicate_readpairs\tbases_on_target\tmean_insert_size\tfrac_min_1x_coverage\tfrac_min_10x_coverage\tfrac_min_50x_coverage\tmean_coverage_genome\tmean_alignment_coverage\tcoverage_uniformity'  > "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
+# 	
+# 		awk -v s1="${sampleNameFieldIndex}" \
+# 			-v s="${_dragenproject}" \
+# 			-v s2="${totalBasesFieldIndex}" \
+# 			-v s3="${totalReadsFieldIndex}" \
+# 			-v s4="${hq_MappedreadsFieldIndex}" \
+# 			-v s5="${duplicateReadPairsFieldIndex}" \
+# 			-v s6="${basesOnTargetFieldIndex}" \
+# 			-v s7="${meanInsertSizeFieldIndex}" \
+# 			-v s8="${fracMin1xCoverageFieldIndex}" \
+# 			-v s9="${fracMin10xCoverageFieldIndex}" \
+# 			-v s10="${fracMin50xCoverageFieldIndex}" \
+# 			-v s11="${meanCoverageGenomeFieldIndex}" \
+# 			-v s12="${mean_alignment_coverageCoverageFieldIndex}" \
+# 			-v s13="${coverage_uniformityCoverageFieldIndex}" \
+# 		'BEGIN {FS="\t"}{OFS="\t"}{if (NR>1){print $s1,s,$s2,$s3,$s4,$s5,$s6,$s7,$s8,$s9,$s10,$s11,$s12,$s13}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >>  "${_statsfilelocation}/${_dragenproject}.Dragen.csv"
+
 	fi
 	echo -e 'Sample,Run,Date' > "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"
 	awk -v s="${_dragenproject}" -v f="${file_date}" 'BEGIN {FS="\t"}{OFS=","}{if (NR>1){print $1,s,f}}' "${_statsfilelocation}/${_dragenproject}.stats.tsv" >> "${_statsfilelocation}/${_dragenproject}.Dragen_runinfo.csv"

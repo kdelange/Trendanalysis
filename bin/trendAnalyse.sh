@@ -928,9 +928,6 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "dragen" ]]; th
 			if grep -Fxq "${dragen_job_controle_line_base}" "${logs_dir}/process.dragen_trendanalysis.finished"
 			then
 				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Skipping already processed dragen project ${dragenProject}."
-			elif grep -Fxq "${dragen_job_controle_line_base}" "${logs_dir}/process.dragen_trendanalysis.failed"
-			then
-				log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "dragen project ${dragenProject}, is not in the correct format, skipping."
 			else
 				echo "${dragen_job_controle_line_base}" >> "${logs_dir}/process.dragen_trendanalysis.started"
 				log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "New dragen project ${dragenProject} will be processed."

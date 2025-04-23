@@ -275,7 +275,7 @@ function processDragen() {
 	declare -a statsFileColumnNames=()
 	declare -A statsFileColumnOffsets=()
 	
-	IFS=$'\t' read -r -a statsFileColumnNames <<< "$(head -1 ${_statsfilelocation}/${_dragenproject}.stats.tsv)"
+	IFS='\t' read -r -a statsFileColumnNames <<< "$(head -1 "${_statsfilelocation}/${_dragenproject}".stats.tsv)"
 	
 	for (( offset = 0 ; offset < ${#statsFileColumnNames[@]} ; offset++ ))
 	do
@@ -300,10 +300,6 @@ function processDragen() {
 	then
 		meanCoverageGenomeFieldIndex=$((${statsFileColumnOffsets['mean_coverage_genome']} + 1))
 	fi
-	if [[ -n "${statsFileColumnOffsets['mean_coverage_target']+isset}" ]]
-	then
-		mean_coverage_targetFieldIndex=$((${statsFileColumnOffsets['mean_coverage_target']} + 1))
-	fi
 	if [[ -n "${statsFileColumnOffsets['frac_min_10x_coverage']+isset}" ]]
 	then
 		fracMin10xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_10x_coverage']} + 1))
@@ -311,10 +307,6 @@ function processDragen() {
 	if [[ -n "${statsFileColumnOffsets['frac_min_50x_coverage']+isset}" ]]
 	then
 		fracMin50xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_50x_coverage']} + 1))
-	fi
-	if [[ -n "${statsFileColumnOffsets['frac_min_20x_coverage']+isset}" ]]
-	then
-		fracMin20xCoverageFieldIndex=$((${statsFileColumnOffsets['frac_min_20x_coverage']} + 1))
 	fi
 	if [[ -n "${statsFileColumnOffsets['mean_alignment_coverage']+isset}" ]]
 	then

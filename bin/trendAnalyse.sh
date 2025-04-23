@@ -275,7 +275,7 @@ function processDragen() {
 	declare -a statsFileColumnNames=()
 	declare -A statsFileColumnOffsets=()
 	
-	IFS='\t' read -r -a statsFileColumnNames <<< "$(head -1 "${_statsfilelocation}/${_dragenproject}".stats.tsv)"
+	IFS=$'\t' read -r -a statsFileColumnNames <<< "$(head -1 "${_statsfilelocation}/${_dragenproject}".stats.tsv)"
 	
 	for (( offset = 0 ; offset < ${#statsFileColumnNames[@]} ; offset++ ))
 	do

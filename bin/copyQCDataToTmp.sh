@@ -194,7 +194,8 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on Exoom ${_project}"
 		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
-		ssh "${group}-ateambot@${DESTINATION_DIAGNOSTICS_CLUSTER}" "mkdir -p ${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+		# shellcheck disable=SC2029
+		ssh "${group}-ateambot@${DESTINATION_DIAGNOSTICS_CLUSTER}" mkdir -p "${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/qc/statistics/"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/" \
 		|| {
 			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
@@ -221,7 +222,8 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${_project}"
 		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
-		ssh "${group}-ateambot@${DESTINATION_DIAGNOSTICS_CLUSTER}" "mkdir -p ${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+		# shellcheck disable=SC2029
+		ssh "${group}-ateambot@${DESTINATION_DIAGNOSTICS_CLUSTER}" mkdir -p "${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/qc/stats.tsv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/${_project}.stats.tsv" \
 		|| {
 			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"

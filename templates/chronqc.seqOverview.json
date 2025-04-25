@@ -19,7 +19,7 @@
         "table_name": "HsMetrics",
         "chart_type": "time_series_with_absolute_threshold",
         "chart_properties": {
-            "chart_title": "Percent target bp 20x",
+            "chart_title": "Fraction target bp 20x",
             "lower_threshold": 0.9,
             "y_value": "PCT_TARGET_BASES_20X"
         }
@@ -28,7 +28,7 @@
         "table_name": "HsMetrics",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
-            "chart_title": "Percent target bp 50x",
+            "chart_title": "Fraction target bp 50x",
             "y_value": "PCT_TARGET_BASES_50X"
         }
     },
@@ -36,7 +36,7 @@
         "table_name": "HsMetrics",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
-            "chart_title": "Percent target bp 100x",
+            "chart_title": "Fraction target bp 100x",
             "y_value": "PCT_TARGET_BASES_100X"
         }
     },

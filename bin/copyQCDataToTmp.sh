@@ -189,11 +189,13 @@ function copyQCProjectdataToTmp() {
 		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}"
 		# The Dragen project (Exoom, WGS, sWGS) wil be copied to ${TMP_ROOT_DIR}/trendanalysis/dragen/
-	elif  [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/statistics/${_project}.Dragen_runinfo.csv" ]]
+	elif  [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/statistics/${_project}.Dragen_runinfo.csv" && "${_project}" =~ "Exoom" ]]
 	then
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${_project}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing Exoom ${_project} ..."
 		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
+		# shellcheck disable=SC2029
+		ssh "${group}-ateambot@${DESTINATION_DIAGNOSTICS_CLUSTER}" mkdir -p "${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
 		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/qc/statistics/"* "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/" \
 		|| {
 			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
@@ -215,8 +217,36 @@ function copyQCProjectdataToTmp() {
 		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
 		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}" 
+	elif [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/stats.tsv" && "${_project}" =~ "WGS" ]]
+	then
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing WGS ${_project} ..."
+		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
+		# shellcheck disable=SC2029
+		ssh "${group}-ateambot@${DESTINATION_DIAGNOSTICS_CLUSTER}" mkdir -p "${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/qc/stats.tsv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/${_project}.stats.tsv" \
+		|| {
+			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+			echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
+			return
+			}
+		rsync -av --rsync-path="sudo -u ${group}-ateambot rsync" "${_prm_project_dir}/${_project}/run01/results/${_project}.csv" "${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/" \
+		|| {
+			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "Failed to rsync ${_project}"
+			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    from ${_prm_project_dir}"
+			log4Bash 'ERROR' "${LINENO}" "${FUNCNAME:-main}" '0' "    to ${DESTINATION_DIAGNOSTICS_CLUSTER}:${TMP_ROOT_DIR}/trendanalysis/dragen/${_project}/"
+			echo "${_line_base}.failed" >> "${_project_job_controle_file_base}"
+			return
+			}
+		sed "/${_line_base}.failed/d" "${_project_job_controle_file_base}" > "${_project_job_controle_file_base}.tmp"
+		sed "/${_line_base}.started/d" "${_project_job_controle_file_base}.tmp" > "${_project_job_controle_file_base}.tmp2"
+		echo "${_line_base}.finished" >> "${_project_job_controle_file_base}.tmp2"
+		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data for ${_project}." 
 	else
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} there is no QC data, nothing to rsync.."
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "There is no QC data for project ${_project}; nothing to rsync."
 	fi
 
 }

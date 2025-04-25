@@ -1,6 +1,6 @@
 [
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "total_bases",
@@ -8,7 +8,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "bases_on_target",
@@ -16,7 +16,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "total_reads",
@@ -24,7 +24,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "hq_mapped_reads",
@@ -32,7 +32,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "duplicate_readpairs",
@@ -40,7 +40,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "frac_duplicates",
@@ -48,7 +48,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "mean_insert_size",
@@ -56,7 +56,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "frac_min_1x_coverage",
@@ -64,7 +64,7 @@
         }
     },
     {
-        "table_name": "dragenSWGS",
+        "table_name": "dragensWGS",
         "chart_type": "time_series_with_mean_and_stdev",
         "chart_properties": {
             "chart_title": "mean_coverage_genome",

@@ -246,7 +246,7 @@ function copyQCProjectdataToTmp() {
 		mv "${_project_job_controle_file_base}.tmp2" "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data for ${_project}." 
 	else
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "For project ${_project} there is no QC data, nothing to rsync.."
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "There is no QC data for project ${_project}; nothing to rsync."
 	fi
 
 }

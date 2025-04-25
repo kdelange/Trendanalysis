@@ -191,7 +191,7 @@ function copyQCProjectdataToTmp() {
 		# The Dragen project (Exoom, WGS, sWGS) wil be copied to ${TMP_ROOT_DIR}/trendanalysis/dragen/
 	elif  [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/statistics/${_project}.Dragen_runinfo.csv" && "${_project}" =~ "Exoom" ]]
 	then
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on Exoom ${_project}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing Exoom ${_project} ..."
 		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
 		# shellcheck disable=SC2029

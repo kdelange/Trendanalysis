@@ -38,7 +38,7 @@ If the script runs on PRM06, the data will be copied to TMP06. Each data type wi
 ### Logging
 On the DAT0(5,6,7) in the logs/trendanalysis folder, for each data type a file will be touched, for instance for rawdata: `groups/${group}/${DAT}/logs/trendanalysis/${PRM}.copyQCDataToTmp.rawdata`.
 
-If `copyQCDataToTmp.sh` is ran on cf-chaperone, all the log files will be in DAT06. For each PRM there will be a file, you will have 3 files for ${PRM}.copyQCDataToTmp.rawdata.
+If `copyQCDataToTmp.sh` runs on cf-chaperone, then the log files will be in `dat06`. For each `${PRM}` there will be a log file, so you will get 3 ${PRM}.copyQCDataToTmp.rawdata file for `prm05`, `prm06` and `prm07`.
 
 In this file, there is a line with `${rawdata}_copyQCDataToTmp_finished`, so the QC data will only be copied to TMP once. 
 If you would like to copy the QC data again to TMP, just remove whole file: ${PRM}.copyQCDataToTmp.rawdata, or just the line with your dataset of intrest.

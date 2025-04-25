@@ -912,7 +912,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "dragen" ]]; th
 	else
 		for dragenProject in "${dragendata[@]}"
 		do
-			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "starting on ${dragenProject}"
+			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing ${dragenProject} ..."
 			dataType=$(echo "${dragenProject}" | cut -d '_' -f2 | cut -d '-' -f2)
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "dataType is ${dataType} for the dragen data."
 			dragen_job_controle_line_base="${dragenProject}.${SCRIPT_NAME}_processDragenToDB"

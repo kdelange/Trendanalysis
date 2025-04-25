@@ -219,7 +219,7 @@ function copyQCProjectdataToTmp() {
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Finished copying data: ${_project}" 
 	elif [[ -e "${_prm_project_dir}/${_project}/run01/results/qc/stats.tsv" && "${_project}" =~ "WGS" ]]
 	then
-		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${_project}"
+		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME:-main}" '0' "Processing WGS ${_project} ..."
 		echo "${_line_base}.started" >> "${_project_job_controle_file_base}"
 		log4Bash 'TRACE' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${_project} found on ${_prm_project_dir}, start rsyncing.."
 		# shellcheck disable=SC2029

@@ -809,7 +809,7 @@ fi
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "projects" ]]; then
 	readarray -t projects < <(find "${tmp_trendanalyse_dir}/projects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/projects/||")
-	if [[ "${#projects[@]:-0}" -eq '0' ]]
+	if [[ "${#projects[@]}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/projects/."
 	else
@@ -840,7 +840,7 @@ fi
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "RNAprojects" ]]; then
 	readarray -t RNAprojects < <(find "${tmp_trendanalyse_dir}/RNAprojects/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/RNAprojects/||")
-	if [[ "${#RNAprojects[@]:-0}" -eq '0' ]]
+	if [[ "${#RNAprojects[@]}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/RNAprojects/."
 	else
@@ -872,7 +872,7 @@ fi
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "darwin" ]]; then
 	readarray -t darwindata < <(find "${tmp_trendanalyse_dir}/darwin/" -maxdepth 1 -mindepth 1 -type f -name "*runinfo*" | sed -e "s|^${tmp_trendanalyse_dir}/darwin/||")
-	if [[ "${#darwindata[@]:-0}" -eq '0' ]]
+	if [[ "${#darwindata[@]}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/darwin/."
 	else
@@ -906,7 +906,7 @@ fi
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "dragen" ]]; then
 	readarray -t dragendata < <(find "${tmp_trendanalyse_dir}/dragen/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/dragen/||")
-	if [[ "${#dragendata[@]:-0}" -eq '0' ]]
+	if [[ "${#dragendata[@]}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/dragen/."
 	else
@@ -950,7 +950,7 @@ fi
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Starting on ${tmp_trendanalyse_dir}/openarray/"
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "openarray" ]]; then
 	readarray -t openarraydata < <(find "${tmp_trendanalyse_dir}/openarray/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^${tmp_trendanalyse_dir}/openarray/||")
-	if [[ "${#openarraydata[@]:-0}" -eq '0' ]]
+	if [[ "${#openarraydata[@]}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/openarraydata/."
 	else
@@ -979,7 +979,7 @@ fi
 
 if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 	readarray -t ogmdata < <(find "${tmp_trendanalyse_dir}/ogm/metricsInput/" -maxdepth 1 -mindepth 1 -type f -name "bas*" | sed -e "s|^${tmp_trendanalyse_dir}/ogm/metricsInput/||")
-	if [[ "${#ogmdata[@]:-0}" -eq '0' ]]
+	if [[ "${#ogmdata[@]}" -eq '0' ]]
 	then
 		log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No projects found @ ${tmp_trendanalyse_dir}/ogm/metricsInput/."
 	else
@@ -1030,7 +1030,7 @@ if [[ "${InputDataType}" == "all" ]] || [[ "${InputDataType}" == "ogm" ]]; then
 
 		readarray -t mainogmdata< <(find "${tmp_trendanalyse_dir}/ogm/" -maxdepth 1 -mindepth 1 -type f -name "mainMetrics*")
 
-		if [[ "${#mainogmdata[@]:-0}" -eq '0' ]]
+		if [[ "${#mainogmdata[@]}" -eq '0' ]]
 		then
 			log4Bash 'WARN' "${LINENO}" "${FUNCNAME:-main}" '0' "No mainMetrics file found @ ${tmp_trendanalyse_dir}/ogm/."
 		else

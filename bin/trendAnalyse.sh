@@ -1050,7 +1050,7 @@ fi
 
 chronqc_tmp="${tmp_trendanalyse_dir}/tmp/"
 log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "cleanup ${chronqc_tmp}* ..."
-rm -rf "${chronqc_tmp:-missing}"/*
+#rm -rf "${chronqc_tmp:-missing}"/*
 
 #
 ## Function for generating a list of ChronQC plots.

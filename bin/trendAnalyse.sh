@@ -90,19 +90,17 @@ function updateOrCreateDatabase() {
 	if [[ "${_logtype}" == 'ogm' ]] || [[ "${_logtype}" == 'darwin' ]]
 	then
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}, _logtype= ${_logtype}."
-		exec "${CHRONQC_VERSION}" chronqc database --create -f \
+		singularity exec "${CHRONQC_VERSION}" chronqc database --create -f \
 			-o "${CHRONQC_DATABASE_NAME}" \
 			"${_tableFile}" \
 			--run-date-info "${_runDateInfo}" \
 			--db-table "${_db_table}" \
-			"${_dataLabel}" -f 
-		echo "Exit status: $?"
-# 			|| {
-# 				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to create database and import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
-# 				sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
-# 				echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.failed"
-# 				return
-# 			}
+			"${_dataLabel}" -f || {
+				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to create database and import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
+				sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
+				echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.failed"
+				return
+			}
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_tableFile} with ${_dataLabel} was stored in Chronqc database."
 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.failed"
 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
@@ -114,7 +112,7 @@ function updateOrCreateDatabase() {
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${_runDateInfo}. Updating ChronQC database with ${_tableFile}."
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Importing ${_tableFile}"
 	
-			exec "${CHRONQC_VERSION}" chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \
+			singularity exec "${CHRONQC_VERSION}" chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \
 				"${_tableFile}" \
 				--db-table "${_db_table}" \
 				--run-date-info "${_runDateInfo}" \
@@ -131,7 +129,7 @@ function updateOrCreateDatabase() {
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Added ${_job_controle_line_base} to process.${_logtype}_trendanalysis.finished file."
 		else
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}."
-			exec "${CHRONQC_VERSION}" chronqc database --create \
+			singularity exec "${CHRONQC_VERSION}" chronqc database --create \
 				-o "${CHRONQC_DATABASE_NAME}" \
 				"${_tableFile}" \
 				--run-date-info "${_runDateInfo}" \

@@ -157,7 +157,7 @@ function processProjectToDB() {
 	_chronqc_projects_dir="${tmp_trendanalyse_dir}/projects/${_project}/"
 
 	log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Removing files from ${chronqc_tmp} ..."
-	rm -rf "${chronqc_tmp:-missing}"/*
+	#rm -rf "${chronqc_tmp:-missing}"/*
 
 	log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "__________processing ${_project}.run_date_info.csv_____________"
 	if [[ -e "${_chronqc_projects_dir}/${_project}.run_date_info.csv" ]]

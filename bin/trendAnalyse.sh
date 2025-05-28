@@ -95,12 +95,14 @@ function updateOrCreateDatabase() {
 			"${_tableFile}" \
 			--run-date-info "${_runDateInfo}" \
 			--db-table "${_db_table}" \
-			"${_dataLabel}" -f || {
-				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to create database and import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
-				sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
-				echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.failed"
-				return
-			}
+			"${_dataLabel}" -f 
+		echo "Exit status: $?"
+# 			|| {
+# 				log4Bash 'ERROR' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Failed to create database and import ${_tableFile} with ${_dataLabel} stored to Chronqc database." 
+# 				sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"
+# 				echo "${_job_controle_line_base}" >> "${logs_dir}/process.${_logtype}_trendanalysis.failed"
+# 				return
+# 			}
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "${FUNCNAME[0]} ${_tableFile} with ${_dataLabel} was stored in Chronqc database."
 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.failed"
 		sed -i "/${_job_controle_line_base}/d" "${logs_dir}/process.${_logtype}_trendanalysis.started"

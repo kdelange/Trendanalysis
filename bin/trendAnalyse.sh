@@ -90,7 +90,7 @@ function updateOrCreateDatabase() {
 	if [[ "${_logtype}" == 'ogm' ]] || [[ "${_logtype}" == 'darwin' ]]
 	then
 		log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}, _logtype= ${_logtype}."
-		chronqc database --create -f \
+		exec "CHRONQC_VERSION" chronqc database --create -f \
 			-o "${CHRONQC_DATABASE_NAME}" \
 			"${_tableFile}" \
 			--run-date-info "${_runDateInfo}" \
@@ -112,7 +112,7 @@ function updateOrCreateDatabase() {
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "found ${_runDateInfo}. Updating ChronQC database with ${_tableFile}."
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Importing ${_tableFile}"
 	
-			chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \
+			exec "CHRONQC_VERSION" chronqc database --update --db "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" \
 				"${_tableFile}" \
 				--db-table "${_db_table}" \
 				--run-date-info "${_runDateInfo}" \
@@ -129,7 +129,7 @@ function updateOrCreateDatabase() {
 			log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME[0]:-main}" '0' "Added ${_job_controle_line_base} to process.${_logtype}_trendanalysis.finished file."
 		else
 			log4Bash 'INFO' "${LINENO}" "${FUNCNAME:-main}" '0' "Create database for project ${_tableFile}."
-			chronqc database --create \
+			exec "CHRONQC_VERSION" chronqc database --create \
 				-o "${CHRONQC_DATABASE_NAME}" \
 				"${_tableFile}" \
 				--run-date-info "${_runDateInfo}" \
@@ -750,9 +750,6 @@ lockFile="${TMP_ROOT_DIR}/logs/${SCRIPT_NAME}.lock"
 thereShallBeOnlyOne "${lockFile}"
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Successfully got exclusive access to lock file ${lockFile} ..."
 log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written to ${TMP_ROOT_DIR}/logs ..."
-
-# shellcheck disable=SC2029
-module load "chronqc/${CHRONQC_VERSION}"
 
 #
 ## Loops over all rawdata folders and checks if it is already in chronQC database. If not than call function 'processRawdataToDB "${rawdata}" to process this project.'

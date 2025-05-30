@@ -2,7 +2,7 @@
 ##get the date of today, so the reports are in a directory per date
 #
 TODAY=$(date '+%Y%m%d')
-
+DISPLAY=":0"
 #
 ## ngs-pipeline reports
 #

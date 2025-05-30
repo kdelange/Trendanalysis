@@ -28,7 +28,7 @@
             "threshold": 70
         }
     },
-    {
+/*    {
         "table_name": "general_stats",
         "chart_type": "time_series_with_box_whisker_plot",
         "chart_properties": {
@@ -36,7 +36,7 @@
             "y_value": "RSeQC_mqc-generalstats-rseqc-TIN_median",
             "y_label": "TIN median"
         }
-    },
+    },*/
     {
         "table_name": "general_stats",
         "chart_type": "time_series_with_mean_and_stdev",

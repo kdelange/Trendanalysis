@@ -6,7 +6,7 @@ DISPLAY=":0"
 #
 ## ngs-pipeline reports
 #
-singularity exec --env DISPLAY=$DISPLAY "${CHRONQC_VERSION}" chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p seqOverview -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" Exoom "${CHRONQC_TEMPLATE_DIRS}/chronqc.seqOverview.json"
+singularity run "${CHRONQC_VERSION}" chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p seqOverview -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" Exoom "${CHRONQC_TEMPLATE_DIRS}/chronqc.seqOverview.json"
 singularity exec --env DISPLAY=$DISPLAY "${CHRONQC_VERSION}" chronqc plot -o "${CHRONQC_REPORTS_DIRS}/${TODAY}/" -p seqOverview -f "${CHRONQC_DATABASE_NAME}/chronqc_db/chronqc.stats.sqlite" Targeted "${CHRONQC_TEMPLATE_DIRS}/chronqc.seqOverview.json"
 
 #

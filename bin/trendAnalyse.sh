@@ -172,7 +172,7 @@ function processProjectToDB() {
 			if [[ "${_metrics}" == multiqc_picard_insertSize.txt ]]
 			then
 				cp "${_chronqc_projects_dir}/${_metrics}" "${chronqc_tmp}/${_project}.${_metrics}"
-				awk '{$1=""}1' "${chronqc_tmp}/${_project}.${_metrics}" | awk '{$1=$1}{OFS="\t"}1' > "${chronqc_tmp}/${_project}.1.${_metrics}"
+				awk -v FS='\t' '{$1=""}1' "${chronqc_tmp}/${_project}.${_metrics}" | awk -v OFS='\t' '{$1=$1}1' > "${chronqc_tmp}/${_project}.1.${_metrics}"
 				perl -pe 's|SAMPLE_NAME\t|Sample\t|' "${chronqc_tmp}/${_project}.1.${_metrics}" > "${chronqc_tmp}/${_project}.3.${_metrics}"
 				perl -pe 's|SAMPLE\t|SAMPLE_NAME2\t|' "${chronqc_tmp}/${_project}.3.${_metrics}" > "${chronqc_tmp}/${_project}.2.${_metrics}"
 			elif [[ "${_metrics}" == multiqc_fastqc.txt ]]

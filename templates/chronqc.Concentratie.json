@@ -16,7 +16,7 @@
             "chart_title": "% Sample per run met A260_230 boven de 1.4",
             "y_value": "A260_230",
             "threshold": 1.4,
-            "y_label": "% of samples whit quality score above 1.4"
+            "y_label": "% of samples with quality score above 1.4"
         }
     },
     {

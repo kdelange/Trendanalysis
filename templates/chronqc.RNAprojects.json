@@ -25,7 +25,7 @@
             "chart_title": "TIN median (% samples above 70)",
             "y_value": "RSeQC_mqc-generalstats-rseqc-TIN_median",
             "y_label": "TIN median",
-            "threshold": '70'
+            "threshold": 70
         }
     },
     {

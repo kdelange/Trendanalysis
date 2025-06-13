@@ -755,7 +755,7 @@ log4Bash 'DEBUG' "${LINENO}" "${FUNCNAME:-main}" '0' "Log files will be written 
 ## Loops over all rawdata folders and checks if it is already in chronQC database. If not than call function 'processRawdataToDB "${rawdata}" to process this project.'
 #
 
-module load "chronqc/${CHRONQC_VERSION}"
+module load "ChronQC/${CHRONQC_VERSION}"
 
 tmp_trendanalyse_dir="${TMP_ROOT_DIR}/trendanalysis/"
 logs_dir="${TMP_ROOT_DIR}/logs/trendanalysis/"

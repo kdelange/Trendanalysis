@@ -67,6 +67,9 @@ while getopts ":g:p:m:d:f:h" opt; do
 		f)
 			datafolder="${OPTARG}"
 			;;
+		*)
+			echo "Unhandled option. Try $(basename "${0}") -h for help."
+			;;
 	esac
 done
 
@@ -104,9 +107,9 @@ fi
 # 2592000 = 30 days ~ 1 month
 # 31449600 = 1 year in seconds
 
-folder=/groups/"${group}/${prm}/${datafolder}/"
+folder=$(ls /groups/"${group}/${prm}/${datafolder}/")
 
-for i in $(ls "${folder}")
+for i in "${folder}"
 do
 	echo "i:${i}"
 	dateInSecAnalysisData=$(date -r "${folder}/${i}" +%s)
@@ -117,15 +120,12 @@ do
 
 	if [[ $(((dateInSecNow - dateInSecAnalysisData) / 2592000)) -gt "${months}" ]]
 	then
-		echo "de som: $(((dateInSecNow - dateInSecAnalysisData) / 2592000)) -gt "${months}""
+		echo "de som: $(((dateInSecNow - dateInSecAnalysisData) / 2592000)) -gt ${months}"
 		echo "data is ouder dan 2 jaar"
 		echo "datum van input:$(date -r "${folder}/${i}")"
 		printf "${i}.copyQCDataToTmp.finished\n" >> "${prm}.copyQCDataToTmp.${datatype}"
 	else
-		echo "de som: $(((dateInSecNow - dateInSecAnalysisData) / 2592000)) -gt "${months}""
-		echo "data is jonger dan 2 jaar"
-		echo "datum van input:$(date -r "${folder}/${i}")"
-		#printf "${i}\n" >> projectenJongerDan2Jaar.csv
+		echo "data is jonger dan ${months} maanden"
 	fi
 done
 

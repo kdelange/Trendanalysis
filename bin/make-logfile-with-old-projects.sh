@@ -107,26 +107,25 @@ fi
 # 2592000 = 30 days ~ 1 month
 # 31449600 = 1 year in seconds
 
-folder=$(ls /groups/"${group}/${prm}/${datafolder}/")
+readarray -t folder < <(find "/groups/${group}/${prm}/${datafolder}/" -maxdepth 1 -mindepth 1 -type d -name "[!.]*" | sed -e "s|^/groups/${group}/${prm}/${datafolder}/||")
 
-for i in "${folder}"
+for i in "${folder[@]}"
 do
 	echo "i:${i}"
-	dateInSecAnalysisData=$(date -r "${folder}/${i}" +%s)
+	dateInSecAnalysisData=$(date -r "/groups/${group}/${prm}/${datafolder}/${i}" +%s)
 	echo "dateInSecAnalysisData: ${dateInSecAnalysisData}"
 	dateInSecNow=$(date +%s)
 	echo "dateInSecNow: ${dateInSecNow}"
-
-
 	if [[ $(((dateInSecNow - dateInSecAnalysisData) / 2592000)) -gt "${months}" ]]
 	then
 		echo "de som: $(((dateInSecNow - dateInSecAnalysisData) / 2592000)) -gt ${months}"
 		echo "data is ouder dan 2 jaar"
-		echo "datum van input:$(date -r "${folder}/${i}")"
-		printf "${i}.copyQCDataToTmp.finished\n" >> "${prm}.copyQCDataToTmp.${datatype}"
+		echo "datum van input:$(date -r "/groups/${group}/${prm}/${datafolder}/${dirname}")"
+		printf "%s.copyQCDataToTmp.finished\n" "${i}" >> "${prm}.copyQCDataToTmp.${datatype}"
 	else
 		echo "data is jonger dan ${months} maanden"
 	fi
+
 done
 
 exit 0
